@@ -23,7 +23,47 @@ public User userAtHand= null;
 	public void exportReport(String reportTitle);
 	//	As a user I would like to view my current balance in a different currency 
 	//Bonus : try to use the same convert function to convert from foreign currency to USD 
-	public Currency convertForeignCurrency(Currency C, double amount);
+	public static double convertForeignCurrency(String currOne, String currTwo, Double ammount) {
+		double USDtoEUR = 0.915;
+		double EURtoUSD = 1.0915;
+		double CADtoEUR = 1.441;
+		double EURtoCAD = 0.6934;
+		double USDtoCAD = 0.7567;
+		double CADtoUSD = 1.26;
+		double conRate = 0;
+		if (currOne.equals("USD")) {
+			if (currTwo.equals("EUR")) {
+				 conRate = USDtoEUR;
+			} else if 
+			(currTwo.equals("CAD")) {
+				 conRate = USDtoCAD;
+			}
+		}
+			if (currOne.equals("EUR")) {
+				if (currTwo.equals("USD")) {
+					 conRate = EURtoUSD;
+				} else if 
+				(currTwo.equals("CAD")) {
+					 conRate = EURtoCAD;
+				}
+			}
+				if (currOne.equals("CAD")) {
+					if (currTwo.equals("EUR")) {
+						 conRate = CADtoEUR;
+					} else if 
+					(currTwo.equals("USD")) {
+						 conRate = CADtoUSD;
+					}
+			}
+			if (conRate == 0.0) {
+				conRate = 1.0;
+			}
+			
+			double results = ammount * conRate;
+			return results;
+			
+	}
+		
 	//	As a user I would like to load multiple expenses from an external file all at once returning true if loaded successfully and false otherwise 
 	public boolean loadExpenseFile(String filePath); 
 	//	As a user I would like to load multiple income from an external file all at once returning true if loaded successfully and false otherwise 
@@ -34,5 +74,7 @@ public User userAtHand= null;
 	public void updateMonthlySavings(); 
 	
 //add/update monthly income ability. add monthly expenses/names of them to two lists, to keep track of them for summary.
+	
+	
 	
 }
