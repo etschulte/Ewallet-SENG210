@@ -60,7 +60,8 @@ public User userAtHand= null;
 			}
 			
 			double results = ammount * conRate;
-			return results;
+			double roundedResult = Math.round(results * 100.0) / 100.0;
+			return roundedResult;
 			
 	}
 		
