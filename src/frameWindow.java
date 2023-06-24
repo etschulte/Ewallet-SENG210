@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -28,9 +29,23 @@ private static JButton convertButton = new JButton();
 private static JComboBox currSelectOne;
 private static JComboBox currSelectTwo;
 private static JLabel currResultLabel;
+private static JButton expenseHomeButton = new JButton();
+private static JComboBox expenseSelectOne;
+private static JButton expenseSubmitButton = new JButton();
+private static JComboBox expenseSelectTwo;
+private static JComboBox expenseSelectThree;
+private static JComboBox expenseSelectFour;
+private static JComboBox expenseSelectFive;
+private static JLabel expenseAddtionalLabel = new JLabel();
+private static JLabel expenseFrequencyLabel = new JLabel();
+private static JLabel expenseCategoryLabel = new JLabel();
+private static JComboBox expenseSelectSix;
+private static JLabel expenseAmountLabel = new JLabel();
+private static JTextField expenseAmountText = new JTextField();
+private static JButton addtionalInfoSubmitButton = new JButton();
 
 
-
+private static JPanel expensePanel;
 private static JPanel conPanel;
 private static JPanel startPanel;
 
@@ -155,9 +170,124 @@ conPanel.setBounds(0, 0, 455, 600);
 conPanel.setLayout(null);
 conPanel.setVisible(false);
 
+//ADD EXPENSE WINDOW ////////////////////////
+expensePanel = new JPanel();
+expensePanel.setBackground(Color.black);
+expensePanel.setBounds(0, 0, 455, 600);
+expensePanel.setLayout(null);
+expensePanel.setVisible(false);
+
+expenseHomeButton = new JButton("Home");
+expenseHomeButton.setBounds(170, 30, 120, 70);
+expenseHomeButton.setFocusable(false);
+expenseHomeButton.addActionListener(this);
+expenseHomeButton.setVisible(true);
+
+JLabel expenseLabel = new JLabel();
+expenseLabel.setText("Please Enter the Type of Expense");
+expenseLabel.setBounds(100, 250, 600, 25);
+expenseLabel.setFont(new Font("Arial", Font.PLAIN, 17));
+expenseLabel.setForeground(Color.white);
+expenseLabel.setVisible(true);
+
+String[] expenseList = {"Transportation", "Bills", "Recreational","Grocery" };
+expenseSelectOne = new JComboBox(expenseList);
+expenseSelectOne.setBounds(90, 290, 150, 35);
+expenseSelectOne.setVisible(true);
+expenseSelectOne.setSelectedIndex(0); 
+
+String[] expenseList2 = {"Gas", "Maintenance" };
+expenseSelectTwo = new JComboBox(expenseList2);
+expenseSelectTwo.setBounds(190, 400, 140, 30);
+expenseSelectTwo.setVisible(false);
+expenseSelectTwo.setSelectedIndex(0); 
+
+String[] expenseList3 = {"Rent", "Electricity" };
+expenseSelectThree = new JComboBox(expenseList3);
+expenseSelectThree.setBounds(190, 400, 140, 30);
+expenseSelectThree.setVisible(false);
+expenseSelectThree.setSelectedIndex(0); 
+
+String[] expenseList4 = {"Entertainment", "Shopping" };
+expenseSelectFour = new JComboBox(expenseList4);
+expenseSelectFour.setBounds(190, 400, 140, 30);
+expenseSelectFour.setVisible(false);
+expenseSelectFour.setSelectedIndex(0); 
+
+String[] expenseList5 = {"Produce", "Meat" };
+expenseSelectFive = new JComboBox(expenseList5);
+expenseSelectFive.setBounds(190, 400, 140, 30);
+expenseSelectFive.setVisible(false);
+expenseSelectFive.setSelectedIndex(0); 
+
+expenseFrequencyLabel.setBounds(100, 440, 600, 25);
+expenseFrequencyLabel.setFont(new Font("Arial", Font.PLAIN, 17));
+expenseFrequencyLabel.setForeground(Color.white);
+expenseFrequencyLabel.setVisible(true);
+
+//combo box for the frequency of when the expense occurs
+String[] expenseList6 = {"Annually", "Monthy", "Biweekly"};
+expenseSelectSix = new JComboBox(expenseList6);
+expenseSelectSix.setBounds(190, 440, 140, 30);
+expenseSelectSix.setVisible(false);
+expenseSelectSix.setSelectedIndex(0); 
+
+expenseAddtionalLabel.setBounds(120, 350, 600, 25);
+expenseAddtionalLabel.setFont(new Font("Arial", Font.PLAIN, 17));
+expenseAddtionalLabel.setForeground(Color.white);
+expenseAddtionalLabel.setVisible(true);
+
+expenseAmountLabel.setBounds(100, 480, 600, 25);
+expenseAmountLabel.setFont(new Font("Arial", Font.PLAIN, 17));
+expenseAmountLabel.setForeground(Color.white);
+expenseAmountLabel.setVisible(true);
+
+expenseCategoryLabel.setBounds(100, 400, 600, 25);
+expenseCategoryLabel.setFont(new Font("Arial", Font.PLAIN, 17));
+expenseCategoryLabel.setForeground(Color.white);
+expenseCategoryLabel.setVisible(true);
+
+expenseAmountText.setPreferredSize(new Dimension(20, 30));
+expenseAmountText.setCaretColor(Color.black); //cursor color
+expenseAmountText.setEditable(true);
+expenseAmountText.setBounds(190, 480, 136, 25);
+expenseAmountText.setVisible(false);
+
+//submit button for type of expense 
+expenseSubmitButton = new JButton("Submit!");
+expenseSubmitButton.setBounds(270, 290, 100, 30);
+expenseSubmitButton.setFocusable(false);
+expenseSubmitButton.addActionListener(this);
+expenseSubmitButton.setVisible(true);
+
+addtionalInfoSubmitButton = new JButton("Submit!");
+addtionalInfoSubmitButton.setBounds(200, 520, 100, 30);
+addtionalInfoSubmitButton.setFocusable(false);
+addtionalInfoSubmitButton.addActionListener(this);
+addtionalInfoSubmitButton.setVisible(false);
+////////////////////////////////////////////////////////
+
 //add to window
 this.add(startPanel);
 this.add(conPanel);
+this.add(expensePanel);
+
+expensePanel.add(expenseHomeButton);
+expensePanel.add(expenseLabel);
+expensePanel.add(expenseSelectOne);
+expensePanel.add(expenseSubmitButton);
+expensePanel.add(expenseSelectTwo);
+expensePanel.add(expenseSelectThree);
+expensePanel.add(expenseSelectFour);
+expensePanel.add(expenseSelectFive);
+expensePanel.add(expenseAddtionalLabel);
+expensePanel.add(expenseFrequencyLabel);
+expensePanel.add(expenseCategoryLabel);
+expensePanel.add(expenseSelectSix);
+expensePanel.add(expenseAmountLabel);
+expensePanel.add(expenseAmountText);
+expensePanel.add(addtionalInfoSubmitButton);
+
 conPanel.add(convertButton);
 conPanel.add(currSelectOne);
 conPanel.add(convertText);
@@ -200,9 +330,153 @@ this.setVisible(true);
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		//Controls the buttons when pressed
-		if(e.getSource()==addExpense) { 
-		System.out.println("you hit the expense button");
+		if (e.getSource() == addExpense) {
+			try {
+				expenseWindow();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
+		if (e.getSource() == expenseSubmitButton) {
+			Object selectedExpense = expenseSelectOne.getSelectedItem();
+			String expenseOne = selectedExpense.toString();
+	
+			if(expenseOne.equals("Transportation")) {
+				expenseSelectTwo.setVisible(true);
+				
+				expenseAddtionalLabel.setText("Enter Additional Information");
+				expenseAddtionalLabel.setVisible(true);
+				
+				expenseFrequencyLabel.setText("Frequency:");
+				expenseFrequencyLabel.setVisible(true);
+				
+				expenseCategoryLabel.setText("Category:");
+				expenseCategoryLabel.setVisible(true);
+				
+				expenseAmountLabel.setText("Amount:");
+				expenseAmountLabel.setVisible(true);
+
+				expenseSelectSix.setVisible(true);
+				
+				expenseAmountText.setVisible(true);
+				
+				addtionalInfoSubmitButton.setVisible(true);
+				
+
+				
+			}
+			else if(expenseOne.equals("Bills")) {
+				expenseSelectThree.setVisible(true);
+				
+				expenseAddtionalLabel.setText("Enter Additional Information");
+				expenseAddtionalLabel.setVisible(true);
+				
+				expenseFrequencyLabel.setText("Frequency:");
+				expenseFrequencyLabel.setVisible(true);
+				
+				expenseCategoryLabel.setText("Category:");
+				expenseCategoryLabel.setVisible(true);
+				
+				expenseAmountLabel.setText("Amount:");
+				expenseAmountLabel.setVisible(true);
+				
+				expenseSelectSix.setVisible(true);
+				
+				expenseAmountText.setVisible(true);
+				
+				addtionalInfoSubmitButton.setVisible(true);
+				
+			}
+			else if(expenseOne.equals("Recreational")) {
+				expenseSelectFour.setVisible(true);
+				
+				expenseAddtionalLabel.setText("Enter Additional Information");
+				expenseAddtionalLabel.setVisible(true);
+				
+				expenseFrequencyLabel.setText("Frequency:");
+				expenseFrequencyLabel.setVisible(true);
+				
+				expenseCategoryLabel.setText("Category:");
+				expenseCategoryLabel.setVisible(true);
+				
+				expenseAmountLabel.setText("Amount:");
+				expenseAmountLabel.setVisible(true);
+				
+				expenseSelectSix.setVisible(true);
+				
+				expenseAmountText.setVisible(true);
+				
+				addtionalInfoSubmitButton.setVisible(true);
+			
+			}
+			else if(expenseOne.equals("Grocery")) {
+				expenseSelectFive.setVisible(true);
+				
+				expenseAddtionalLabel.setText("Enter Additional Information");
+				expenseAddtionalLabel.setVisible(true);
+				
+				expenseFrequencyLabel.setText("Frequency:");
+				expenseFrequencyLabel.setVisible(true);
+				
+				expenseCategoryLabel.setText("Category:");
+				expenseCategoryLabel.setVisible(true);
+				
+				expenseAmountLabel.setText("Amount:");
+				expenseAmountLabel.setVisible(true);
+				
+				expenseSelectSix.setVisible(true);
+				
+				expenseAmountText.setVisible(true);
+				
+				addtionalInfoSubmitButton.setVisible(true);
+			
+			}
+		}
+		
+		if(e.getSource()== addtionalInfoSubmitButton) { 
+			 String selectedExpenseOne = expenseSelectOne.getSelectedItem().toString();
+		      String selectedExpenseTwo = "";
+		      String selectedFrequency = expenseSelectSix.getSelectedItem().toString(); 
+		      
+		      if (selectedExpenseOne.equals("Transportation")) {
+		            selectedExpenseTwo = expenseSelectTwo.getSelectedItem().toString();
+		        } else if (selectedExpenseOne.equals("Bills")) {
+		            selectedExpenseTwo = expenseSelectThree.getSelectedItem().toString();
+		        } else if (selectedExpenseOne.equals("Recreational")) {
+		            selectedExpenseTwo = expenseSelectFour.getSelectedItem().toString();
+		        } else if (selectedExpenseOne.equals("Grocery")) {
+		            selectedExpenseTwo = expenseSelectFive.getSelectedItem().toString();
+		        }
+		      double amount = Double.parseDouble(expenseAmountText.getText());
+		      
+		      Expenser.addExpense(selectedExpenseOne, selectedExpenseTwo, amount, selectedFrequency);
+		      
+		      JOptionPane.showMessageDialog(null, "Expense added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+		      expenseAmountText.setText("");
+		      expenseSelectOne.setSelectedIndex(0);
+		      expenseSelectTwo.setSelectedIndex(0);
+		      expenseSelectThree.setSelectedIndex(0);
+		      expenseSelectFour.setSelectedIndex(0);
+		      expenseSelectFive.setSelectedIndex(0);
+		      expenseSelectSix.setSelectedIndex(0);
+		      
+		      // Hide additional components
+		      expenseSelectTwo.setVisible(false);
+		      expenseSelectThree.setVisible(false);
+		      expenseSelectFour.setVisible(false);
+		      expenseSelectFive.setVisible(false);
+		      expenseSelectSix.setVisible(false);
+		      expenseAmountText.setVisible(false);
+		      addtionalInfoSubmitButton.setVisible(false);
+		      expenseAmountLabel.setVisible(false);
+		      expenseCategoryLabel.setVisible(false);
+		      expenseFrequencyLabel.setVisible(false);
+		      expenseAddtionalLabel.setVisible(false);
+			}
+
+		
 		if(e.getSource()==addIncome) { 
 			System.out.println("you hit the income button");
 			}
@@ -240,6 +514,15 @@ this.setVisible(true);
 					e1.printStackTrace();
 				}
 			}
+		
+		if(e.getSource()==expenseHomeButton) { //resets to home screen
+			try {
+				screenReset();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		}
 	
 	
@@ -248,6 +531,7 @@ this.setVisible(true);
 	public static void screenReset() throws IOException {
 		startPanel.setVisible(true);
 		conPanel.setVisible(false);
+		expensePanel.setVisible(false);
 	}
 	
 	public static void convertWindow() throws IOException {
@@ -256,6 +540,16 @@ this.setVisible(true);
 
 		//making conversion screen
 		conPanel.setVisible(true);
+		
+		
+	}
+	
+	public static void expenseWindow() throws IOException {
+		//hiding original screen
+		startPanel.setVisible(false);
+
+		//making conversion screen
+		expensePanel.setVisible(true);
 		
 		
 	}
