@@ -1,10 +1,19 @@
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 public interface Expenser {
 	
-public User userAtHand= null;
-	// As a user I'd like to add a monthly expense so I can track and report my expenses - 3pts
-	public void addExpense (Expense Ex); 
+	public User userAtHand = null;
+	public Dictionary<String, String> expenseCategories = new Hashtable<>(); 
+	public Dictionary<Double, String> expenseAmount = new Hashtable<>(); 
+	
+// As a user I'd like to add a monthly expense so I can track and report my expenses - 3pts
+	public static void addExpense(String category, String subcategory, double amount, String frequency) { // ADDED
+		expenseCategories.put(category, subcategory);
+		expenseAmount.put(amount, frequency);
+	
+	}
 	// As a user I'd like to add a monthly income so I can track and report my income all year - 3pts
 	public void addMonthlyIncome (Wage W);
 	//As  a user I would like to view a detailed report of all expenses, income, and summary information 
