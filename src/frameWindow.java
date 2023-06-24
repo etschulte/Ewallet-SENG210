@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -450,6 +451,29 @@ this.setVisible(true);
 		      double amount = Double.parseDouble(expenseAmountText.getText());
 		      
 		      Expenser.addExpense(selectedExpenseOne, selectedExpenseTwo, amount, selectedFrequency);
+		      
+		      JOptionPane.showMessageDialog(null, "Expense added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+		      expenseAmountText.setText("");
+		      expenseSelectOne.setSelectedIndex(0);
+		      expenseSelectTwo.setSelectedIndex(0);
+		      expenseSelectThree.setSelectedIndex(0);
+		      expenseSelectFour.setSelectedIndex(0);
+		      expenseSelectFive.setSelectedIndex(0);
+		      expenseSelectSix.setSelectedIndex(0);
+		      
+		      // Hide additional components
+		      expenseSelectTwo.setVisible(false);
+		      expenseSelectThree.setVisible(false);
+		      expenseSelectFour.setVisible(false);
+		      expenseSelectFive.setVisible(false);
+		      expenseSelectSix.setVisible(false);
+		      expenseAmountText.setVisible(false);
+		      addtionalInfoSubmitButton.setVisible(false);
+		      expenseAmountLabel.setVisible(false);
+		      expenseCategoryLabel.setVisible(false);
+		      expenseFrequencyLabel.setVisible(false);
+		      expenseAddtionalLabel.setVisible(false);
 			}
 
 		
