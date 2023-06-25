@@ -7,6 +7,9 @@ public interface Expenser {
 	public User userAtHand = null;
 	public Dictionary<String, String> expenseCategories = new Hashtable<>(); 
 	public Dictionary<Double, String> expenseAmount = new Hashtable<>(); 
+	public Dictionary<String, String> incomeTime = new Hashtable<>(); 
+	public Dictionary<Double, String> incomeAmount = new Hashtable<>(); 
+	
 	
 // As a user I'd like to add a monthly expense so I can track and report my expenses - 3pts
 	public static void addExpense(String category, String subcategory, double amount, String frequency) { // ADDED
@@ -14,6 +17,11 @@ public interface Expenser {
 		expenseAmount.put(amount, frequency);
 	
 	}
+	public static void addIncome(String intype, double income, String inmonth , String inyear){
+		incomeAmount.put(income,intype);
+		incomeTime.put(inmonth, inyear);
+	}
+	
 	// As a user I'd like to add a monthly income so I can track and report my income all year - 3pts
 	public void addMonthlyIncome (Wage W);
 	//As  a user I would like to view a detailed report of all expenses, income, and summary information 
