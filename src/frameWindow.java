@@ -575,9 +575,15 @@ this.setVisible(true);
 		
 		}
 		if(e.getSource()== enterIncome) {
+			String selectedincomeType = incomeType.getSelectedItem().toString();
+			double cashflow = Double.parseDouble(incomeText.getText());
+			Expenser.addIncome(selectedincomeType, cashflow);
 			System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $" + incomeText.getText() + " on " + incomemonth.getSelectedItem() + "/" + incomeyear.getText() + ".");
+			JOptionPane.showMessageDialog(null, "Income type and amount added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
 		}
+		
 		// want to enter information into an array, then enter it into a display into viewer 
+		//WILL ONLY ENTER INTO AN ARRAY BASED ON TYPE FOR NOW 
 		if(e.getSource()==currencyConv) { 
 			System.out.println("you hit the currency button");
 			try {
