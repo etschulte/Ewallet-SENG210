@@ -45,9 +45,20 @@ private static JTextField expenseAmountText = new JTextField();
 private static JButton addtionalInfoSubmitButton = new JButton();
 
 
+//income 
+private static JLabel incomeLabel;
+private static JTextField incomeText = new JTextField();
+private static JComboBox incomeType;
+private static JComboBox incomemonth;
+private static JTextField incomeyear = new JTextField();
+private static JLabel moneylabel;
+private static JLabel inlabel;
+private static JButton enterIncome = new JButton();
+private static JButton incomeHomeButton = new JButton();
 private static JPanel expensePanel;
 private static JPanel conPanel;
 private static JPanel startPanel;
+private static JPanel incomePanel;
 
 	frameWindow() {
 		
@@ -99,15 +110,12 @@ currencyConv.setFocusable(false);
 currencyConv.addActionListener(this);
 currencyConv.setVisible(true);
 
-
-
-
-
-
-
-
-
 //currency Conversion window
+
+
+
+
+
 
 //you can re-use the home button for other screens as long as you don't move it, if you want to move it, copy, rename, and change the position.
 homeButton = new JButton("Home");
@@ -169,6 +177,84 @@ conPanel.setBackground(Color.black);
 conPanel.setBounds(0, 0, 455, 600);
 conPanel.setLayout(null);
 conPanel.setVisible(false);
+
+//ADD INCOME PANEL
+incomePanel = new JPanel();
+incomePanel.setBackground(Color.black);
+incomePanel.setBounds(0, 0, 455, 600);
+incomePanel.setLayout(null);
+incomePanel.setVisible(false);
+
+incomeHomeButton = new JButton("Home");
+incomeHomeButton.setBounds(170, 30, 120, 70);
+incomeHomeButton.setFocusable(false);
+incomeHomeButton.addActionListener(this);
+incomeHomeButton.setVisible(true);
+
+
+incomeLabel = new JLabel();
+incomeLabel.setText("Please enter your income amount:");
+incomeLabel.setBounds(85, 350, 600, 25);
+incomeLabel.setFont(new Font("Arial", Font.PLAIN, 17));
+incomeLabel.setForeground(Color.white);
+incomeLabel.setVisible(true);
+
+inlabel = new JLabel();
+inlabel.setText("Type:");
+inlabel.setBounds(40, 390, 30, 25);
+inlabel.setFont(new Font("Arial", Font.PLAIN, 12));
+inlabel.setForeground(Color.white);
+inlabel.setVisible(true);
+
+
+enterIncome = new JButton("Enter");
+enterIncome.setBounds(175, 430, 100, 30);
+enterIncome.setFocusable(false);
+enterIncome.addActionListener(this);
+enterIncome.setVisible(true);
+
+String[] incometypeList = {"Primary", "Secondary", "Other",};
+incomeType = new JComboBox(incometypeList);
+incomeType.setBounds(85, 390, 80, 25);
+incomeType.setVisible(true);
+
+String[] incomemonths = {"01","02","03","04","05","06","07","08","09","10","11","12"};
+incomemonth = new JComboBox(incomemonths);
+incomemonth.setBounds(305, 390, 40, 25);
+incomemonth.setVisible(true);
+incomemonth.setSelectedIndex(0);
+
+incomeyear.setPreferredSize(new Dimension(20, 30));
+incomeyear.setCaretColor(Color.black); //cursor color
+incomeyear.setText("2023"); //starting text
+incomeyear.setEditable(true); // make it so year is limited to only four charecters 
+incomeyear.setBounds(360, 390, 50, 25);
+incomeyear.setVisible(true);
+
+moneylabel = new JLabel();
+moneylabel.setText("Date:");
+moneylabel.setBounds(275, 390, 30, 25);
+moneylabel.setFont(new Font("Arial", Font.PLAIN, 12));
+moneylabel.setForeground(Color.white);
+moneylabel.setVisible(true);
+
+incomeText.setPreferredSize(new Dimension(20, 30));
+incomeText.setCaretColor(Color.black); //cursor color
+incomeText.setText("100.00"); //starting text
+incomeText.setEditable(true);
+incomeText.setBounds(185, 390, 80, 25);
+incomeText.setVisible(true);
+
+
+incomePanel.add(incomeText);
+incomePanel.add(incomeLabel);
+incomePanel.add(incomeType);
+incomePanel.add(moneylabel);
+incomePanel.add(inlabel);
+incomePanel.add(enterIncome);
+incomePanel.add(incomemonth);
+incomePanel.add(incomeyear);
+incomePanel.add(incomeHomeButton);
 
 //ADD EXPENSE WINDOW ////////////////////////
 expensePanel = new JPanel();
@@ -271,6 +357,7 @@ addtionalInfoSubmitButton.setVisible(false);
 this.add(startPanel);
 this.add(conPanel);
 this.add(expensePanel);
+this.add(incomePanel);
 
 expensePanel.add(expenseHomeButton);
 expensePanel.add(expenseLabel);
@@ -479,7 +566,18 @@ this.setVisible(true);
 		
 		if(e.getSource()==addIncome) { 
 			System.out.println("you hit the income button");
-			}
+				try {
+					incomeWindow();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		
+		}
+		if(e.getSource()== enterIncome) {
+			System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $" + incomeText.getText() + " on " + incomemonth.getSelectedItem() + "/" + incomeyear.getText() + ".");
+		}
+		// want to enter information into an array, then enter it into a display into viewer 
 		if(e.getSource()==currencyConv) { 
 			System.out.println("you hit the currency button");
 			try {
@@ -523,6 +621,15 @@ this.setVisible(true);
 				e1.printStackTrace();
 			}
 		}
+		
+		if(e.getSource()==incomeHomeButton) { //resets to home screen
+			try {
+				screenReset();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		}
 	
 	
@@ -532,6 +639,7 @@ this.setVisible(true);
 		startPanel.setVisible(true);
 		conPanel.setVisible(false);
 		expensePanel.setVisible(false);
+		incomePanel.setVisible(false);
 	}
 	
 	public static void convertWindow() throws IOException {
@@ -543,7 +651,16 @@ this.setVisible(true);
 		
 		
 	}
+	public static void incomeWindow() throws IOException {
+	    incomePanel.setVisible(true);
+		startPanel.setVisible(false);
+		conPanel.setVisible(false);
+		expensePanel.setVisible(false);
+
 	
+
+}
+
 	public static void expenseWindow() throws IOException {
 		//hiding original screen
 		startPanel.setVisible(false);
