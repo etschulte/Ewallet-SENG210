@@ -7,7 +7,7 @@ public interface Expenser {
 	public User userAtHand = null;
 	public Dictionary<String, String> expenseCategories = new Hashtable<>(); 
 	public Dictionary<Double, String> expenseAmount = new Hashtable<>(); 
-	//public Dictionary<String, String> incomeTypes = new Hashtable<>(); 
+	public Dictionary<String, String> incomeTime = new Hashtable<>(); 
 	public Dictionary<Double, String> incomeAmount = new Hashtable<>(); 
 	
 	
@@ -17,8 +17,9 @@ public interface Expenser {
 		expenseAmount.put(amount, frequency);
 	
 	}
-	public static void addIncome(String intype, double income){
+	public static void addIncome(String intype, double income, String inmonth , String inyear){
 		incomeAmount.put(income,intype);
+		incomeTime.put(inmonth, inyear);
 	}
 	
 	// As a user I'd like to add a monthly income so I can track and report my income all year - 3pts

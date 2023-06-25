@@ -576,10 +576,12 @@ this.setVisible(true);
 		}
 		if(e.getSource()== enterIncome) {
 			String selectedincomeType = incomeType.getSelectedItem().toString();
+			String selectedincomeMonth = incomemonth.getSelectedItem().toString();
+			String selectedincomeYear = incomeyear.getText().toString();
 			double cashflow = Double.parseDouble(incomeText.getText());
-			Expenser.addIncome(selectedincomeType, cashflow);
+			Expenser.addIncome(selectedincomeType, cashflow ,selectedincomeMonth , selectedincomeYear);
 			System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $" + incomeText.getText() + " on " + incomemonth.getSelectedItem() + "/" + incomeyear.getText() + ".");
-			JOptionPane.showMessageDialog(null, "Income type and amount added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Income added! Look in Console for details!", "Success", JOptionPane.INFORMATION_MESSAGE);
 		}
 		
 		// want to enter information into an array, then enter it into a display into viewer 
