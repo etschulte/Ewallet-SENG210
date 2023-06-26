@@ -193,8 +193,8 @@ incomeHomeButton.setVisible(true);
 
 
 incomeLabel = new JLabel();
-incomeLabel.setText("Please enter your income amount:");
-incomeLabel.setBounds(85, 350, 600, 25);
+incomeLabel.setText("Please enter your monthly income amount:");
+incomeLabel.setBounds(45, 350, 600, 25);
 incomeLabel.setFont(new Font("Arial", Font.PLAIN, 17));
 incomeLabel.setForeground(Color.white);
 incomeLabel.setVisible(true);
@@ -218,25 +218,6 @@ incomeType = new JComboBox(incometypeList);
 incomeType.setBounds(85, 390, 80, 25);
 incomeType.setVisible(true);
 
-String[] incomemonths = {"01","02","03","04","05","06","07","08","09","10","11","12"};
-incomemonth = new JComboBox(incomemonths);
-incomemonth.setBounds(305, 390, 40, 25);
-incomemonth.setVisible(true);
-incomemonth.setSelectedIndex(0);
-
-incomeyear.setPreferredSize(new Dimension(20, 30));
-incomeyear.setCaretColor(Color.black); //cursor color
-incomeyear.setText("2023"); //starting text
-incomeyear.setEditable(true); // make it so year is limited to only four charecters 
-incomeyear.setBounds(360, 390, 50, 25);
-incomeyear.setVisible(true);
-
-moneylabel = new JLabel();
-moneylabel.setText("Date:");
-moneylabel.setBounds(275, 390, 30, 25);
-moneylabel.setFont(new Font("Arial", Font.PLAIN, 12));
-moneylabel.setForeground(Color.white);
-moneylabel.setVisible(true);
 
 incomeText.setPreferredSize(new Dimension(20, 30));
 incomeText.setCaretColor(Color.black); //cursor color
@@ -247,13 +228,10 @@ incomeText.setVisible(true);
 
 
 incomePanel.add(incomeText);
-incomePanel.add(incomeLabel);
 incomePanel.add(incomeType);
-incomePanel.add(moneylabel);
+incomePanel.add(incomeLabel);
 incomePanel.add(inlabel);
 incomePanel.add(enterIncome);
-incomePanel.add(incomemonth);
-incomePanel.add(incomeyear);
 incomePanel.add(incomeHomeButton);
 
 //ADD EXPENSE WINDOW ////////////////////////
@@ -576,11 +554,9 @@ this.setVisible(true);
 		}
 		if(e.getSource()== enterIncome) {
 			String selectedincomeType = incomeType.getSelectedItem().toString();
-			String selectedincomeMonth = incomemonth.getSelectedItem().toString();
-			String selectedincomeYear = incomeyear.getText().toString();
 			double cashflow = Double.parseDouble(incomeText.getText());
-			Expenser.addIncome(selectedincomeType, cashflow ,selectedincomeMonth , selectedincomeYear);
-			System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $" + incomeText.getText() + " on " + incomemonth.getSelectedItem() + "/" + incomeyear.getText() + ".");
+			Expenser.addIncome(selectedincomeType, cashflow);
+			System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $" + incomeText.getText() +  ".");
 			JOptionPane.showMessageDialog(null, "Income added! Look in Console for details!", "Success", JOptionPane.INFORMATION_MESSAGE);
 		}
 		

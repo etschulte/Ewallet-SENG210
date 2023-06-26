@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 public interface Expenser {
@@ -7,23 +8,22 @@ public interface Expenser {
 	public User userAtHand = null;
 	public Dictionary<String, String> expenseCategories = new Hashtable<>(); 
 	public Dictionary<Double, String> expenseAmount = new Hashtable<>(); 
-	public Dictionary<String, String> incomeTime = new Hashtable<>(); 
 	public Dictionary<Double, String> incomeAmount = new Hashtable<>(); 
+	public static double monthlyIncome = 0;
+	
 	
 	
 // As a user I'd like to add a monthly expense so I can track and report my expenses - 3pts
 	public static void addExpense(String category, String subcategory, double amount, String frequency) { // ADDED
 		expenseCategories.put(category, subcategory);
 		expenseAmount.put(amount, frequency);
-	
+		updateMonthlySavings();
 	}
-	public static void addIncome(String intype, double income, String inmonth , String inyear){
+	public static void addIncome(String intype, double income){
 		incomeAmount.put(income,intype);
-		incomeTime.put(inmonth, inyear);
+		updateMonthlySavings();
 	}
 	
-	// As a user I'd like to add a monthly income so I can track and report my income all year - 3pts
-	public void addMonthlyIncome (Wage W);
 	//As  a user I would like to view a detailed report of all expenses, income, and summary information 
 	//summary information include : total income, total income for each type, total income for each month, total expense, total expense for each type, 
 	//total savings (total income- total expenses) to date, if the total savings are less than zero it should be reported as total new debt. 	
@@ -64,6 +64,7 @@ public interface Expenser {
 					 conRate = EURtoCAD;
 				}
 			}
+		
 				if (currOne.equals("CAD")) {
 					if (currTwo.equals("EUR")) {
 						 conRate = CADtoEUR;
@@ -89,10 +90,39 @@ public interface Expenser {
 	// As a user I would like to provide an item and a price and get an estimate in number of months needed to save up to buy this item. (based on current monthly saving. 
 	public int whenCanIBuy(String itemname,double  price);
 	// updates monthly savings based on latest added income and expenses. This is an internal function not called by the users.  Bonus: what is the most efficient way to call it (when?)? 
-	public void updateMonthlySavings(); 
+	public static double updateMonthlySavings() {
+			double monthlyIncome = 0;
+			double monthlyBills = 0;
+			double monthlySavings;
+		    Enumeration<Double> incometimeread = incomeAmount.keys();
+			while (incometimeread.hasMoreElements()) {
+			    Double key = incometimeread.nextElement();
+			    String value = incomeAmount.get(key);
+			    monthlyIncome += key;
+			    
+			}
+			    Enumeration<Double> expenseamount = expenseAmount.keys();
+				while (expenseamount.hasMoreElements()) {
+				    Double key = expenseamount.nextElement();
+				    String value = expenseAmount.get(key);
+				    System.out.println(value);
+				    if (value.equals("Annually")) {
+				    	key = key/12;
+				    	monthlyBills += key;	
+				    } else if (value.equals("Monthly")) {
+				    	monthlyBills += key;	
+					} else if (value.equals("Biweekly")) {
+						key = key*2;
+				    	monthlyBills += key;	
+				    }
+
+					    	    
+		
+				}
+			    monthlySavings = monthlyIncome - monthlyBills;
+			    return monthlySavings;
+			}
+		}
+		
 	
-//add/update monthly income ability. add monthly expenses/names of them to two lists, to keep track of them for summary.
-	
-	
-	
-}
+
