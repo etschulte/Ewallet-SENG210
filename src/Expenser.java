@@ -17,11 +17,9 @@ public interface Expenser {
 	public static void addExpense(String category, String subcategory, double amount, String frequency) { // ADDED
 		expenseCategories.put(category, subcategory);
 		expenseAmount.put(amount, frequency);
-		updateMonthlySavings();
 	}
 	public static void addIncome(String intype, double income){
 		incomeAmount.put(income,intype);
-		updateMonthlySavings();
 	}
 	
 	//As  a user I would like to view a detailed report of all expenses, income, and summary information 
