@@ -675,6 +675,7 @@ this.setVisible(true);
 		} 
 		if(e.getSource()==viewSummary) { 
 			try {
+				Expenser.updateMonthlySavings();
 				SummaryWindow();
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -748,6 +749,8 @@ this.setVisible(true);
 		conPanel.setVisible(false);
 		expensePanel.setVisible(false);
 		incomePanel.setVisible(false);
+		summaryOverviewPanel.setVisible(false);
+		fullExpenseOverviewPanel.setVisible(false);
 	}
 	
 	public static void convertWindow() throws IOException {
