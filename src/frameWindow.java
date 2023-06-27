@@ -1,10 +1,14 @@
 import java.awt.BorderLayout;
+import javax.swing.JTextArea;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,6 +33,8 @@ private static JButton convertButton = new JButton();
 private static JComboBox currSelectOne;
 private static JComboBox currSelectTwo;
 private static JLabel currResultLabel;
+
+// add expense
 private static JButton expenseHomeButton = new JButton();
 private static JComboBox expenseSelectOne;
 private static JButton expenseSubmitButton = new JButton();
@@ -44,6 +50,16 @@ private static JLabel expenseAmountLabel = new JLabel();
 private static JTextField expenseAmountText = new JTextField();
 private static JButton addtionalInfoSubmitButton = new JButton();
 
+//For the report expense function 
+private static JPanel fullExpenseOverviewPanel;
+private static JTextArea expenseDetailsTextArea = new JTextArea();
+private static JButton fullExpenseReportsButton = new JButton();
+private static JButton fullExpenseHomeButton = new JButton();
+
+
+//Summary view menu 
+private static JPanel summaryOverviewPanel;
+private static JButton summaryHomeButton = new JButton();
 
 //income 
 private static JLabel incomeLabel;
@@ -177,6 +193,7 @@ conPanel.setBackground(Color.black);
 conPanel.setBounds(0, 0, 455, 600);
 conPanel.setLayout(null);
 conPanel.setVisible(false);
+
 
 //ADD INCOME PANEL
 incomePanel = new JPanel();
@@ -329,13 +346,57 @@ addtionalInfoSubmitButton.setBounds(200, 520, 100, 30);
 addtionalInfoSubmitButton.setFocusable(false);
 addtionalInfoSubmitButton.addActionListener(this);
 addtionalInfoSubmitButton.setVisible(false);
+
+
 ////////////////////////////////////////////////////////
+
+
+//SUMMARY VIEW MENU OPTIONS////////////////////////////////
+summaryOverviewPanel = new JPanel();
+summaryOverviewPanel.setBackground(Color.black);
+summaryOverviewPanel.setBounds(0, 0, 455, 600);
+summaryOverviewPanel.setLayout(null);
+summaryOverviewPanel.setVisible(false);
+
+summaryHomeButton = new JButton("Home");
+summaryHomeButton.setBounds(170, 30, 120, 70);
+summaryHomeButton.setFocusable(false);
+summaryHomeButton.addActionListener(this);
+summaryHomeButton.setVisible(true);
+
+fullExpenseReportsButton = new JButton("View Full Expense Reports");
+fullExpenseReportsButton.setBounds(130, 135, 190, 70);
+fullExpenseReportsButton.setFocusable(false);
+fullExpenseReportsButton.addActionListener(this);
+fullExpenseReportsButton.setVisible(true);
+
+//VIEW FULL EXPENSE OPTION 
+fullExpenseOverviewPanel = new JPanel();
+fullExpenseOverviewPanel.setBackground(Color.black);
+fullExpenseOverviewPanel.setBounds(0, 0, 455, 600);
+fullExpenseOverviewPanel.setLayout(null);
+fullExpenseOverviewPanel.setVisible(false);
+
+fullExpenseHomeButton = new JButton("Home");
+fullExpenseHomeButton.setBounds(170, 30, 120, 70);
+fullExpenseHomeButton.setFocusable(false);
+fullExpenseHomeButton.addActionListener(this);
+fullExpenseHomeButton.setVisible(true);
+
+expenseDetailsTextArea = new JTextArea();
+expenseDetailsTextArea.setBounds(30, 130, 395, 400); // Set the position and size of the text area
+expenseDetailsTextArea.setEditable(false); // Set the text area as non-editable
+
+
+
 
 //add to window
 this.add(startPanel);
 this.add(conPanel);
 this.add(expensePanel);
 this.add(incomePanel);
+this.add(summaryOverviewPanel);
+this.add(fullExpenseOverviewPanel);
 
 expensePanel.add(expenseHomeButton);
 expensePanel.add(expenseLabel);
@@ -352,6 +413,17 @@ expensePanel.add(expenseSelectSix);
 expensePanel.add(expenseAmountLabel);
 expensePanel.add(expenseAmountText);
 expensePanel.add(addtionalInfoSubmitButton);
+
+
+//full expense overview report
+fullExpenseOverviewPanel.add(fullExpenseHomeButton);
+fullExpenseOverviewPanel.add(expenseDetailsTextArea);
+
+
+///summary report overview menu 
+summaryOverviewPanel.add(summaryHomeButton);
+summaryOverviewPanel.add(fullExpenseReportsButton);
+
 
 conPanel.add(convertButton);
 conPanel.add(currSelectOne);
@@ -371,9 +443,6 @@ startPanel.add(chooseLabel);
 
 
 
-
-
-
 //define start window
 this.setSize(455, 600); 
 this.setTitle("E-Wallet"); 
@@ -389,7 +458,7 @@ this.setVisible(true);
 
 	
 	
-	
+	///ACTIONS EVENTS + LOGIC/////////////////////////////////////////////////////////////////
 	
 
 	@Override
@@ -403,6 +472,7 @@ this.setVisible(true);
 				e1.printStackTrace();
 			}
 		}
+		
 		if (e.getSource() == expenseSubmitButton) {
 			Object selectedExpense = expenseSelectOne.getSelectedItem();
 			String expenseOne = selectedExpense.toString();
@@ -571,8 +641,45 @@ this.setVisible(true);
 				e1.printStackTrace();
 			}
 			}
+		
+
+		if (e.getSource() == fullExpenseReportsButton) {
+				try {
+					expenseOverviewWindow();
+					
+					expenseDetailsTextArea.setText("");
+					
+					 List<Map<String, Object>> expensesList = Expenser.PrintExpensereport();
+					    
+					    // Iterate over the expenses list and append details to the text area
+					    for (Map<String, Object> expenseDetails : expensesList) {
+					        String category = (String) expenseDetails.get("Category");
+					        String subcategory = (String) expenseDetails.get("Subcategory");
+					        double amount = (double) expenseDetails.get("Amount");
+					        String frequency = (String) expenseDetails.get("Frequency");
+					        
+					        // Append expense details to the text area
+					        expenseDetailsTextArea.append("Category: " + category + "\n");
+					        expenseDetailsTextArea.append("Subcategory: " + subcategory + "\n");
+					        expenseDetailsTextArea.append("Amount: " + amount + "\n");
+					        expenseDetailsTextArea.append("Frequency: " + frequency + "\n"); 
+					        
+					        expenseDetailsTextArea.append("-------------------------------------------------\n");
+					    }
+					    
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		
+		} 
 		if(e.getSource()==viewSummary) { 
-			System.out.println("you hit the summary button");
+			try {
+				SummaryWindow();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			}
 		if(e.getSource()==convertButton) { //converts currency
 			
@@ -614,9 +721,26 @@ this.setVisible(true);
 				e1.printStackTrace();
 			}
 		}
+	
+	if(e.getSource()==summaryHomeButton) { //resets to home screen
+		try {
+			screenReset();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
+	}
 	
-	
+	if(e.getSource()==fullExpenseHomeButton) { //resets to home screen
+		try {
+			screenReset();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	}
+	/////////////////////////////////////////////////////////////////
 	
 	//function to reset screen to base window, anytime you add a button on another window, set it to false here so when we add a back to home button, it makes it invisible.
 	public static void screenReset() throws IOException {
@@ -643,7 +767,17 @@ this.setVisible(true);
 
 	
 
-}
+} 
+	
+	public static void SummaryWindow() throws IOException {
+		//hiding original screen
+		startPanel.setVisible(false);
+
+		//making conversion screen
+		summaryOverviewPanel.setVisible(true);
+		
+		
+	}
 
 	public static void expenseWindow() throws IOException {
 		//hiding original screen
@@ -654,5 +788,16 @@ this.setVisible(true);
 		
 		
 	}
+	
+	public static void expenseOverviewWindow() throws IOException {
+		//hiding original screen
+		summaryOverviewPanel.setVisible(false);
+
+		//making conversion screen
+		fullExpenseOverviewPanel.setVisible(true);
+		
+		
+	}
+	
 }
 

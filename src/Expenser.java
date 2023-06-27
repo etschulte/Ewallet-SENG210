@@ -2,21 +2,38 @@ import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
 public interface Expenser {
 	
 	public User userAtHand = null;
-	public Dictionary<String, String> expenseCategories = new Hashtable<>(); 
-	public Dictionary<Double, String> expenseAmount = new Hashtable<>(); 
+	
+	public static List<Map<String, Object>> expensesList = new ArrayList<>();
+	
 	public Dictionary<Double, String> incomeAmount = new Hashtable<>(); 
 	public static double monthlyIncome = 0;
 	
 	
 	
 // As a user I'd like to add a monthly expense so I can track and report my expenses - 3pts
-	public static void addExpense(String category, String subcategory, double amount, String frequency) { // ADDED
-		expenseCategories.put(category, subcategory);
-		expenseAmount.put(amount, frequency);
+	public static void addExpense(String category, String subcategory, double amount, String frequency) {
+	    Map<String, Object> expenseDetails = new HashMap<>();
+	    expenseDetails.put("Category", category);
+	    expenseDetails.put("Subcategory", subcategory);
+	    expenseDetails.put("Amount", amount);
+	    expenseDetails.put("Frequency", frequency);
+	    
+	    expensesList.add(expenseDetails);
+
+	    // Print expense details to console for confirmation 
+	    System.out.println("Expense added:");
+	    System.out.println("Category: " + category);
+	    System.out.println("Subcategory: " + subcategory);
+	    System.out.println("Amount: " + amount);
+	    System.out.println("Frequency: " + frequency);
+	    System.out.println();
 	}
 	public static void addIncome(String intype, double income){
 		incomeAmount.put(income,intype);
@@ -26,8 +43,12 @@ public interface Expenser {
 	//summary information include : total income, total income for each type, total income for each month, total expense, total expense for each type, 
 	//total savings (total income- total expenses) to date, if the total savings are less than zero it should be reported as total new debt. 	
 	public void PrintFullreport();
+	
 	//As  a user I would like to view a detailed report of all expenses, and summary information for expenses 
-	public void PrintExpensereport();
+	public static List<Map<String, Object>> PrintExpensereport() {
+	     return expensesList;
+	
+	}
 	//As  a user I would like to view a detailed report of all income, and summary information for income
 	public void PrintIncomereport();
 	//As  a user I would like to view a detailed report of income of a certain type, and summary information for income
@@ -88,7 +109,7 @@ public interface Expenser {
 	// As a user I would like to provide an item and a price and get an estimate in number of months needed to save up to buy this item. (based on current monthly saving. 
 	public int whenCanIBuy(String itemname,double  price);
 	// updates monthly savings based on latest added income and expenses. This is an internal function not called by the users.  Bonus: what is the most efficient way to call it (when?)? 
-	public static double updateMonthlySavings() {
+	/*public static double updateMonthlySavings() {
 			double monthlyIncome = 0;
 			double monthlyBills = 0;
 			double monthlySavings;
@@ -119,7 +140,7 @@ public interface Expenser {
 				}
 			    monthlySavings = monthlyIncome - monthlyBills;
 			    return monthlySavings;
-			}
+			} */
 		}
 		
 	
