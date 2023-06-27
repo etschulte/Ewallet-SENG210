@@ -109,39 +109,58 @@ public interface Expenser {
 	// As a user I would like to provide an item and a price and get an estimate in number of months needed to save up to buy this item. (based on current monthly saving. 
 	public int whenCanIBuy(String itemname,double  price);
 	// updates monthly savings based on latest added income and expenses. This is an internal function not called by the users.  Bonus: what is the most efficient way to call it (when?)? 
-	/*public static double updateMonthlySavings() {
-			double monthlyIncome = 0;
-			double monthlyBills = 0;
-			double monthlySavings;
+	public static void updateMonthlySavings() {
+		double monthlySavings = 0;
+		double monthlyBills = 0;
+			double monthlyIncome = 0;;
+			double secondIncome = 0;
+			double primIncome = 0;
+			double otherIncome = 0;
 		    Enumeration<Double> incometimeread = incomeAmount.keys();
 			while (incometimeread.hasMoreElements()) {
 			    Double key = incometimeread.nextElement();
 			    String value = incomeAmount.get(key);
-			    monthlyIncome += key;
 			    
+			    if(value.equals("Primary")) {
+			    	primIncome += key;
+			} else if (value.equals("Secondary") ) {
+				secondIncome += key;
 			}
-			    Enumeration<Double> expenseamount = expenseAmount.keys();
-				while (expenseamount.hasMoreElements()) {
-				    Double key = expenseamount.nextElement();
-				    String value = expenseAmount.get(key);
-				    System.out.println(value);
-				    if (value.equals("Annually")) {
-				    	key = key/12;
-				    	monthlyBills += key;	
-				    } else if (value.equals("Monthly")) {
-				    	monthlyBills += key;	
-					} else if (value.equals("Biweekly")) {
-						key = key*2;
-				    	monthlyBills += key;	
-				    }
-
+			else {
+				otherIncome += key;
+			}
+			}
+			monthlyIncome = otherIncome + secondIncome + primIncome;
 					    	    
-		
-				}
-			    monthlySavings = monthlyIncome - monthlyBills;
-			    return monthlySavings;
-			} */
-		}
+
+	for (Map<String, Object> expense : expensesList) {
+	    if (expense.containsKey("Amount") && expense.containsKey("Frequency")) {
+	    	double addVal = 0;
+	        Object amount = expense.get("Amount");
+	        Object frequency = expense.get("Frequency");
+	        // Do something with the amount and frequency
+	        String compString = frequency.toString();
+	        double compAmount = (double) amount;
+	        System.out.println("Amount: " + amount);
+	        System.out.println("Frequency: " + frequency);
+	        if (compString.equals("Annually")) {
+	        	addVal = compAmount/12;
+	        	monthlyBills += addVal;
+	        } else if (compString.equals("Biweekly") ) {
+	        	addVal = compAmount*2;
+	        	monthlyBills += addVal;
+	        } else {
+	        	monthlyBills += compAmount;
+	        }
+ 
+	    }
+			} 
+	monthlySavings = monthlyIncome - monthlyBills;
+	System.out.println(monthlySavings);
+	}
+}
+	
+
 		
 	
 
