@@ -34,6 +34,13 @@ private static JComboBox currSelectOne;
 private static JComboBox currSelectTwo;
 private static JLabel currResultLabel;
 
+//Save for item
+private static JLabel saveResLabel;
+private static JTextField saveAmountText;
+private static JButton itemSave;
+private static JButton savePanelHomeButton = new JButton();
+private static JButton savePanelSubmit = new JButton();
+
 // add expense
 private static JButton expenseHomeButton = new JButton();
 private static JComboBox expenseSelectOne;
@@ -55,8 +62,8 @@ private static JPanel fullExpenseOverviewPanel;
 private static JTextArea expenseDetailsTextArea = new JTextArea();
 private static JButton fullExpenseReportsButton = new JButton();
 private static JButton fullExpenseHomeButton = new JButton();
-
-
+//Save for item
+private static JPanel savePanel;
 //Summary view menu 
 private static JPanel summaryOverviewPanel;
 private static JButton summaryHomeButton = new JButton();
@@ -251,6 +258,47 @@ incomePanel.add(inlabel);
 incomePanel.add(enterIncome);
 incomePanel.add(incomeHomeButton);
 
+//SaveScreen
+savePanel = new JPanel();
+savePanel.setBackground(Color.black);
+savePanel.setBounds(0, 0, 455, 600);
+savePanel.setLayout(null);
+savePanel.setVisible(false);
+
+savePanelHomeButton = new JButton("Home");
+savePanelHomeButton.setBounds(170, 30, 120, 70);
+savePanelHomeButton.setFocusable(false);
+savePanelHomeButton.addActionListener(this);
+savePanelHomeButton.setVisible(true);
+
+JLabel saveAmountLabel = new JLabel();
+saveAmountLabel.setBounds(100, 300, 600, 25);
+saveAmountLabel.setText("Please enter the amount of the item");
+saveAmountLabel.setFont(new Font("Arial", Font.PLAIN, 17));
+saveAmountLabel.setForeground(Color.white);
+saveAmountLabel.setVisible(true);
+
+saveAmountText = new JTextField();
+saveAmountText.setPreferredSize(new Dimension(20, 30));
+saveAmountText.setCaretColor(Color.black); //cursor color
+saveAmountText.setText("100.00"); //starting text
+saveAmountText.setEditable(true);
+saveAmountText.setBounds(185, 340, 80, 25);
+saveAmountText.setVisible(true);
+
+savePanelSubmit = new JButton("Submit");
+savePanelSubmit.setBounds(170, 390, 120, 70);
+savePanelSubmit.setFocusable(false);
+savePanelSubmit.addActionListener(this);
+savePanelSubmit.setVisible(true);
+
+saveResLabel = new JLabel();
+saveResLabel.setBounds(100, 460, 600, 25);
+saveResLabel.setText("Months to save:");
+saveResLabel.setFont(new Font("Arial", Font.PLAIN, 17));
+saveResLabel.setForeground(Color.white);
+saveAmountLabel.setVisible(true);
+
 //ADD EXPENSE WINDOW ////////////////////////
 expensePanel = new JPanel();
 expensePanel.setBackground(Color.black);
@@ -370,6 +418,12 @@ fullExpenseReportsButton.setFocusable(false);
 fullExpenseReportsButton.addActionListener(this);
 fullExpenseReportsButton.setVisible(true);
 
+itemSave = new JButton("Save for Item");
+itemSave.setBounds(130, 230, 190, 70);
+itemSave.setFocusable(false);
+itemSave.addActionListener(this);
+itemSave.setVisible(true);
+
 //VIEW FULL EXPENSE OPTION 
 fullExpenseOverviewPanel = new JPanel();
 fullExpenseOverviewPanel.setBackground(Color.black);
@@ -397,6 +451,14 @@ this.add(expensePanel);
 this.add(incomePanel);
 this.add(summaryOverviewPanel);
 this.add(fullExpenseOverviewPanel);
+this.add(savePanel);
+
+//save panel
+savePanel.add(savePanelHomeButton);
+savePanel.add(saveAmountLabel);
+savePanel.add(saveAmountText);
+savePanel.add(saveResLabel);
+savePanel.add(savePanelSubmit);
 
 expensePanel.add(expenseHomeButton);
 expensePanel.add(expenseLabel);
@@ -423,6 +485,7 @@ fullExpenseOverviewPanel.add(expenseDetailsTextArea);
 ///summary report overview menu 
 summaryOverviewPanel.add(summaryHomeButton);
 summaryOverviewPanel.add(fullExpenseReportsButton);
+summaryOverviewPanel.add(itemSave);
 
 
 conPanel.add(convertButton);
@@ -673,6 +736,20 @@ this.setVisible(true);
 				}
 		
 		} 
+		if(e.getSource()==savePanelSubmit) {
+			double currMonthlySavings = Expenser.updateMonthlySavings();
+			double currAmount = Double.parseDouble(saveAmountText.getText());
+			double currRes = currAmount/currMonthlySavings;
+			double roundedResult = Math.round(currRes * 10.0) / 10.0;
+			if (currRes > 0) {
+				saveResLabel.setText("Months to save: " + currRes);
+			} else {
+				saveResLabel.setText("You currently have a negative income" + currRes);
+			}
+			
+			
+			
+		}
 		if(e.getSource()==viewSummary) { 
 			try {
 				Expenser.updateMonthlySavings();
@@ -740,6 +817,22 @@ this.setVisible(true);
 			e1.printStackTrace();
 		}
 	}
+	if(e.getSource()==savePanelHomeButton) { //resets to home screen
+		try {
+			screenReset();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	if(e.getSource()==itemSave) { //resets to home screen
+		try {
+			saveScreen();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 	}
 	/////////////////////////////////////////////////////////////////
 	
@@ -751,6 +844,7 @@ this.setVisible(true);
 		incomePanel.setVisible(false);
 		summaryOverviewPanel.setVisible(false);
 		fullExpenseOverviewPanel.setVisible(false);
+		savePanel.setVisible(false);
 	}
 	
 	public static void convertWindow() throws IOException {
@@ -799,6 +893,14 @@ this.setVisible(true);
 		//making conversion screen
 		fullExpenseOverviewPanel.setVisible(true);
 		
+		
+	}
+	public static void saveScreen() throws IOException {
+		//hiding original screen
+		summaryOverviewPanel.setVisible(false);
+
+		//making conversion screen
+		savePanel.setVisible(true);
 		
 	}
 	
