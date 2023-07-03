@@ -479,6 +479,7 @@ this.add(expensePanel);
 this.add(incomePanel);
 this.add(summaryOverviewPanel);
 this.add(fullExpenseOverviewPanel);
+this.add(fullIncomeOverviewPanel);
 this.add(savePanel);
 
 //save panel
@@ -777,8 +778,8 @@ this.setVisible(true);
 				    
 				    // Iterate over the expenses list and append details to the text area
 				    for (Map<String, Object> incomeDetailsMap : incomeAmount) {
-				        String intype = (String) incomeDetailsMap.get("Income Type");
-				        double inamount = (double) incomeDetailsMap.get("Income Amount");
+				        String intype = (String) incomeDetailsMap.get("Type");
+				        double inamount = (double) incomeDetailsMap.get("Income");
 				        
 				        // Append expense details to the text area
 				        IncomeDetailsTextArea.append("Income Type: " + intype+ "\n");

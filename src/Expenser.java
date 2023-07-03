@@ -37,8 +37,8 @@ public interface Expenser {
 	}
 	public static void addIncome(String intype, double income){
 		Map <String, Object> incomeDetailsMap = new HashMap<>();
-		incomeDetailsMap.put("Income Type ", intype);
-		incomeDetailsMap.put("Income Amount ", income);
+		incomeDetailsMap.put("Type", intype);
+		incomeDetailsMap.put("Income", income);
 		
 		incomeAmount.add(incomeDetailsMap);
 		
@@ -128,9 +128,9 @@ public interface Expenser {
 			//correction on keys 
 			
 	for (Map<String, Object> income : incomeAmount) {
-			    if (income.containsKey("Income Amount") && income.containsKey("Income Type")) {
-			        Object inamount = income.get("Income Amount");
-			        Object intype = income.get("Income Type");
+			    if (income.containsKey("Income") && income.containsKey("Type")) {
+			        Object inamount = income.get("Income");
+			        Object intype = income.get("Type");
 			        // Do something with the amount and frequency
 			        String incomString = intype.toString();
 			        double incomAmount = (double) inamount;
