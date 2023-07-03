@@ -12,7 +12,7 @@ public interface Expenser {
 	
 	public static List<Map<String, Object>> expensesList = new ArrayList<>();
 	
-	public Dictionary<Double, String> incomeAmount = new Hashtable<>(); 
+	public static List<Map<String, Object>> incomeAmount = new ArrayList<>(); 
 	public static double monthlyIncome = 0;
 	
 	
@@ -36,7 +36,12 @@ public interface Expenser {
 	    System.out.println();
 	}
 	public static void addIncome(String intype, double income){
-		incomeAmount.put(income,intype);
+		Map <String, Object> incomeDetailsMap = new HashMap<>();
+		incomeDetailsMap.put("Income Type ", intype);
+		incomeDetailsMap.put("Income Amount ", income);
+		
+		incomeAmount.add(incomeDetailsMap);
+		
 	}
 	
 	//As  a user I would like to view a detailed report of all expenses, income, and summary information 
@@ -50,7 +55,10 @@ public interface Expenser {
 	
 	}
 	//As  a user I would like to view a detailed report of all income, and summary information for income
-	public void PrintIncomereport();
+	public static List<Map<String, Object>> PrintIncomereport() {
+		return incomeAmount;
+		
+	}
 	//As  a user I would like to view a detailed report of income of a certain type, and summary information for income
 	public void PrintIncomereportbyTpe();
 	//As  a user I would like to view a detailed report of expense of a certain type , and summary information for expenses
@@ -112,24 +120,34 @@ public interface Expenser {
 	public static double updateMonthlySavings() {
 		double monthlySavings = 0;
 		double monthlyBills = 0;
-			double monthlyIncome = 0;;
-			double secondIncome = 0;
-			double primIncome = 0;
-			double otherIncome = 0;
-		    Enumeration<Double> incometimeread = incomeAmount.keys();
-			while (incometimeread.hasMoreElements()) {
-			    Double key = incometimeread.nextElement();
-			    String value = incomeAmount.get(key);
-			    
-			    if(value.equals("Primary")) {
-			    	primIncome += key;
-			} else if (value.equals("Secondary") ) {
-				secondIncome += key;
-			}
-			else {
-				otherIncome += key;
-			}
-			}
+		double monthlyIncome = 0;
+		double secondIncome = 0;
+		double primIncome = 0;
+		double otherIncome = 0;
+
+			//correction on keys 
+			
+	for (Map<String, Object> income : incomeAmount) {
+			    if (income.containsKey("Income Amount") && income.containsKey("Income Type")) {
+			        Object inamount = income.get("Income Amount");
+			        Object intype = income.get("Income Type");
+			        // Do something with the amount and frequency
+			        String incomString = intype.toString();
+			        double incomAmount = (double) inamount;
+			        System.out.println("Income: " + inamount);
+			        System.out.println("Income Type: " + intype);
+			        if (incomString.equals("Primary")) {
+			        	primIncome += incomAmount;
+			        	
+			        } else if (incomString.equals("Secondary") ) {
+			        
+			        	secondIncome += incomAmount;
+			        } else {
+			        	otherIncome += incomAmount;
+			        }
+			        
+			    }
+					}
 			monthlyIncome = otherIncome + secondIncome + primIncome;
 					    	    
 
