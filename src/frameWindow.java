@@ -87,6 +87,7 @@ private static JPanel fullIncomeOverviewPanel;
 private static JTextArea IncomeDetailsTextArea = new JTextArea();
 private static JButton fullIncomeReportsButton = new JButton();
 private static JButton fullIncomeHomeButton = new JButton();
+private static JButton fullIncomeReporter = new JButton();
 	frameWindow() {
 		
 
@@ -423,13 +424,13 @@ fullExpenseReportsButton.addActionListener(this);
 fullExpenseReportsButton.setVisible(true);
 
 fullIncomeReportsButton = new JButton("View Income Reports");
-fullIncomeReportsButton.setBounds(130, 230, 190, 70);
+fullIncomeReportsButton.setBounds(130, 360, 190, 70);
 fullIncomeReportsButton.setFocusable(false);
 fullIncomeReportsButton.addActionListener(this);
 fullIncomeReportsButton.setVisible(true);
 
 itemSave = new JButton("Save for Item");
-itemSave.setBounds(130, 325, 190, 70);
+itemSave.setBounds(130, 285, 190, 70);
 itemSave.setFocusable(false);
 itemSave.addActionListener(this);
 itemSave.setVisible(true);
@@ -459,16 +460,23 @@ fullIncomeOverviewPanel.setLayout(null);
 fullIncomeOverviewPanel.setVisible(false);
 
 fullIncomeHomeButton = new JButton("Home");
-fullIncomeHomeButton.setBounds(170, 30, 120, 70);
+fullIncomeHomeButton.setBounds(50, 30, 120, 70);
 fullIncomeHomeButton.setFocusable(false);
 fullIncomeHomeButton.addActionListener(this);
 fullIncomeHomeButton.setVisible(true);
+
+fullIncomeReporter = new JButton("Find!");
+fullIncomeReporter.setBounds(350, 30, 65, 50);
+fullIncomeReporter.setFocusable(false);
+fullIncomeReporter.addActionListener(this);
+fullIncomeReporter.setVisible(true);
 
 IncomeDetailsTextArea = new JTextArea();
 IncomeDetailsTextArea.setBounds(30, 130, 395, 400); // Set the position and size of the text area
 IncomeDetailsTextArea.setEditable(false); // Set the text area as non-editable
 
 fullIncomeOverviewPanel.add(fullIncomeHomeButton);
+fullIncomeOverviewPanel.add(fullIncomeReporter);
 fullIncomeOverviewPanel.add(IncomeDetailsTextArea);
 
 
@@ -739,6 +747,7 @@ this.setVisible(true);
 		if (e.getSource() == fullExpenseReportsButton) {
 				try {
 					expenseOverviewWindow();
+			
 					
 					expenseDetailsTextArea.setText("");
 					
@@ -772,6 +781,9 @@ this.setVisible(true);
 			try {
 				incomeOverviewWindow();
 				
+				
+				/*
+				
 				IncomeDetailsTextArea.setText("");
 				
 				 List<Map<String, Object>> incomeAmount = Expenser.PrintIncomereport();
@@ -787,7 +799,7 @@ this.setVisible(true);
 				       
 				        IncomeDetailsTextArea.append("-------------------------------------------------\n");
 				    }
-				    
+				    */
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
