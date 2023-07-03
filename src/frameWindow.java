@@ -88,6 +88,7 @@ private static JTextArea IncomeDetailsTextArea = new JTextArea();
 private static JButton fullIncomeReportsButton = new JButton();
 private static JButton fullIncomeHomeButton = new JButton();
 private static JButton fullIncomeReporter = new JButton();
+private static JComboBox typeSorter;
 	frameWindow() {
 		
 
@@ -471,12 +472,18 @@ fullIncomeReporter.setFocusable(false);
 fullIncomeReporter.addActionListener(this);
 fullIncomeReporter.setVisible(true);
 
+String[] typeList = {"Primary", "Secondary", "Other","All"};
+typeSorter = new JComboBox(typeList);
+typeSorter.setBounds(250, 30, 80, 50);
+typeSorter.setVisible(true);
+
 IncomeDetailsTextArea = new JTextArea();
 IncomeDetailsTextArea.setBounds(30, 130, 395, 400); // Set the position and size of the text area
 IncomeDetailsTextArea.setEditable(false); // Set the text area as non-editable
 
 fullIncomeOverviewPanel.add(fullIncomeHomeButton);
 fullIncomeOverviewPanel.add(fullIncomeReporter);
+fullIncomeOverviewPanel.add(typeSorter);
 fullIncomeOverviewPanel.add(IncomeDetailsTextArea);
 
 
@@ -780,32 +787,73 @@ this.setVisible(true);
 		if (e.getSource() == fullIncomeReportsButton) {
 			try {
 				incomeOverviewWindow();
-				
-				
-				/*
-				
-				IncomeDetailsTextArea.setText("");
-				
-				 List<Map<String, Object>> incomeAmount = Expenser.PrintIncomereport();
 				    
-				    // Iterate over the expenses list and append details to the text area
-				    for (Map<String, Object> incomeDetailsMap : incomeAmount) {
-				        String intype = (String) incomeDetailsMap.get("Type");
-				        double inamount = (double) incomeDetailsMap.get("Income");
-				        
-				        // Append expense details to the text area
-				        IncomeDetailsTextArea.append("Income Type: " + intype+ "\n");
-				        IncomeDetailsTextArea.append("Income Amount: " + inamount + "\n");
-				       
-				        IncomeDetailsTextArea.append("-------------------------------------------------\n");
-				    }
-				    */
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 	
-	} 
+	      }
+		
+		if (e.getSource() == fullIncomeReporter) {
+			IncomeDetailsTextArea.setText("");
+			
+			 List<Map<String, Object>> incomeAmount = Expenser.PrintIncomereport();
+			    
+			    // Iterate over the expenses list and append details to the text area
+			    for (Map<String, Object> incomeDetailsMap : incomeAmount) {
+			        
+			    	
+			    if (typeSorter.getSelectedIndex()== 0) {	
+			        if((String) incomeDetailsMap.get("Type") == "Primary") { 
+			        String intype = (String) incomeDetailsMap.get("Type");
+			        double inamount = (double) incomeDetailsMap.get("Income");
+			        
+			        // Append expense details to the text area
+			        IncomeDetailsTextArea.append("Income Type: " + intype+ "\n");
+			        IncomeDetailsTextArea.append("Income Amount: " + inamount + "\n");
+			       
+			        IncomeDetailsTextArea.append("-------------------------------------------------\n");
+			        }
+			    }
+			    else if (typeSorter.getSelectedIndex()== 1) {	
+			        if((String) incomeDetailsMap.get("Type") == "Secondary") { 
+			        String intype = (String) incomeDetailsMap.get("Type");
+			        double inamount = (double) incomeDetailsMap.get("Income");
+			        
+			        // Append expense details to the text area
+			        IncomeDetailsTextArea.append("Income Type: " + intype+ "\n");
+			        IncomeDetailsTextArea.append("Income Amount: " + inamount + "\n");
+			       
+			        IncomeDetailsTextArea.append("-------------------------------------------------\n");
+			        }
+			    }
+			    else if (typeSorter.getSelectedIndex()== 2) {	
+			        if((String) incomeDetailsMap.get("Type") == "Other") { 
+			        String intype = (String) incomeDetailsMap.get("Type");
+			        double inamount = (double) incomeDetailsMap.get("Income");
+			        
+			        // Append expense details to the text area
+			        IncomeDetailsTextArea.append("Income Type: " + intype+ "\n");
+			        IncomeDetailsTextArea.append("Income Amount: " + inamount + "\n");
+			       
+			        IncomeDetailsTextArea.append("-------------------------------------------------\n");
+			        }
+			    }
+			    else if (typeSorter.getSelectedIndex()== 3) {	
+			       
+			        String intype = (String) incomeDetailsMap.get("Type");
+			        double inamount = (double) incomeDetailsMap.get("Income");
+			        
+			        // Append expense details to the text area
+			        IncomeDetailsTextArea.append("Income Type: " + intype+ "\n");
+			        IncomeDetailsTextArea.append("Income Amount: " + inamount + "\n");
+			       
+			        IncomeDetailsTextArea.append("-------------------------------------------------\n");
+			        }
+			    }
+		}
+
 		if(e.getSource()==savePanelSubmit) {
 			double currMonthlySavings = Expenser.updateMonthlySavings();
 			double currAmount = Double.parseDouble(saveAmountText.getText());
