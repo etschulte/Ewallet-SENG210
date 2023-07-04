@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.text.DecimalFormat;
 import javax.swing.JTextArea;
 
 import java.awt.Color;
@@ -17,6 +18,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+
 
 
 
@@ -62,11 +65,23 @@ private static JPanel fullExpenseOverviewPanel;
 private static JTextArea expenseDetailsTextArea = new JTextArea();
 private static JButton fullExpenseReportsButton = new JButton();
 private static JButton fullExpenseHomeButton = new JButton();
+private static JLabel expenseOverviewLabel = new JLabel();
+
 //Save for item
 private static JPanel savePanel;
 //Summary view menu 
 private static JPanel summaryOverviewPanel;
 private static JButton summaryHomeButton = new JButton();
+
+//For the expense report by type function 
+private static JButton expenseByTypeButton = new JButton();
+private static JPanel expenseTypeOverviewPanel;
+private static JButton typeExpenseHomeButton = new JButton();
+private static JTextArea expenseTypeDetailsTextArea = new JTextArea();
+private static JLabel expenseTypeLabel = new JLabel();
+private static JLabel expenseTypeOverviewLabel = new JLabel();
+private static JComboBox expenseSortItems;
+private static JButton sortTypeSubmitButton = new JButton();
 
 //income 
 private static JLabel incomeLabel;
@@ -95,40 +110,44 @@ startPanel.setVisible(true);
 //Start Page Labels			
 		
 JLabel titleLabel = new JLabel();
-titleLabel.setText("E-Wallet");
-titleLabel.setBounds(165, 30, 150, 25);
-titleLabel.setFont(new Font("Arial", Font.PLAIN, 25));
+titleLabel.setText("E-WALLET");
+titleLabel.setBounds(170, 30, 150, 25);
+titleLabel.setFont(new Font("Courier New", Font.PLAIN, 25));
 titleLabel.setForeground(Color.white);
 titleLabel.setVisible(true);
 
 JLabel chooseLabel = new JLabel();
-chooseLabel.setText("What would you like to do?");
+chooseLabel.setText("What Would You Like To Do?");
 chooseLabel.setBounds(65, 250, 400, 25);
-chooseLabel.setFont(new Font("Arial", Font.PLAIN, 25));
+chooseLabel.setFont(new Font("Courier New", Font.PLAIN, 20));
 chooseLabel.setForeground(Color.white);
 chooseLabel.setVisible(true);
 		
 //Start Page Buttons
-addIncome = new JButton("Add an income");
-addIncome.setBounds(30, 330, 165, 70);
+addIncome = new JButton("Add an Income");
+addIncome.setFont(new Font("Courier New", Font.PLAIN, 13));
+addIncome.setBounds(30, 330, 182, 70);
 addIncome.setFocusable(false);
 addIncome.addActionListener(this);
 addIncome.setVisible(true);
 
-addExpense = new JButton("Add an expense");
-addExpense.setBounds(250, 330, 165, 70);
+addExpense = new JButton("Add an Expense");
+addExpense.setFont(new Font("Courier New", Font.PLAIN, 13));
+addExpense.setBounds(233, 330, 182, 70);
 addExpense.setFocusable(false);
 addExpense.addActionListener(this);
 addExpense.setVisible(true);
 
 viewSummary = new JButton("View a Summary");
-viewSummary.setBounds(30, 450, 165, 70);
+viewSummary.setFont(new Font("Courier New", Font.PLAIN, 13));
+viewSummary.setBounds(30, 450, 182, 70);
 viewSummary.setFocusable(false);
 viewSummary.addActionListener(this);
 viewSummary.setVisible(true);
 
-currencyConv = new JButton("Currency Conversion");
-currencyConv.setBounds(250, 450, 165, 70);
+currencyConv = new JButton("Convert Currency ");
+currencyConv.setFont(new Font("Courier New", Font.PLAIN, 13));
+currencyConv.setBounds(233, 450, 182, 70);
 currencyConv.setFocusable(false);
 currencyConv.addActionListener(this);
 currencyConv.setVisible(true);
@@ -294,7 +313,7 @@ savePanelSubmit.setVisible(true);
 
 saveResLabel = new JLabel();
 saveResLabel.setBounds(100, 460, 600, 25);
-saveResLabel.setText("Months to save:");
+saveResLabel.setText("Months to Save:");
 saveResLabel.setFont(new Font("Arial", Font.PLAIN, 17));
 saveResLabel.setForeground(Color.white);
 saveAmountLabel.setVisible(true);
@@ -394,8 +413,6 @@ addtionalInfoSubmitButton.setBounds(200, 520, 100, 30);
 addtionalInfoSubmitButton.setFocusable(false);
 addtionalInfoSubmitButton.addActionListener(this);
 addtionalInfoSubmitButton.setVisible(false);
-
-
 ////////////////////////////////////////////////////////
 
 
@@ -419,10 +436,16 @@ fullExpenseReportsButton.addActionListener(this);
 fullExpenseReportsButton.setVisible(true);
 
 itemSave = new JButton("Save for Item");
-itemSave.setBounds(130, 230, 190, 70);
+itemSave.setBounds(130, 285, 190, 70);
 itemSave.setFocusable(false);
 itemSave.addActionListener(this);
 itemSave.setVisible(true);
+
+expenseByTypeButton = new JButton("Sort Expense by Type");
+expenseByTypeButton.setBounds(130, 210, 190, 70);
+expenseByTypeButton.setFocusable(false);
+expenseByTypeButton.addActionListener(this);
+expenseByTypeButton.setVisible(true);
 
 //VIEW FULL EXPENSE OPTION 
 fullExpenseOverviewPanel = new JPanel();
@@ -432,26 +455,88 @@ fullExpenseOverviewPanel.setLayout(null);
 fullExpenseOverviewPanel.setVisible(false);
 
 fullExpenseHomeButton = new JButton("Home");
-fullExpenseHomeButton.setBounds(170, 30, 120, 70);
+fullExpenseHomeButton.setBounds(130, 10, 200, 35);
 fullExpenseHomeButton.setFocusable(false);
 fullExpenseHomeButton.addActionListener(this);
 fullExpenseHomeButton.setVisible(true);
 
 expenseDetailsTextArea = new JTextArea();
-expenseDetailsTextArea.setBounds(30, 130, 395, 400); // Set the position and size of the text area
+expenseDetailsTextArea.setBounds(30, 65, 400, 450); // Set the position and size of the text area
 expenseDetailsTextArea.setEditable(false); // Set the text area as non-editable
+
+
+expenseOverviewLabel = new JLabel();
+expenseOverviewLabel.setBounds(170, 295, 500, 500);
+expenseOverviewLabel.setText("Total Compounded Expenses:");
+expenseOverviewLabel.setFont(new Font("Arial", Font.PLAIN, 15));
+expenseOverviewLabel.setForeground(Color.white);
+expenseOverviewLabel.setVisible(true);
+
+
+//VIEW EXPENSE BY TYPE
+expenseTypeOverviewPanel = new JPanel();
+expenseTypeOverviewPanel.setBackground(Color.black);
+expenseTypeOverviewPanel.setBounds(0, 0, 455, 600);
+expenseTypeOverviewPanel.setLayout(null);
+expenseTypeOverviewPanel.setVisible(false);
+
+typeExpenseHomeButton = new JButton("Home");
+typeExpenseHomeButton.setBounds(130, 10, 200, 35);
+typeExpenseHomeButton.setFocusable(false);
+typeExpenseHomeButton.addActionListener(this);
+typeExpenseHomeButton.setVisible(true);
+
+
+expenseTypeDetailsTextArea = new JTextArea(400,400);
+expenseTypeDetailsTextArea.setBounds(30, 100, 400, 410);// Set the position and size of the text area
+expenseTypeDetailsTextArea.setEditable(false); 
+
+expenseTypeLabel = new JLabel();
+expenseTypeLabel.setBounds(45, 40, 100, 65);
+expenseTypeLabel.setText("Sort By Type:");
+expenseTypeLabel.setFont(new Font("Arial", Font.PLAIN, 15));
+expenseTypeLabel.setForeground(Color.white);
+expenseTypeLabel.setVisible(true);
+
+expenseTypeOverviewLabel = new JLabel();
+expenseTypeOverviewLabel.setBounds(170, 290, 500, 500);
+expenseTypeOverviewLabel.setText("Total Compounded Expenses:");
+expenseTypeOverviewLabel.setFont(new Font("Arial", Font.PLAIN, 15));
+expenseTypeOverviewLabel.setForeground(Color.white);
+expenseTypeOverviewLabel.setVisible(true);
+
+String[] expenseSortList = {"Transportation", "Bills", "Recreational","Grocery" };
+expenseSortItems = new JComboBox(expenseSortList);
+expenseSortItems.setBounds(160, 55, 150, 35);
+expenseSortItems.setVisible(true);
+expenseSortItems.setSelectedIndex(0); 
+
+sortTypeSubmitButton = new JButton("Submit!");
+sortTypeSubmitButton.setBounds(330, 60, 100, 25);
+sortTypeSubmitButton.setFocusable(false);
+sortTypeSubmitButton.addActionListener(this);
+sortTypeSubmitButton.setVisible(true);
+
+
+//NOTE TO SELF///////
+/*
+ * You need to parse the info from the expense sort list and then drive it into the function and 
+ * then print it out and don't forget about the total for the items also
+ * find a way to make it a scroll pane
+ */
 
 
 
 
 //add to window
-this.add(startPanel);
-this.add(conPanel);
-this.add(expensePanel);
-this.add(incomePanel);
-this.add(summaryOverviewPanel);
-this.add(fullExpenseOverviewPanel);
-this.add(savePanel);
+getContentPane().add(startPanel);
+getContentPane().add(conPanel);
+getContentPane().add(expensePanel);
+getContentPane().add(incomePanel);
+getContentPane().add(summaryOverviewPanel);
+getContentPane().add(fullExpenseOverviewPanel);
+getContentPane().add(savePanel);
+getContentPane().add(expenseTypeOverviewPanel);
 
 //save panel
 savePanel.add(savePanelHomeButton);
@@ -480,14 +565,24 @@ expensePanel.add(addtionalInfoSubmitButton);
 //full expense overview report
 fullExpenseOverviewPanel.add(fullExpenseHomeButton);
 fullExpenseOverviewPanel.add(expenseDetailsTextArea);
+fullExpenseOverviewPanel.add(expenseOverviewLabel);
 
+
+//expense report by type 
+expenseTypeOverviewPanel.add(typeExpenseHomeButton);
+expenseTypeOverviewPanel.add(expenseTypeDetailsTextArea);
+expenseTypeOverviewPanel.add(expenseTypeLabel);
+expenseTypeOverviewPanel.add(expenseTypeOverviewLabel);
+expenseTypeOverviewPanel.add(expenseSortItems);
+expenseTypeOverviewPanel.add(sortTypeSubmitButton);
 
 ///summary report overview menu 
 summaryOverviewPanel.add(summaryHomeButton);
 summaryOverviewPanel.add(fullExpenseReportsButton);
 summaryOverviewPanel.add(itemSave);
+summaryOverviewPanel.add(expenseByTypeButton);
 
-
+//currency conv
 conPanel.add(convertButton);
 conPanel.add(currSelectOne);
 conPanel.add(convertText);
@@ -509,7 +604,7 @@ startPanel.add(chooseLabel);
 //define start window
 this.setSize(455, 600); 
 this.setTitle("E-Wallet"); 
-this.setLayout(new BorderLayout(10, 10));
+getContentPane().setLayout(new BorderLayout(10, 10));
 this.setResizable(false); 
 this.getContentPane().setBackground(Color.black);
 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
@@ -704,6 +799,55 @@ this.setVisible(true);
 				e1.printStackTrace();
 			}
 			}
+		if(e.getSource()==expenseByTypeButton) { 
+			try {
+				expenseTypeOverviewWindow();
+
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		
+		}
+		
+		if(e.getSource()==sortTypeSubmitButton) { 
+		
+				String selectedType = expenseSortItems.getSelectedItem().toString();
+				System.out.print(selectedType);
+//expenseTypeDetailsTextArea
+				expenseTypeDetailsTextArea.setText("");
+				
+				List<Map<String, Object>> filteredExpenses = Expenser.PrintExpensebyType(selectedType);
+				
+			    for (Map<String, Object> expenseDetails : filteredExpenses) {
+			        String category = (String) expenseDetails.get("Category");
+			        String subcategory = (String) expenseDetails.get("Subcategory");
+			        double amount = (double) expenseDetails.get("Amount");
+			        String frequency = (String) expenseDetails.get("Frequency");
+			        
+			        expenseTypeDetailsTextArea.append("Category: " + category + "\n");
+			        expenseTypeDetailsTextArea.append("Subcategory: " + subcategory + "\n");
+			        expenseTypeDetailsTextArea.append("Amount: " + amount + "\n");
+			        expenseTypeDetailsTextArea.append("Frequency: " + frequency + "\n");
+			        
+			        expenseTypeDetailsTextArea.append("----------------------------------------------------------------------------\n");
+			    }
+			    
+			    double totalExpense = 0;
+			    for (Map<String, Object> expenseDetails : filteredExpenses) {
+			        double amount = (double) expenseDetails.get("Amount");
+			        totalExpense += amount;
+			    }
+
+			    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+			    String formattedTotalExpense = decimalFormat.format(totalExpense);
+
+			    if (totalExpense > 0) {
+			    	expenseTypeOverviewLabel.setText("Total Compounded Expenses: " + formattedTotalExpense);
+			    } else {
+			    	expenseTypeOverviewLabel.setText("Total Compounded Expenses: " + formattedTotalExpense);
+			    }
+		}
 		
 
 		if (e.getSource() == fullExpenseReportsButton) {
@@ -727,7 +871,22 @@ this.setVisible(true);
 					        expenseDetailsTextArea.append("Amount: " + amount + "\n");
 					        expenseDetailsTextArea.append("Frequency: " + frequency + "\n"); 
 					        
-					        expenseDetailsTextArea.append("-------------------------------------------------\n");
+					        expenseDetailsTextArea.append("----------------------------------------------------------------------------\n");
+					    }
+					    
+					    double totalExpense = 0;
+					    for (Map<String, Object> expenseDetails : expensesList) {
+					        double amount = (double) expenseDetails.get("Amount");
+					        totalExpense += amount;
+					    }
+
+					    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+					    String formattedTotalExpense = decimalFormat.format(totalExpense);
+
+					    if (totalExpense > 0) {
+					        expenseOverviewLabel.setText("Total Compounded Expenses: " + formattedTotalExpense);
+					    } else {
+					        expenseOverviewLabel.setText("Total Compounded Expenses: " + formattedTotalExpense);
 					    }
 					    
 				} catch (IOException e1) {
@@ -742,7 +901,7 @@ this.setVisible(true);
 			double currRes = currAmount/currMonthlySavings;
 			double roundedResult = Math.round(currRes * 10.0) / 10.0;
 			if (currRes > 0) {
-				saveResLabel.setText("Months to save: " + currRes);
+				saveResLabel.setText("Months to Save: " + currRes);
 			} else {
 				saveResLabel.setText("You currently have a negative income" + currRes);
 			}
@@ -833,6 +992,15 @@ this.setVisible(true);
 			e1.printStackTrace();
 		}
 	}
+	
+	if(e.getSource()==typeExpenseHomeButton) { //resets to home screen
+		try {
+			screenReset();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 	}
 	/////////////////////////////////////////////////////////////////
 	
@@ -845,6 +1013,7 @@ this.setVisible(true);
 		summaryOverviewPanel.setVisible(false);
 		fullExpenseOverviewPanel.setVisible(false);
 		savePanel.setVisible(false);
+		expenseTypeOverviewPanel.setVisible(false);
 	}
 	
 	public static void convertWindow() throws IOException {
@@ -895,6 +1064,16 @@ this.setVisible(true);
 		
 		
 	}
+	public static void expenseTypeOverviewWindow() throws IOException {
+		//hiding original screen
+		summaryOverviewPanel.setVisible(false);
+
+		//making conversion screen
+		expenseTypeOverviewPanel.setVisible(true);
+		
+		
+	}
+	
 	public static void saveScreen() throws IOException {
 		//hiding original screen
 		summaryOverviewPanel.setVisible(false);
@@ -903,6 +1082,5 @@ this.setVisible(true);
 		savePanel.setVisible(true);
 		
 	}
-	
 }
 
