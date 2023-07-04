@@ -62,7 +62,18 @@ public interface Expenser {
 	//As  a user I would like to view a detailed report of income of a certain type, and summary information for income
 	public void PrintIncomereportbyTpe();
 	//As  a user I would like to view a detailed report of expense of a certain type , and summary information for expenses
-	public void PrintExpensebyType();
+	public static List<Map<String, Object>> PrintExpensebyType(String type) {
+		 List<Map<String, Object>> filteredExpenses = new ArrayList<>();
+		    
+		    for (Map<String, Object> expenseDetails : expensesList) {
+		        String category = (String) expenseDetails.get("Category");
+		        
+		        if (category.equals(type)) {
+		            filteredExpenses.add(expenseDetails);
+		        }
+		    }
+		    return filteredExpenses;
+	}
 	// As a user I would like to choose a report and export it as an external file (any type is fine preferences are csv or JSON)
 	public void exportReport(String reportTitle);
 	//	As a user I would like to view my current balance in a different currency 
