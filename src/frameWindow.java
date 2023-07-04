@@ -72,9 +72,9 @@ private static JButton summaryHomeButton = new JButton();
 private static JLabel incomeLabel;
 private static JTextField incomeText = new JTextField();
 private static JComboBox incomeType;
-private static JComboBox incomemonth;
-private static JTextField incomeyear = new JTextField();
-private static JLabel moneylabel;
+//private static JComboBox incomemonth;
+//private static JTextField incomeyear = new JTextField();
+//private static JLabel moneylabel;
 private static JLabel inlabel;
 private static JButton enterIncome = new JButton();
 private static JButton incomeHomeButton = new JButton();
@@ -83,6 +83,12 @@ private static JPanel conPanel;
 private static JPanel startPanel;
 private static JPanel incomePanel;
 
+private static JPanel fullIncomeOverviewPanel;
+private static JTextArea IncomeDetailsTextArea = new JTextArea();
+private static JButton fullIncomeReportsButton = new JButton();
+private static JButton fullIncomeHomeButton = new JButton();
+private static JButton fullIncomeReporter = new JButton();
+private static JComboBox typeSorter;
 	frameWindow() {
 		
 
@@ -418,8 +424,14 @@ fullExpenseReportsButton.setFocusable(false);
 fullExpenseReportsButton.addActionListener(this);
 fullExpenseReportsButton.setVisible(true);
 
+fullIncomeReportsButton = new JButton("View Income Reports");
+fullIncomeReportsButton.setBounds(130, 360, 190, 70);
+fullIncomeReportsButton.setFocusable(false);
+fullIncomeReportsButton.addActionListener(this);
+fullIncomeReportsButton.setVisible(true);
+
 itemSave = new JButton("Save for Item");
-itemSave.setBounds(130, 230, 190, 70);
+itemSave.setBounds(130, 285, 190, 70);
 itemSave.setFocusable(false);
 itemSave.addActionListener(this);
 itemSave.setVisible(true);
@@ -441,7 +453,38 @@ expenseDetailsTextArea = new JTextArea();
 expenseDetailsTextArea.setBounds(30, 130, 395, 400); // Set the position and size of the text area
 expenseDetailsTextArea.setEditable(false); // Set the text area as non-editable
 
+//VIEW INCOME OVERVIEW OPTION 
+fullIncomeOverviewPanel = new JPanel();
+fullIncomeOverviewPanel.setBackground(Color.black);
+fullIncomeOverviewPanel.setBounds(0, 0, 455, 600);
+fullIncomeOverviewPanel.setLayout(null);
+fullIncomeOverviewPanel.setVisible(false);
 
+fullIncomeHomeButton = new JButton("Home");
+fullIncomeHomeButton.setBounds(50, 30, 120, 70);
+fullIncomeHomeButton.setFocusable(false);
+fullIncomeHomeButton.addActionListener(this);
+fullIncomeHomeButton.setVisible(true);
+
+fullIncomeReporter = new JButton("Find!");
+fullIncomeReporter.setBounds(350, 30, 65, 50);
+fullIncomeReporter.setFocusable(false);
+fullIncomeReporter.addActionListener(this);
+fullIncomeReporter.setVisible(true);
+
+String[] typeList = {"Primary", "Secondary", "Other","All"};
+typeSorter = new JComboBox(typeList);
+typeSorter.setBounds(250, 30, 80, 50);
+typeSorter.setVisible(true);
+
+IncomeDetailsTextArea = new JTextArea();
+IncomeDetailsTextArea.setBounds(30, 130, 395, 400); // Set the position and size of the text area
+IncomeDetailsTextArea.setEditable(false); // Set the text area as non-editable
+
+fullIncomeOverviewPanel.add(fullIncomeHomeButton);
+fullIncomeOverviewPanel.add(fullIncomeReporter);
+fullIncomeOverviewPanel.add(typeSorter);
+fullIncomeOverviewPanel.add(IncomeDetailsTextArea);
 
 
 //add to window
@@ -451,6 +494,7 @@ this.add(expensePanel);
 this.add(incomePanel);
 this.add(summaryOverviewPanel);
 this.add(fullExpenseOverviewPanel);
+this.add(fullIncomeOverviewPanel);
 this.add(savePanel);
 
 //save panel
@@ -485,6 +529,7 @@ fullExpenseOverviewPanel.add(expenseDetailsTextArea);
 ///summary report overview menu 
 summaryOverviewPanel.add(summaryHomeButton);
 summaryOverviewPanel.add(fullExpenseReportsButton);
+summaryOverviewPanel.add(fullIncomeReportsButton);
 summaryOverviewPanel.add(itemSave);
 
 
@@ -709,6 +754,7 @@ this.setVisible(true);
 		if (e.getSource() == fullExpenseReportsButton) {
 				try {
 					expenseOverviewWindow();
+			
 					
 					expenseDetailsTextArea.setText("");
 					
@@ -736,6 +782,78 @@ this.setVisible(true);
 				}
 		
 		} 
+		
+		
+		if (e.getSource() == fullIncomeReportsButton) {
+			try {
+				incomeOverviewWindow();
+				    
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	
+	      }
+		
+		if (e.getSource() == fullIncomeReporter) {
+			IncomeDetailsTextArea.setText("");
+			
+			 List<Map<String, Object>> incomeAmount = Expenser.PrintIncomereport();
+			    
+			    // Iterate over the expenses list and append details to the text area
+			    for (Map<String, Object> incomeDetailsMap : incomeAmount) {
+			        
+			    	
+			    if (typeSorter.getSelectedIndex()== 0) {	
+			        if((String) incomeDetailsMap.get("Type") == "Primary") { 
+			        String intype = (String) incomeDetailsMap.get("Type");
+			        double inamount = (double) incomeDetailsMap.get("Income");
+			        
+			        // Append expense details to the text area
+			        IncomeDetailsTextArea.append("Income Type: " + intype+ "\n");
+			        IncomeDetailsTextArea.append("Income Amount: " + inamount + "\n");
+			       
+			        IncomeDetailsTextArea.append("-------------------------------------------------\n");
+			        }
+			    }
+			    else if (typeSorter.getSelectedIndex()== 1) {	
+			        if((String) incomeDetailsMap.get("Type") == "Secondary") { 
+			        String intype = (String) incomeDetailsMap.get("Type");
+			        double inamount = (double) incomeDetailsMap.get("Income");
+			        
+			        // Append expense details to the text area
+			        IncomeDetailsTextArea.append("Income Type: " + intype+ "\n");
+			        IncomeDetailsTextArea.append("Income Amount: " + inamount + "\n");
+			       
+			        IncomeDetailsTextArea.append("-------------------------------------------------\n");
+			        }
+			    }
+			    else if (typeSorter.getSelectedIndex()== 2) {	
+			        if((String) incomeDetailsMap.get("Type") == "Other") { 
+			        String intype = (String) incomeDetailsMap.get("Type");
+			        double inamount = (double) incomeDetailsMap.get("Income");
+			        
+			        // Append expense details to the text area
+			        IncomeDetailsTextArea.append("Income Type: " + intype+ "\n");
+			        IncomeDetailsTextArea.append("Income Amount: " + inamount + "\n");
+			       
+			        IncomeDetailsTextArea.append("-------------------------------------------------\n");
+			        }
+			    }
+			    else if (typeSorter.getSelectedIndex()== 3) {	
+			       
+			        String intype = (String) incomeDetailsMap.get("Type");
+			        double inamount = (double) incomeDetailsMap.get("Income");
+			        
+			        // Append expense details to the text area
+			        IncomeDetailsTextArea.append("Income Type: " + intype+ "\n");
+			        IncomeDetailsTextArea.append("Income Amount: " + inamount + "\n");
+			       
+			        IncomeDetailsTextArea.append("-------------------------------------------------\n");
+			        }
+			    }
+		}
+
 		if(e.getSource()==savePanelSubmit) {
 			double currMonthlySavings = Expenser.updateMonthlySavings();
 			double currAmount = Double.parseDouble(saveAmountText.getText());
@@ -817,6 +935,16 @@ this.setVisible(true);
 			e1.printStackTrace();
 		}
 	}
+	
+	if(e.getSource()==fullIncomeHomeButton) { //resets to home screen
+		try {
+			screenReset();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
 	if(e.getSource()==savePanelHomeButton) { //resets to home screen
 		try {
 			screenReset();
@@ -844,6 +972,7 @@ this.setVisible(true);
 		incomePanel.setVisible(false);
 		summaryOverviewPanel.setVisible(false);
 		fullExpenseOverviewPanel.setVisible(false);
+		fullIncomeOverviewPanel.setVisible(false);
 		savePanel.setVisible(false);
 	}
 	
@@ -892,6 +1021,16 @@ this.setVisible(true);
 
 		//making conversion screen
 		fullExpenseOverviewPanel.setVisible(true);
+		
+		
+	}
+	
+	public static void incomeOverviewWindow() throws IOException {
+		//hiding original screen
+		summaryOverviewPanel.setVisible(false);
+
+		//making conversion screen
+		fullIncomeOverviewPanel.setVisible(true);
 		
 		
 	}
