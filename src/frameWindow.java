@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+//m
+import java.nio.file.Paths;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -36,6 +39,9 @@ private static JButton convertButton = new JButton();
 private static JComboBox currSelectOne;
 private static JComboBox currSelectTwo;
 private static JLabel currResultLabel;
+//file export 
+private static JButton importExpenseButton = new JButton();	
+private static JButton importIncomeButton = new JButton();
 
 //Save for item
 private static JLabel saveResLabel;
@@ -60,6 +66,14 @@ private static JLabel expenseAmountLabel = new JLabel();
 private static JTextField expenseAmountText = new JTextField();
 private static JButton addtionalInfoSubmitButton = new JButton();
 
+
+
+
+//for the detailed report
+private static JPanel detailedSummaryPanel;
+private static JTextArea detailedSummaryTextArea = new JTextArea();
+private static JButton detailedSummaryHomeButton = new JButton();
+
 //For the report expense function 
 private static JPanel fullExpenseOverviewPanel;
 private static JTextArea expenseDetailsTextArea = new JTextArea();
@@ -72,6 +86,7 @@ private static JPanel savePanel;
 //Summary view menu 
 private static JPanel summaryOverviewPanel;
 private static JButton summaryHomeButton = new JButton();
+private static JButton detailedSummaryButton = new JButton();
 
 //For the expense report by type function 
 private static JButton expenseByTypeButton = new JButton();
@@ -82,6 +97,7 @@ private static JLabel expenseTypeLabel = new JLabel();
 private static JLabel expenseTypeOverviewLabel = new JLabel();
 private static JComboBox expenseSortItems;
 private static JButton sortTypeSubmitButton = new JButton();
+private static JButton exportExpenseReportButton = new JButton();
 
 //income 
 private static JLabel incomeLabel;
@@ -104,6 +120,7 @@ private static JButton fullIncomeReportsButton = new JButton();
 private static JButton fullIncomeHomeButton = new JButton();
 private static JButton fullIncomeReporter = new JButton();
 private static JComboBox typeSorter;
+private static JButton exportIncomeReportButton = new JButton();
 	frameWindow() {
 		
 
@@ -234,6 +251,12 @@ incomePanel.setBounds(0, 0, 455, 600);
 incomePanel.setLayout(null);
 incomePanel.setVisible(false);
 
+importIncomeButton = new JButton("Import income");
+importIncomeButton.setBounds(170,110, 150, 70);
+importIncomeButton.setFocusable(false);
+importIncomeButton.addActionListener(this);
+importIncomeButton.setVisible(true);
+
 incomeHomeButton = new JButton("Home");
 incomeHomeButton.setBounds(170, 30, 120, 70);
 incomeHomeButton.setFocusable(false);
@@ -282,6 +305,7 @@ incomePanel.add(incomeLabel);
 incomePanel.add(inlabel);
 incomePanel.add(enterIncome);
 incomePanel.add(incomeHomeButton);
+incomePanel.add(importIncomeButton);
 
 //SaveScreen
 savePanel = new JPanel();
@@ -336,6 +360,12 @@ expenseHomeButton.setBounds(170, 30, 120, 70);
 expenseHomeButton.setFocusable(false);
 expenseHomeButton.addActionListener(this);
 expenseHomeButton.setVisible(true);
+
+importExpenseButton = new JButton("Import expense");
+importExpenseButton.setBounds(170,110, 150, 70);
+importExpenseButton.setFocusable(false);
+importExpenseButton.addActionListener(this);
+importExpenseButton.setVisible(true);
 
 JLabel expenseLabel = new JLabel();
 expenseLabel.setText("Please Enter the Type of Expense");
@@ -447,6 +477,12 @@ fullIncomeReportsButton.setFocusable(false);
 fullIncomeReportsButton.addActionListener(this);
 fullIncomeReportsButton.setVisible(true);
 
+detailedSummaryButton = new JButton("Detailed Summary");
+detailedSummaryButton.setBounds(130, 435, 190, 70);
+detailedSummaryButton.setFocusable(false);
+detailedSummaryButton.addActionListener(this);
+detailedSummaryButton.setVisible(true);
+
 itemSave = new JButton("Save for Item");
 itemSave.setBounds(130, 285, 190, 70);
 itemSave.setFocusable(false);
@@ -467,16 +503,39 @@ fullExpenseOverviewPanel.setLayout(null);
 fullExpenseOverviewPanel.setVisible(false);
 
 fullExpenseHomeButton = new JButton("Home");
-fullExpenseHomeButton.setBounds(130, 10, 200, 35);
+fullExpenseHomeButton.setBounds(130, 10, 150, 35);
 fullExpenseHomeButton.setFocusable(false);
 fullExpenseHomeButton.addActionListener(this);
 fullExpenseHomeButton.setVisible(true);
+
+exportExpenseReportButton = new JButton("Export report");
+exportExpenseReportButton.setBounds(300, 10, 120, 40);
+exportExpenseReportButton.setFocusable(false);
+exportExpenseReportButton.addActionListener(this);
+exportExpenseReportButton.setVisible(true);
 
 expenseDetailsTextArea = new JTextArea();
 expenseDetailsTextArea.setBounds(30, 65, 400, 450); // Set the position and size of the text area
 expenseDetailsTextArea.setEditable(false); // Set the text area as non-editable
 
-//VIEW INCOME OVERVIEW OPTION 
+//detailed summary pane
+	detailedSummaryPanel = new JPanel();
+	detailedSummaryPanel.setBackground(Color.black);
+	detailedSummaryPanel.setBounds(0, 0, 455, 600);
+	detailedSummaryPanel.setLayout(null);
+	detailedSummaryPanel.setVisible(false);
+	
+	detailedSummaryHomeButton = new JButton("Home");
+	detailedSummaryHomeButton.setBounds(170, 30, 120, 70);
+	detailedSummaryHomeButton.setFocusable(false);
+	detailedSummaryHomeButton.addActionListener(this);
+	detailedSummaryHomeButton.setVisible(true);
+	
+	detailedSummaryTextArea = new JTextArea();
+	detailedSummaryTextArea.setBounds(30, 130, 395, 400); // Set the position and size of the text area
+	detailedSummaryTextArea.setEditable(false); // Set the text area as non-editable
+
+	//VIEW INCOME OVERVIEW OPTION 
 fullIncomeOverviewPanel = new JPanel();
 fullIncomeOverviewPanel.setBackground(Color.black);
 fullIncomeOverviewPanel.setBounds(0, 0, 455, 600);
@@ -495,6 +554,15 @@ fullIncomeReporter.setFocusable(false);
 fullIncomeReporter.addActionListener(this);
 fullIncomeReporter.setVisible(true);
 
+//export functions
+exportIncomeReportButton = new JButton("Export report");
+exportIncomeReportButton.setBounds(300, 85, 120, 40);
+exportIncomeReportButton.setFocusable(false);
+exportIncomeReportButton.addActionListener(this);
+exportIncomeReportButton.setVisible(true);
+
+
+
 String[] typeList = {"Primary", "Secondary", "Other","All"};
 typeSorter = new JComboBox(typeList);
 typeSorter.setBounds(250, 30, 80, 50);
@@ -508,8 +576,9 @@ fullIncomeOverviewPanel.add(fullIncomeHomeButton);
 fullIncomeOverviewPanel.add(fullIncomeReporter);
 fullIncomeOverviewPanel.add(typeSorter);
 fullIncomeOverviewPanel.add(IncomeDetailsTextArea);
+fullIncomeOverviewPanel.add(exportIncomeReportButton);
 
-
+fullExpenseOverviewPanel.add(exportExpenseReportButton);
 //add to window
 this.add(startPanel);
 this.add(conPanel);
@@ -519,6 +588,7 @@ this.add(summaryOverviewPanel);
 this.add(fullExpenseOverviewPanel);
 this.add(fullIncomeOverviewPanel);
 this.add(savePanel);
+this.add(detailedSummaryPanel);
 
 expenseOverviewLabel = new JLabel();
 expenseOverviewLabel.setBounds(170, 295, 500, 500);
@@ -592,6 +662,7 @@ getContentPane().add(summaryOverviewPanel);
 getContentPane().add(fullExpenseOverviewPanel);
 getContentPane().add(savePanel);
 getContentPane().add(expenseTypeOverviewPanel);
+getContentPane().add(detailedSummaryPanel);
 
 
 //save panel
@@ -616,6 +687,7 @@ expensePanel.add(expenseSelectSix);
 expensePanel.add(expenseAmountLabel);
 expensePanel.add(expenseAmountText);
 expensePanel.add(addtionalInfoSubmitButton);
+expensePanel.add(importExpenseButton);
 
 
 //full expense overview report
@@ -632,12 +704,17 @@ expenseTypeOverviewPanel.add(expenseTypeOverviewLabel);
 expenseTypeOverviewPanel.add(expenseSortItems);
 expenseTypeOverviewPanel.add(sortTypeSubmitButton);
 
+//detailed summary report
+	detailedSummaryPanel.add(detailedSummaryTextArea);
+	detailedSummaryPanel.add(detailedSummaryHomeButton);
+
 ///summary report overview menu 
 summaryOverviewPanel.add(summaryHomeButton);
 summaryOverviewPanel.add(fullExpenseReportsButton);
 summaryOverviewPanel.add(fullIncomeReportsButton);
 summaryOverviewPanel.add(itemSave);
 summaryOverviewPanel.add(expenseByTypeButton);
+summaryOverviewPanel.add(detailedSummaryButton);
 
 //currency conv
 conPanel.add(convertButton);
@@ -1039,6 +1116,96 @@ this.setVisible(true);
 			
 			
 		}
+		if(e.getSource()==detailedSummaryButton) {
+			try {
+				detailedSummaryTextArea.setText("");
+				detailedSummaryOverviewWindow();
+				List<Map<String, Object>> incomeAmount = Expenser.PrintIncomereport();
+				 List<Map<String, Object>> expensesList = Expenser.PrintExpensereport();
+			    
+			    // Iterate over the expenses list and append details to the text area
+			    for (Map<String, Object> incomeDetailsMap : incomeAmount) {
+			        
+			    	
+			    if (typeSorter.getSelectedIndex()== 0) {	
+			        if((String) incomeDetailsMap.get("Type") == "Primary") { 
+			        String intype = (String) incomeDetailsMap.get("Type");
+			        double inamount = (double) incomeDetailsMap.get("Income");
+			        
+			        // Append expense details to the text area
+			        detailedSummaryTextArea.append("Income Type: " + intype+ "\n");
+			        detailedSummaryTextArea.append("Income Amount: " + inamount + "\n");
+			       
+			        detailedSummaryTextArea.append("-------------------------------------------------\n");
+			        }
+			    }
+			    else if (typeSorter.getSelectedIndex()== 1) {	
+			        if((String) incomeDetailsMap.get("Type") == "Secondary") { 
+			        String intype = (String) incomeDetailsMap.get("Type");
+			        double inamount = (double) incomeDetailsMap.get("Income");
+			        
+			        // Append expense details to the text area
+			        detailedSummaryTextArea.append("Income Type: " + intype+ "\n");
+			        detailedSummaryTextArea.append("Income Amount: " + inamount + "\n");
+			       
+			        detailedSummaryTextArea.append("-------------------------------------------------\n");
+			        }
+			    }
+			    else if (typeSorter.getSelectedIndex()== 2) {	
+			        if((String) incomeDetailsMap.get("Type") == "Other") { 
+			        String intype = (String) incomeDetailsMap.get("Type");
+			        double inamount = (double) incomeDetailsMap.get("Income");
+			        
+			        // Append expense details to the text area
+			        detailedSummaryTextArea.append("Income Type: " + intype+ "\n");
+			        detailedSummaryTextArea.append("Income Amount: " + inamount + "\n");
+			       
+			        detailedSummaryTextArea.append("-------------------------------------------------\n");
+			        }
+			    }
+			    else if (typeSorter.getSelectedIndex()== 3) {	
+			       
+			        String intype = (String) incomeDetailsMap.get("Type");
+			        double inamount = (double) incomeDetailsMap.get("Income");
+			        
+			        // Append expense details to the text area
+			        detailedSummaryTextArea.append("Income Type: " + intype+ "\n");
+			        detailedSummaryTextArea.append("Income Amount: " + inamount + "\n");
+			       
+			        detailedSummaryTextArea.append("-------------------------------------------------\n");
+			        }
+			    }
+				    
+				    // Iterate over the expenses list and append details to the text area
+				    for (Map<String, Object> expenseDetails : expensesList) {
+				        String category = (String) expenseDetails.get("Category");
+				        String subcategory = (String) expenseDetails.get("Subcategory");
+				        double amount = (double) expenseDetails.get("Amount");
+				        String frequency = (String) expenseDetails.get("Frequency");
+				        
+				        // Append expense details to the text area
+				        detailedSummaryTextArea.append("Category: " + category + "\n");
+				        detailedSummaryTextArea.append("Subcategory: " + subcategory + "\n");
+				        detailedSummaryTextArea.append("Amount: " + amount + "\n");
+				        detailedSummaryTextArea.append("Frequency: " + frequency + "\n"); 
+				        
+				        detailedSummaryTextArea.append("-------------------------------------------------\n");
+				    }
+			    
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+		if(e.getSource()==detailedSummaryHomeButton) {
+			try {
+				screenReset();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		if(e.getSource()==viewSummary) { 
 			try {
 				Expenser.updateMonthlySavings();
@@ -1141,6 +1308,36 @@ this.setVisible(true);
 			e1.printStackTrace();
 		}
 	}
+	
+	//export
+	if(e.getSource()==importExpenseButton) { 
+		String fileName = "C:\\Users\\snave\\eclipse-workspace\\210Project-2021(2)\\src\\expenseImport.txt";
+		Expenser.addExpensesFromFile(fileName);
+		JOptionPane.showMessageDialog(null, "Expense added! Look in Console for details!", "Success", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	if(e.getSource()==importIncomeButton) { 
+		String fileName = "C:\\Users\\snave\\eclipse-workspace\\210Project-2021(2)\\src\\incomes.txt";
+		Expenser.addIncomesFromFile(fileName);
+		JOptionPane.showMessageDialog(null, "Income added! Look in Console for details!", "Success", JOptionPane.INFORMATION_MESSAGE);
+	}
+	if(e.getSource()==exportIncomeReportButton) { //resets to home screen
+		
+        String fileName = "incomeoutput.txt";
+        String homeDirectory = System.getProperty("user.home");
+        String filePath = Paths.get(homeDirectory, fileName).toString();
+		 List<Map<String, Object>> incomeAmount = Expenser.PrintIncomereport();
+		Expenser.exportMapListToTxt( incomeAmount,filePath);
+	}
+	
+	if(e.getSource()==exportExpenseReportButton) { //resets to home screen
+		
+        String fileName = "exportoutput.txt";
+        String homeDirectory = System.getProperty("user.home");
+        String filePath = Paths.get(homeDirectory, fileName).toString();
+        List<Map<String, Object>> expensesList = Expenser.PrintExpensereport();
+		Expenser.exportMapListToTxt( expensesList,filePath);
+	}
 	}
 	/////////////////////////////////////////////////////////////////
 	
@@ -1204,6 +1401,12 @@ this.setVisible(true);
 		fullExpenseOverviewPanel.setVisible(true);
 		
 		
+	}
+	public static void detailedSummaryOverviewWindow() throws IOException{
+		
+		summaryOverviewPanel.setVisible(false);
+		
+		detailedSummaryPanel.setVisible(true);
 	}
 
 	
