@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -16,15 +17,13 @@ import java.nio.file.Paths;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
-
-
-
 
 public class frameWindow extends JFrame implements ActionListener{
 
@@ -1309,19 +1308,43 @@ this.setVisible(true);
 		}
 	}
 	
-	//export
-	if(e.getSource()==importExpenseButton) { 
-		String fileName = "C:\\Users\\snave\\eclipse-workspace\\210Project-2021(2)\\src\\expenseImport.txt";
-		Expenser.addExpensesFromFile(fileName);
-		JOptionPane.showMessageDialog(null, "Expense added! Look in Console for details!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+	
+   if(e.getSource()==importExpenseButton) {
+		
+		JFileChooser fileChooser = new JFileChooser();
+		
+		fileChooser.setCurrentDirectory(new File(".")); //sets current directory
+		
+		int response = fileChooser.showOpenDialog(null); //select file to open
+		//int response = fileChooser.showSaveDialog(null); //select file to save
+		
+		if(response == JFileChooser.APPROVE_OPTION) {
+			File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+			String fileName = file.toString();
+			Expenser.addExpensesFromFile(fileName);
+			JOptionPane.showMessageDialog(null, "Expense added! Look in Console for details!", "Success", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 	
-	if(e.getSource()==importIncomeButton) { 
-		String fileName = "C:\\Users\\snave\\eclipse-workspace\\210Project-2021(2)\\src\\incomes.txt";
-		Expenser.addIncomesFromFile(fileName);
-		JOptionPane.showMessageDialog(null, "Income added! Look in Console for details!", "Success", JOptionPane.INFORMATION_MESSAGE);
+	if(e.getSource()==importIncomeButton) {
+		
+		JFileChooser fileChooser = new JFileChooser();
+		
+		fileChooser.setCurrentDirectory(new File(".")); //sets current directory
+		
+		int response = fileChooser.showOpenDialog(null); //select file to open
+		//int response = fileChooser.showSaveDialog(null); //select file to save
+		
+		if(response == JFileChooser.APPROVE_OPTION) {
+			File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+			String fileName = file.toString();
+			Expenser.addIncomesFromFile(fileName);
+			JOptionPane.showMessageDialog(null, "Income added! Look in Console for details!", "Success", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
-	if(e.getSource()==exportIncomeReportButton) { //resets to home screen
+
+	if(e.getSource()==exportIncomeReportButton) { 
 		
         String fileName = "incomeoutput.txt";
         String homeDirectory = System.getProperty("user.home");
@@ -1330,7 +1353,7 @@ this.setVisible(true);
 		Expenser.exportMapListToTxt( incomeAmount,filePath);
 	}
 	
-	if(e.getSource()==exportExpenseReportButton) { //resets to home screen
+	if(e.getSource()==exportExpenseReportButton) {
 		
         String fileName = "exportoutput.txt";
         String homeDirectory = System.getProperty("user.home");
