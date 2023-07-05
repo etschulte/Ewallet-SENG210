@@ -1,3 +1,6 @@
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -5,6 +8,8 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
+import java.io.BufferedWriter;
+import java.io.FileReader;
 
 public interface Expenser {
 	
@@ -15,9 +20,43 @@ public interface Expenser {
 	public static List<Map<String, Object>> incomeAmount = new ArrayList<>(); 
 	public static double monthlyIncome = 0;
 	
-	
+	public static void exportMapListToTxt(List<Map<String, Object>> mapList, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (Map<String, Object> map : mapList) {
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    writer.write(entry.getKey() + "=" + entry.getValue());
+                    writer.newLine();
+                }
+                writer.newLine(); // Add an empty line between each map
+            }
+            System.out.println("Map list exported to " + fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 	
 // As a user I'd like to add a monthly expense so I can track and report my expenses - 3pts
+    public static void addExpensesFromFile(String fileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] expenseData = line.split(",");
+
+                // Extract expense details from the line
+                String category = expenseData[0].trim();
+                String subcategory = expenseData[1].trim();
+                double amount = Double.parseDouble(expenseData[2].trim());
+                String frequency = expenseData[3].trim();
+
+                // Call the addExpense function with the extracted details
+                addExpense(category, subcategory, amount, frequency);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	
+
 	public static void addExpense(String category, String subcategory, double amount, String frequency) {
 	    Map<String, Object> expenseDetails = new HashMap<>();
 	    expenseDetails.put("Category", category);
@@ -43,6 +82,23 @@ public interface Expenser {
 		incomeAmount.add(incomeDetailsMap);
 		
 	}
+	 public static void addIncomesFromFile(String fileName) {
+	        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+	            String line;
+	            while ((line = reader.readLine()) != null) {
+	                String[] incomeData = line.split(",");
+	                
+	                // Extract income details from the line
+	                String intype = incomeData[0].trim();
+	                double income = Double.parseDouble(incomeData[1].trim());
+	                
+	                // Call the addIncome function with the extracted details
+	                addIncome(intype, income);
+	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
 	
 	//As  a user I would like to view a detailed report of all expenses, income, and summary information 
 	//summary information include : total income, total income for each type, total income for each month, total expense, total expense for each type, 
