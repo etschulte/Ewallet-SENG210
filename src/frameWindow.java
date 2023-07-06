@@ -119,6 +119,7 @@ private static JButton fullIncomeReportsButton = new JButton();
 private static JButton fullIncomeHomeButton = new JButton();
 private static JButton fullIncomeReporter = new JButton();
 private static JComboBox typeSorter;
+private static JLabel incomeOverviewLabel = new JLabel();
 private static JButton exportIncomeReportButton = new JButton();
 	frameWindow() {
 		
@@ -609,11 +610,19 @@ IncomeDetailsTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
 IncomeDetailsTextArea.setBounds(30, 110, 400, 430); // Set the position and size of the text area
 IncomeDetailsTextArea.setEditable(false); // Set the text area as non-editable
 
+incomeOverviewLabel = new JLabel();
+incomeOverviewLabel.setBounds(110, 295, 500, 500);
+incomeOverviewLabel.setText("Total Compounded Income:");
+incomeOverviewLabel.setFont(new Font("Courier New", Font.PLAIN, 15));
+incomeOverviewLabel.setForeground(Color.white);
+incomeOverviewLabel.setVisible(true);
+
 fullIncomeOverviewPanel.add(fullIncomeHomeButton);
 fullIncomeOverviewPanel.add(fullIncomeReporter);
 fullIncomeOverviewPanel.add(typeSorter);
 fullIncomeOverviewPanel.add(IncomeDetailsTextArea);
 fullIncomeOverviewPanel.add(exportIncomeReportButton);
+fullIncomeOverviewPanel.add(incomeOverviewLabel);
 
 fullExpenseOverviewPanel.add(exportExpenseReportButton);
 //add to window
