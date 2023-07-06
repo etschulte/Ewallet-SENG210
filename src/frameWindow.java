@@ -545,7 +545,6 @@ exportExpenseReportButton.addActionListener(this);
 exportExpenseReportButton.setVisible(true);
 
 expenseDetailsTextArea = new JTextArea();
-
 expenseDetailsTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
 expenseDetailsTextArea.setEditable(false); // Set the text area as non-editable
 JScrollPane expensePane = new JScrollPane(expenseDetailsTextArea);
@@ -571,7 +570,7 @@ expensePane.setBounds(30, 65, 400, 450);
 	detailedSummaryTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
 // Set the position and size of the text area
 	detailedSummaryTextArea.setEditable(false); // Set the text area as non-editable
-	JScrollPane detailedSummaryPane = new JScrollPane(expenseDetailsTextArea);
+	JScrollPane detailedSummaryPane = new JScrollPane(detailedSummaryTextArea);
 	detailedSummaryPane.setBounds(30, 70, 395, 480);
 
 
@@ -1045,51 +1044,52 @@ this.setVisible(true);
 		
 
 		if (e.getSource() == fullExpenseReportsButton) {
-				try {
-					expenseOverviewWindow();
-			
-					
-					expenseDetailsTextArea.setText("");
-					
-					 List<Map<String, Object>> expensesList = Expenser.PrintExpensereport();
-					    
-					    // Iterate over the expenses list and append details to the text area
-					    for (Map<String, Object> expenseDetails : expensesList) {
-					        String category = (String) expenseDetails.get("Category");
-					        String subcategory = (String) expenseDetails.get("Subcategory");
-					        double amount = (double) expenseDetails.get("Amount");
-					        String frequency = (String) expenseDetails.get("Frequency");
-					        
-					        // Append expense details to the text area
-					        expenseDetailsTextArea.append("Category: " + category + "\n");
-					        expenseDetailsTextArea.append("Subcategory: " + subcategory + "\n");
-					        expenseDetailsTextArea.append("Amount: " + amount + "\n");
-					        expenseDetailsTextArea.append("Frequency: " + frequency + "\n"); 
-					        
-					        expenseDetailsTextArea.append("------------------------------------------\n");
-					    }
-					    
-					    double totalExpense = 0;
-					    for (Map<String, Object> expenseDetails : expensesList) {
-					        double amount = (double) expenseDetails.get("Amount");
-					        totalExpense += amount;
-					    }
-
-					    DecimalFormat decimalFormat = new DecimalFormat("#.##");
-					    String formattedTotalExpense = decimalFormat.format(totalExpense);
-
-					    if (totalExpense > 0) {
-					        expenseOverviewLabel.setText("Total Compounded Expenses: " + formattedTotalExpense);
-					    } else {
-					        expenseOverviewLabel.setText("Total Compounded Expenses: " + formattedTotalExpense);
-					    }
-					    
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+			try {
+				expenseOverviewWindow();
 		
-		} 
+				
+				expenseDetailsTextArea.setText("");
+				
+				 List<Map<String, Object>> expensesList = Expenser.PrintExpensereport();
+				    
+				    // Iterate over the expenses list and append details to the text area
+				    for (Map<String, Object> expenseDetails : expensesList) {
+				        String category = (String) expenseDetails.get("Category");
+				        String subcategory = (String) expenseDetails.get("Subcategory");
+				        double amount = (double) expenseDetails.get("Amount");
+				        String frequency = (String) expenseDetails.get("Frequency");
+				        
+				        // Append expense details to the text area
+				        expenseDetailsTextArea.append("Category: " + category + "\n");
+				        expenseDetailsTextArea.append("Subcategory: " + subcategory + "\n");
+				        expenseDetailsTextArea.append("Amount: " + amount + "\n");
+				        expenseDetailsTextArea.append("Frequency: " + frequency + "\n"); 
+				        
+				        expenseDetailsTextArea.append("---------------------------------------------\n");
+				    }
+				    
+				    double totalExpense = 0;
+				    for (Map<String, Object> expenseDetails : expensesList) {
+				        double amount = (double) expenseDetails.get("Amount");
+				        totalExpense += amount;
+				    }
+
+				    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+				    String formattedTotalExpense = decimalFormat.format(totalExpense);
+
+				    if (totalExpense > 0) {
+				        expenseOverviewLabel.setText("Total Compounded Expenses: " + formattedTotalExpense);
+				    } else {
+				        expenseOverviewLabel.setText("Total Compounded Expenses: " + formattedTotalExpense);
+				    }
+				    
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	
+	} 
+	
 		
 		
 		if (e.getSource() == fullIncomeReportsButton) {
