@@ -947,7 +947,7 @@ this.setVisible(true);
 
 		
 		if(e.getSource()==addIncome) { 
-			System.out.println("you hit the income button");
+			
 				try {
 					incomeWindow();
 				} catch (IOException e1) {
@@ -961,7 +961,7 @@ this.setVisible(true);
 			double cashflow = Double.parseDouble(incomeText.getText());
 			Expenser.addIncome(selectedincomeType, cashflow);
 			System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $" + incomeText.getText() +  ".");
-			JOptionPane.showMessageDialog(null, "Income Successfully Added!", "Success", JOptionPane.INFORMATION_MESSAGE);
+			
 		}
 		
 		// want to enter information into an array, then enter it into a display into viewer 
@@ -1186,7 +1186,7 @@ this.setVisible(true);
 			        detailedSummaryTextArea.append("Income Type: " + intype+ "\n");
 			        detailedSummaryTextArea.append("Income Amount: " + inamount + "\n");
 			       
-			        detailedSummaryTextArea.append("-------------------------------------------------\n");
+			        detailedSummaryTextArea.append("----------------------------------------------------------------------------\n");
 			        }
 			    }
 			    else if (typeSorter.getSelectedIndex()== 1) {	
@@ -1198,7 +1198,7 @@ this.setVisible(true);
 			        detailedSummaryTextArea.append("Income Type: " + intype+ "\n");
 			        detailedSummaryTextArea.append("Income Amount: " + inamount + "\n");
 			       
-			        detailedSummaryTextArea.append("-------------------------------------------------\n");
+			        detailedSummaryTextArea.append("----------------------------------------------------------------------------\n");
 			        }
 			    }
 			    else if (typeSorter.getSelectedIndex()== 2) {	
@@ -1210,7 +1210,7 @@ this.setVisible(true);
 			        detailedSummaryTextArea.append("Income Type: " + intype+ "\n");
 			        detailedSummaryTextArea.append("Income Amount: " + inamount + "\n");
 			       
-			        detailedSummaryTextArea.append("-------------------------------------------------\n");
+			        detailedSummaryTextArea.append("----------------------------------------------------------------------------\n");
 			        }
 			    }
 			    else if (typeSorter.getSelectedIndex()== 3) {	
@@ -1222,7 +1222,7 @@ this.setVisible(true);
 			        detailedSummaryTextArea.append("Income Type: " + intype+ "\n");
 			        detailedSummaryTextArea.append("Income Amount: " + inamount + "\n");
 			       
-			        detailedSummaryTextArea.append("-------------------------------------------------\n");
+			        detailedSummaryTextArea.append("----------------------------------------------------------------------------\n");
 			        }
 			    }
 				    
@@ -1239,7 +1239,7 @@ this.setVisible(true);
 				        detailedSummaryTextArea.append("Amount: " + amount + "\n");
 				        detailedSummaryTextArea.append("Frequency: " + frequency + "\n"); 
 				        
-				        detailedSummaryTextArea.append("-------------------------------------------------\n");
+				        detailedSummaryTextArea.append("----------------------------------------------------------------------------\n");
 				    }
 			    
 			} catch (IOException e1) {
