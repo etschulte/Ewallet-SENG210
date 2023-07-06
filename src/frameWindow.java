@@ -545,9 +545,13 @@ exportExpenseReportButton.addActionListener(this);
 exportExpenseReportButton.setVisible(true);
 
 expenseDetailsTextArea = new JTextArea();
+
 expenseDetailsTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
-expenseDetailsTextArea.setBounds(30, 65, 400, 450); // Set the position and size of the text area
 expenseDetailsTextArea.setEditable(false); // Set the text area as non-editable
+JScrollPane expensePane = new JScrollPane(expenseDetailsTextArea);
+expensePane.setBounds(30, 65, 400, 450);
+
+
 
 //detailed summary pane
 	detailedSummaryPanel = new JPanel();
@@ -565,8 +569,11 @@ expenseDetailsTextArea.setEditable(false); // Set the text area as non-editable
 	
 	detailedSummaryTextArea = new JTextArea();
 	detailedSummaryTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
-	detailedSummaryTextArea.setBounds(30, 70, 395, 480); // Set the position and size of the text area
+// Set the position and size of the text area
 	detailedSummaryTextArea.setEditable(false); // Set the text area as non-editable
+	JScrollPane detailedSummaryPane = new JScrollPane(expenseDetailsTextArea);
+	detailedSummaryPane.setBounds(30, 70, 395, 480);
+
 
 	//VIEW INCOME OVERVIEW OPTION 
 fullIncomeOverviewPanel = new JPanel();
@@ -607,8 +614,9 @@ typeSorter.setVisible(true);
 
 IncomeDetailsTextArea = new JTextArea();
 IncomeDetailsTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
-IncomeDetailsTextArea.setBounds(30, 110, 400, 430); // Set the position and size of the text area
 IncomeDetailsTextArea.setEditable(false); // Set the text area as non-editable
+JScrollPane incomePane = new JScrollPane(IncomeDetailsTextArea);
+incomePane.setBounds(30, 110, 400, 430); 
 
 incomeOverviewLabel = new JLabel();
 incomeOverviewLabel.setBounds(110, 295, 500, 500);
@@ -620,11 +628,12 @@ incomeOverviewLabel.setVisible(true);
 fullIncomeOverviewPanel.add(fullIncomeHomeButton);
 fullIncomeOverviewPanel.add(fullIncomeReporter);
 fullIncomeOverviewPanel.add(typeSorter);
-fullIncomeOverviewPanel.add(IncomeDetailsTextArea);
+fullIncomeOverviewPanel.add(incomePane);
 fullIncomeOverviewPanel.add(exportIncomeReportButton);
 fullIncomeOverviewPanel.add(incomeOverviewLabel);
 
 fullExpenseOverviewPanel.add(exportExpenseReportButton);
+
 //add to window
 getContentPane().add(startPanel);
 getContentPane().add(conPanel);
@@ -661,8 +670,9 @@ typeExpenseHomeButton.setVisible(true);
 
 expenseTypeDetailsTextArea = new JTextArea(400,400);
 expenseTypeDetailsTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
-expenseTypeDetailsTextArea.setBounds(30, 100, 400, 410);// Set the position and size of the text area
 expenseTypeDetailsTextArea.setEditable(false); 
+JScrollPane expensetypePane = new JScrollPane(expenseTypeDetailsTextArea);
+expensetypePane.setBounds(30, 100, 400, 410);
 
 expenseTypeLabel = new JLabel();
 expenseTypeLabel.setBounds(40, 40, 110, 65);
@@ -734,20 +744,20 @@ expensePanel.add(importExpenseButton);
 
 //full expense overview report
 fullExpenseOverviewPanel.add(fullExpenseHomeButton);
-fullExpenseOverviewPanel.add(expenseDetailsTextArea);
 fullExpenseOverviewPanel.add(expenseOverviewLabel);
+fullExpenseOverviewPanel.add(expensePane);
 
 
 //expense report by type 
 expenseTypeOverviewPanel.add(typeExpenseHomeButton);
-expenseTypeOverviewPanel.add(expenseTypeDetailsTextArea);
+expenseTypeOverviewPanel.add(expensetypePane);
 expenseTypeOverviewPanel.add(expenseTypeLabel);
 expenseTypeOverviewPanel.add(expenseTypeOverviewLabel);
 expenseTypeOverviewPanel.add(expenseSortItems);
 expenseTypeOverviewPanel.add(sortTypeSubmitButton);
 
 //detailed summary report
-	detailedSummaryPanel.add(detailedSummaryTextArea);
+	detailedSummaryPanel.add(detailedSummaryPane);
 	detailedSummaryPanel.add(detailedSummaryHomeButton);
 
 ///summary report overview menu 
@@ -904,6 +914,7 @@ this.setVisible(true);
 		}
 		
 		if(e.getSource()== addtionalInfoSubmitButton) { 
+			try {
 			 String selectedExpenseOne = expenseSelectOne.getSelectedItem().toString();
 		      String selectedExpenseTwo = "";
 		      String selectedFrequency = expenseSelectSix.getSelectedItem().toString(); 
@@ -944,6 +955,10 @@ this.setVisible(true);
 		      expenseFrequencyLabel.setVisible(false);
 		      expenseAddtionalLabel.setVisible(false);
 			}
+			catch (Exception exc) {
+				JOptionPane.showMessageDialog(null, "Please enter a valid submission.", "Error", JOptionPane.INFORMATION_MESSAGE);
+			}
+			}
 
 		
 		if(e.getSource()==addIncome) { 
@@ -957,17 +972,20 @@ this.setVisible(true);
 		
 		}
 		if(e.getSource()== enterIncome) {
+			try {
 			String selectedincomeType = incomeType.getSelectedItem().toString();
 			double cashflow = Double.parseDouble(incomeText.getText());
 			Expenser.addIncome(selectedincomeType, cashflow);
 			System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $" + incomeText.getText() +  ".");
-			
+			}
+			catch (Exception exc) {
+				JOptionPane.showMessageDialog(null, "Please enter a valid submission.", "Error", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}
 		
 		// want to enter information into an array, then enter it into a display into viewer 
 		//WILL ONLY ENTER INTO AN ARRAY BASED ON TYPE FOR NOW 
 		if(e.getSource()==currencyConv) { 
-			System.out.println("you hit the currency button");
 			try {
 				convertWindow();
 			} catch (IOException e1) {
@@ -1006,7 +1024,7 @@ this.setVisible(true);
 			        expenseTypeDetailsTextArea.append("Amount: " + amount + "\n");
 			        expenseTypeDetailsTextArea.append("Frequency: " + frequency + "\n");
 			        
-			        expenseTypeDetailsTextArea.append("----------------------------------------------------------------------------\n");
+			        expenseTypeDetailsTextArea.append("------------------------------------------\n");
 			    }
 			    
 			    double totalExpense = 0;
@@ -1048,7 +1066,7 @@ this.setVisible(true);
 					        expenseDetailsTextArea.append("Amount: " + amount + "\n");
 					        expenseDetailsTextArea.append("Frequency: " + frequency + "\n"); 
 					        
-					        expenseDetailsTextArea.append("----------------------------------------------------------------------------\n");
+					        expenseDetailsTextArea.append("------------------------------------------\n");
 					    }
 					    
 					    double totalExpense = 0;
@@ -1102,7 +1120,7 @@ this.setVisible(true);
 			       
 			        IncomeDetailsTextArea.append("Type: " + category + "\n");
 			        IncomeDetailsTextArea.append("Income: " + amount + "\n");
-			        IncomeDetailsTextArea.append("----------------------------------------------------------------------------\n");
+			        IncomeDetailsTextArea.append("------------------------------------------\n");
 			    }
 			    
 			    double totalIncome = 0;
@@ -1133,7 +1151,7 @@ this.setVisible(true);
 				       
 				        IncomeDetailsTextArea.append("Type: " + category + "\n");
 				        IncomeDetailsTextArea.append("Income: " + amount + "\n");
-				        IncomeDetailsTextArea.append("----------------------------------------------------------------------------\n");
+				        IncomeDetailsTextArea.append("------------------------------------------\n");
 				    }
 				    
 				    double totalIncome = 0;
@@ -1155,16 +1173,23 @@ this.setVisible(true);
 		}
 
 		if(e.getSource()==savePanelSubmit) {
-			double currMonthlySavings = Expenser.updateMonthlySavings();
-			double currAmount = Double.parseDouble(saveAmountText.getText());
-			double currRes = currAmount/currMonthlySavings;
-			double roundedResult = Math.round(currRes * 10.0) / 10.0;
-			if (currRes > 0) {
-				saveResLabel.setText("Estimated Months to Save: " + currRes);
-			} else {
-				saveResLabel.setText("You currently have a negative income" + currRes);
-			}	
-			
+			try {
+			    double currMonthlySavings = Expenser.updateMonthlySavings();
+			    double currAmount = Double.parseDouble(saveAmountText.getText());
+			    double currRes = currAmount / currMonthlySavings;
+
+			    // Format currRes to one decimal place
+			    DecimalFormat decimalFormat = new DecimalFormat("#.#");
+			    String formattedRes = decimalFormat.format(currRes);
+
+			    if (currRes > 0) {
+			        saveResLabel.setText("Estimated Months to Save: " + formattedRes);
+			    } else {
+			        saveResLabel.setText("You currently have a negative income: " + formattedRes);
+			    }
+			} catch (Exception exc) {
+			    JOptionPane.showMessageDialog(null, "Please enter a valid submission.", "Error", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}
 		if(e.getSource()==detailedSummaryButton) {
 			try {
@@ -1186,7 +1211,7 @@ this.setVisible(true);
 			        detailedSummaryTextArea.append("Income Type: " + intype+ "\n");
 			        detailedSummaryTextArea.append("Income Amount: " + inamount + "\n");
 			       
-			        detailedSummaryTextArea.append("----------------------------------------------------------------------------\n");
+			        detailedSummaryTextArea.append("------------------------------------------\n");
 			        }
 			    }
 			    else if (typeSorter.getSelectedIndex()== 1) {	
@@ -1198,7 +1223,7 @@ this.setVisible(true);
 			        detailedSummaryTextArea.append("Income Type: " + intype+ "\n");
 			        detailedSummaryTextArea.append("Income Amount: " + inamount + "\n");
 			       
-			        detailedSummaryTextArea.append("----------------------------------------------------------------------------\n");
+			        detailedSummaryTextArea.append("------------------------------------------\n");
 			        }
 			    }
 			    else if (typeSorter.getSelectedIndex()== 2) {	
@@ -1210,7 +1235,7 @@ this.setVisible(true);
 			        detailedSummaryTextArea.append("Income Type: " + intype+ "\n");
 			        detailedSummaryTextArea.append("Income Amount: " + inamount + "\n");
 			       
-			        detailedSummaryTextArea.append("----------------------------------------------------------------------------\n");
+			        detailedSummaryTextArea.append("------------------------------------------\n");
 			        }
 			    }
 			    else if (typeSorter.getSelectedIndex()== 3) {	
@@ -1222,7 +1247,7 @@ this.setVisible(true);
 			        detailedSummaryTextArea.append("Income Type: " + intype+ "\n");
 			        detailedSummaryTextArea.append("Income Amount: " + inamount + "\n");
 			       
-			        detailedSummaryTextArea.append("----------------------------------------------------------------------------\n");
+			        detailedSummaryTextArea.append("------------------------------------------\n");
 			        }
 			    }
 				    
@@ -1239,7 +1264,7 @@ this.setVisible(true);
 				        detailedSummaryTextArea.append("Amount: " + amount + "\n");
 				        detailedSummaryTextArea.append("Frequency: " + frequency + "\n"); 
 				        
-				        detailedSummaryTextArea.append("----------------------------------------------------------------------------\n");
+				        detailedSummaryTextArea.append("------------------------------------------\n");
 				    }
 			    
 			} catch (IOException e1) {
@@ -1266,7 +1291,7 @@ this.setVisible(true);
 			}
 			}
 		if(e.getSource()==convertButton) { //converts currency
-			
+			try {
 			Object selectedConversionOne = currSelectOne.getSelectedItem(); //getting the selected option
 			String currOne = selectedConversionOne.toString(); //converting to a string to pass variable
 			Object selectedConversionTwo = currSelectTwo.getSelectedItem();
@@ -1277,7 +1302,10 @@ this.setVisible(true);
 			double converResults = Expenser.convertForeignCurrency(currOne, currTwo, convertAmmount);
 			currResultLabel.setText(currTwo + ": " + converResults);
 			currResultLabel.setVisible(true);
-			
+			}
+			catch (Exception exc) {
+				JOptionPane.showMessageDialog(null, "Please enter a valid submission.", "Error", JOptionPane.INFORMATION_MESSAGE);
+			}
 			}
 		if(e.getSource()==homeButton) { //resets to home screen
 				try {
