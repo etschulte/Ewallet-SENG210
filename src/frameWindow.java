@@ -1088,7 +1088,7 @@ this.setVisible(true);
 		if (e.getSource() == fullIncomeReporter) {
 			    
 			
-			 
+			 if (typeSorter.getSelectedIndex()!=3) {
 		        String selectedinType = typeSorter.getSelectedItem().toString();
 				System.out.print(selectedinType);
 //expenseTypeDetailsTextArea
@@ -1119,8 +1119,40 @@ this.setVisible(true);
 			    } else {
 			    	incomeOverviewLabel.setText("Total Compounded Income: " + formattedTotalIncome);
 			    }
+		    }
+			 else {
+				 IncomeDetailsTextArea.setText("");
+					
+				 List<Map<String, Object>> incomeAmount = Expenser.PrintIncomereport();
+				 
+				    
+				    // Iterate over the expenses list and append details to the text area
+				    for (Map<String, Object> incomeDetailsMap : incomeAmount) {
+				    	String category = (String) incomeDetailsMap.get("Type");
+				        double amount = (double) incomeDetailsMap.get("Income");
+				       
+				        IncomeDetailsTextArea.append("Type: " + category + "\n");
+				        IncomeDetailsTextArea.append("Income: " + amount + "\n");
+				        IncomeDetailsTextArea.append("----------------------------------------------------------------------------\n");
+				    }
+				    
+				    double totalIncome = 0;
+				    for (Map<String, Object> IncomeDetailsMap : incomeAmount) {
+				        double amount = (double) IncomeDetailsMap.get("Income");
+				        totalIncome += amount;
+				    }
+
+				    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+				    String formattedTotalIncome = decimalFormat.format(totalIncome);
+
+				    if (totalIncome > 0) {
+				    	incomeOverviewLabel.setText("Total Compounded Income: " + formattedTotalIncome);
+				    } else {
+				    	incomeOverviewLabel.setText("Total Compounded Income: " + formattedTotalIncome);
+				    }
+			    }
+				 
 		}
-	
 
 		if(e.getSource()==savePanelSubmit) {
 			double currMonthlySavings = Expenser.updateMonthlySavings();
@@ -1131,9 +1163,7 @@ this.setVisible(true);
 				saveResLabel.setText("Estimated Months to Save: " + currRes);
 			} else {
 				saveResLabel.setText("You currently have a negative income" + currRes);
-			}
-			
-			
+			}	
 			
 		}
 		if(e.getSource()==detailedSummaryButton) {
