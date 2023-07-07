@@ -1,0 +1,2 @@
+Food, Groceries, 50.0, Monthly
+Transportation, Fuel, 30.0, Weekly
