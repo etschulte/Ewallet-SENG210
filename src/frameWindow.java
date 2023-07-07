@@ -1,7 +1,4 @@
 import java.awt.BorderLayout;
-import java.text.DecimalFormat;
-import javax.swing.JTextArea;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -9,11 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
 //m
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,8 +19,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class frameWindow extends JFrame implements ActionListener{
 
@@ -278,7 +276,7 @@ incomeLabel.setVisible(true);
 
 inlabel = new JLabel();
 inlabel.setText("Type:");
-inlabel.setBounds(30, 390, 30, 25);
+inlabel.setBounds(10, 390, 55, 25);
 inlabel.setFont(new Font("Courier New", Font.PLAIN, 13));
 inlabel.setForeground(Color.white);
 inlabel.setVisible(true);
@@ -294,7 +292,7 @@ enterIncome.setVisible(true);
 String[] incometypeList = {"Primary", "Secondary", "Other",};
 incomeType = new JComboBox(incometypeList);
 incomeType.setFont(new Font("Courier New", Font.PLAIN, 13));
-incomeType.setBounds(110, 390, 80, 25);
+incomeType.setBounds(60, 390, 140, 25);
 incomeType.setVisible(true);
 incomeText.setFont(new Font("Courier New", Font.PLAIN, 13));
 
@@ -618,7 +616,7 @@ JScrollPane incomePane = new JScrollPane(IncomeDetailsTextArea);
 incomePane.setBounds(30, 110, 400, 430); 
 
 incomeOverviewLabel = new JLabel();
-incomeOverviewLabel.setBounds(110, 295, 500, 500);
+incomeOverviewLabel.setBounds(110, 300, 500, 500);
 incomeOverviewLabel.setText("Total Compounded Income:");
 incomeOverviewLabel.setFont(new Font("Courier New", Font.PLAIN, 15));
 incomeOverviewLabel.setForeground(Color.white);
@@ -1469,38 +1467,46 @@ this.setVisible(true);
 	
 
 	
-   if(e.getSource()==importExpenseButton) {
-		
-		JFileChooser fileChooser = new JFileChooser();
-		
-		fileChooser.setCurrentDirectory(new File(".")); //sets current directory
-		
-		int response = fileChooser.showOpenDialog(null); //select file to open
-		//int response = fileChooser.showSaveDialog(null); //select file to save
-		
-		if(response == JFileChooser.APPROVE_OPTION) {
-			File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-			String fileName = file.toString();
-			Expenser.addExpensesFromFile(fileName);
-			JOptionPane.showMessageDialog(null, "Expense Successfully Added!", "Success", JOptionPane.INFORMATION_MESSAGE);
-		}
+	if (e.getSource() == importExpenseButton) {
+
+	    String fileName = "C:\\Users\\Damian\\git\\Ewallet-SENG21011\\src\\expenseImport.txt";
+
+	    try {
+
+	        Expenser.addExpensesFromFile(fileName);
+
+	        JOptionPane.showMessageDialog(null, "Expense added! Look in Console for details!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+	    } catch (Exception ex) {
+
+	        JOptionPane.showMessageDialog(null, "Error importing expenses from the file!", "Error", JOptionPane.ERROR_MESSAGE);
+
+	        ex.printStackTrace();
+
+	    }
+
 	}
-	
-	if(e.getSource()==importIncomeButton) {
-		
-		JFileChooser fileChooser = new JFileChooser();
-		
-		fileChooser.setCurrentDirectory(new File(".")); //sets current directory
-		
-		int response = fileChooser.showOpenDialog(null); //select file to open
-		//int response = fileChooser.showSaveDialog(null); //select file to save
-		
-		if(response == JFileChooser.APPROVE_OPTION) {
-			File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-			String fileName = file.toString();
-			Expenser.addIncomesFromFile(fileName);
-			JOptionPane.showMessageDialog(null, "Income Successfully Added!", "Success", JOptionPane.INFORMATION_MESSAGE);
-		}
+
+	 
+
+	if (e.getSource() == importIncomeButton) {
+
+	    String fileName = "C:\\Users\\Damian\\git\\Ewallet-SENG21011\\src\\incomes.txt";
+
+	    try {
+
+	        Expenser.addIncomesFromFile(fileName);
+
+	        JOptionPane.showMessageDialog(null, "Income added! Look in Console for details!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+	    } catch (Exception ex) {
+
+	        JOptionPane.showMessageDialog(null, "Error importing incomes from the file!", "Error", JOptionPane.ERROR_MESSAGE);
+
+	        ex.printStackTrace();
+
+	    }
+
 	}
 
 	if(e.getSource()==exportIncomeReportButton) { 
