@@ -11,15 +11,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 public class frameWindow extends JFrame implements ActionListener{
 
@@ -111,6 +103,17 @@ private static JPanel conPanel;
 private static JPanel startPanel;
 private static JPanel incomePanel;
 
+// Login Panel
+private Font loginPanelComponentFont;
+private static JPanel loginPanel;
+private static JButton loginHomeButton;
+private JLabel loginPanelDefaultMessage;
+private JLabel loginUsernameFieldLabel;
+private JLabel loginPasswordFieldLabel;
+private static JTextField loginUsernameField;
+private static JPasswordField loginPasswordField;
+private static JButton loginToAccountButton;
+
 private static JPanel fullIncomeOverviewPanel;
 private static JTextArea IncomeDetailsTextArea = new JTextArea();
 private static JButton fullIncomeReportsButton = new JButton();
@@ -185,8 +188,67 @@ loginButton.setBounds(233,460,182,70);
 loginButton.setFocusable(false);
 loginButton.addActionListener(this);
 
+// login panel configuration
+loginPanel = new JPanel();
+loginPanel.setLayout(null);
+loginPanel.setBackground(Color.black);
+loginPanel.setBounds(0, 0, 455, 600);
 
+// Reusable font component configuration
+loginPanelComponentFont = new Font("Courier New", Font.PLAIN, 16);
 
+// Login Button to go back to home page configuration
+loginHomeButton = new JButton("Home");
+loginHomeButton.setFont(new Font("Courier New", Font.PLAIN,13));
+loginHomeButton.addActionListener(this);
+loginHomeButton.setFocusable(false);
+loginHomeButton.setBounds(140,20,180,35);
+
+// Login default message configuration
+loginPanelDefaultMessage = new JLabel();
+loginPanelDefaultMessage.setText("Login to an account here!");
+loginPanelDefaultMessage.setFont(new Font("Courier New", Font.PLAIN, 20));
+loginPanelDefaultMessage.setBounds(72, 210, 400, 25);
+loginPanelDefaultMessage.setForeground(Color.WHITE);
+
+// Username field label configuration
+loginUsernameFieldLabel = new JLabel("Username:");
+loginUsernameFieldLabel.setFont(loginPanelComponentFont);
+loginUsernameFieldLabel.setBounds(40,300,100,50);
+loginUsernameFieldLabel.setForeground(Color.WHITE);
+
+// Password field label configuration
+loginPasswordFieldLabel = new JLabel("Password:");
+loginPasswordFieldLabel.setFont(loginPanelComponentFont);
+loginPasswordFieldLabel.setBounds(40,370,100,50);
+loginPasswordFieldLabel.setForeground(Color.WHITE);
+
+// Username Field configuration
+loginUsernameField = new JTextField();
+loginUsernameField.setFont(loginPanelComponentFont);
+loginUsernameField.setBounds(160,310,220,30);
+
+// Password field configuration
+loginPasswordField = new JPasswordField();
+loginPasswordField.setFont(loginPanelComponentFont);
+loginPasswordField.setBounds(160,380,220,30);
+
+// Login to account button configuration
+loginToAccountButton = new JButton("Login");
+loginToAccountButton.setFont(loginPanelComponentFont);
+loginToAccountButton.setFocusable(false);
+loginToAccountButton.addActionListener(this);
+loginToAccountButton.setBounds(140,480,180,35);
+
+// Adding components to login panel
+loginPanel.add(loginHomeButton);
+loginPanel.add(loginPanelDefaultMessage);
+loginPanel.add(loginUsernameFieldLabel);
+loginPanel.add(loginUsernameField);
+loginPanel.add(loginPasswordFieldLabel);
+loginPanel.add(loginPasswordField);
+loginPanel.add(loginToAccountButton);
+loginPanel.setVisible(false);
 //currency Conversion window
 
 
@@ -717,6 +779,7 @@ sortTypeSubmitButton.setVisible(true);
 
 
 //add to window
+getContentPane().add(loginPanel);
 getContentPane().add(startPanel);
 getContentPane().add(conPanel);
 getContentPane().add(expensePanel);
@@ -829,7 +892,40 @@ this.setVisible(true);
 				e1.printStackTrace();
 			}
 		}
-		
+
+		if(e.getSource() == loginButton) {
+			try {
+				showLoginPanel();
+			} catch (IOException ioException) {
+				ioException.printStackTrace();
+			}
+
+		}
+
+		if(e.getSource() == loginHomeButton) {
+			try {
+				screenReset();
+			} catch (IOException ioException) {
+				ioException.printStackTrace();
+			}
+		}
+
+		if(e.getSource() == loginToAccountButton) {
+
+			if(loginUsernameField.getText().equals("") && loginPasswordField.getText().equals("")) {
+				JOptionPane.showMessageDialog(this,"Username and password field are empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
+			}
+			else if(loginUsernameField.getText().equals("")) {
+				JOptionPane.showMessageDialog(this,"Username field is empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
+			}
+			else if(loginPasswordField.getText().equals("")) {
+				JOptionPane.showMessageDialog(this,"Password field is empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
+			}
+			else {
+				//TODO retrieve data from database and add authentication
+			}
+		}
+
 		if (e.getSource() == expenseSubmitButton) {
 			Object selectedExpense = expenseSelectOne.getSelectedItem();
 			String expenseOne = selectedExpense.toString();
@@ -1557,6 +1653,7 @@ this.setVisible(true);
 		savePanel.setVisible(false);
 		expenseTypeOverviewPanel.setVisible(false);
 		detailedSummaryPanel.setVisible(false);
+		loginPanel.setVisible(false);
 	}
 	
 	public static void convertWindow() throws IOException {
@@ -1641,6 +1738,14 @@ this.setVisible(true);
 		//making conversion screen
 		savePanel.setVisible(true);
 		
+	}
+
+	public static void showLoginPanel() throws IOException {
+		// hiding original screen
+		startPanel.setVisible(false);
+
+		// showing login screen
+		loginPanel.setVisible(true);
 	}
 }
 
