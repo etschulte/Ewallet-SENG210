@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 //m
 import java.nio.file.Paths;
@@ -14,7 +13,6 @@ import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -27,7 +25,9 @@ public class frameWindow extends JFrame implements ActionListener{
 
 	//Global variables, to work with action listener
 private static JButton addIncome = new JButton();	
-private static JButton addExpense = new JButton();	
+private static JButton addExpense = new JButton();
+private static JButton loginButton = new JButton();
+private static JButton createAccountButton = new JButton();
 private static JButton viewSummary = new JButton();	
 private static JButton currencyConv = new JButton();
 private static JButton homeButton = new JButton();
@@ -139,7 +139,7 @@ titleLabel.setVisible(true);
 
 JLabel chooseLabel = new JLabel();
 chooseLabel.setText("What Would You Like To Do?");
-chooseLabel.setBounds(65, 250, 400, 25);
+chooseLabel.setBounds(65, 200, 400, 25);
 chooseLabel.setFont(new Font("Courier New", Font.PLAIN, 20));
 chooseLabel.setForeground(Color.white);
 chooseLabel.setVisible(true);
@@ -147,31 +147,45 @@ chooseLabel.setVisible(true);
 //Start Page Buttons
 addIncome = new JButton("Add an Income");
 addIncome.setFont(new Font("Courier New", Font.PLAIN, 13));
-addIncome.setBounds(30, 330, 182, 70);
+addIncome.setBounds(30, 260, 182, 70);
 addIncome.setFocusable(false);
 addIncome.addActionListener(this);
 addIncome.setVisible(true);
 
 addExpense = new JButton("Add an Expense");
 addExpense.setFont(new Font("Courier New", Font.PLAIN, 13));
-addExpense.setBounds(233, 330, 182, 70);
+addExpense.setBounds(233, 260, 182, 70);
 addExpense.setFocusable(false);
 addExpense.addActionListener(this);
 addExpense.setVisible(true);
 
 viewSummary = new JButton("View a Summary");
 viewSummary.setFont(new Font("Courier New", Font.PLAIN, 13));
-viewSummary.setBounds(30, 450, 182, 70);
+viewSummary.setBounds(30, 360, 182, 70);
 viewSummary.setFocusable(false);
 viewSummary.addActionListener(this);
 viewSummary.setVisible(true);
 
 currencyConv = new JButton("Convert Currency ");
 currencyConv.setFont(new Font("Courier New", Font.PLAIN, 13));
-currencyConv.setBounds(233, 450, 182, 70);
+currencyConv.setBounds(233, 360, 182, 70);
 currencyConv.setFocusable(false);
 currencyConv.addActionListener(this);
 currencyConv.setVisible(true);
+
+createAccountButton.setText("Create An Account");
+createAccountButton.setFont(new Font("Courier New", Font.PLAIN, 13));
+createAccountButton.setBounds(30,460,182,70);
+createAccountButton.setFocusable(false);
+createAccountButton.addActionListener(this);
+
+loginButton.setText("Login");
+loginButton.setFont(new Font("Courier New", Font.PLAIN, 13));
+loginButton.setBounds(233,460,182,70);
+loginButton.setFocusable(false);
+loginButton.addActionListener(this);
+
+
 
 //currency Conversion window
 
@@ -778,6 +792,8 @@ startPanel.add(viewSummary);
 startPanel.add(currencyConv);
 startPanel.add(addExpense);
 startPanel.add(addIncome);
+startPanel.add(loginButton);
+startPanel.add(createAccountButton);
 startPanel.add(titleLabel);
 startPanel.add(chooseLabel);
 
