@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 //m
 import java.nio.file.Paths;
+import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,8 @@ import javax.swing.*;
 public class frameWindow extends JFrame implements ActionListener{
 
 	//Global variables, to work with action listener
+private static final int MAX_LOGIN_ATTEMPTS = 5;
+private static int loginAttempts = 0;
 private static JButton addIncome = new JButton();	
 private static JButton addExpense = new JButton();
 private static JButton loginButton = new JButton();
@@ -911,7 +914,9 @@ this.setVisible(true);
 		}
 
 		if(e.getSource() == loginToAccountButton) {
-
+			if (loginAttempts > MAX_LOGIN_ATTEMPTS) {
+				System.exit(0);
+			}
 			if(loginUsernameField.getText().equals("") && loginPasswordField.getText().equals("")) {
 				JOptionPane.showMessageDialog(this,"Username and password field are empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
 			}
@@ -922,7 +927,20 @@ this.setVisible(true);
 				JOptionPane.showMessageDialog(this,"Password field is empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
 			}
 			else {
-				//TODO retrieve data from database and add authentication
+				if(queryForItem("User","username",loginUsernameField.getText())) {
+					System.out.println("Username found in database");
+					try {
+						int userID = Integer.parseInt(queryForAdjacentItem("User", "username", "userID", loginUsernameField.getText()));
+						if (loginPasswordField.equals(queryForAdjacentItem("User","userID","password",String.valueOf(userID)))) {
+							JOptionPane.showMessageDialog(this, "Login Successful","E-WALLET Authentication Service",JOptionPane.INFORMATION_MESSAGE);
+						} else {
+							JOptionPane.showMessageDialog(this, "Incorrect Credentials","E-WALLET Authentication Service",JOptionPane.INFORMATION_MESSAGE);
+							loginAttempts++;
+						}
+					} catch (NumberFormatException numberFormatException) {
+						System.out.println(numberFormatException.getMessage());
+					}
+				}
 			}
 		}
 
@@ -1639,6 +1657,60 @@ this.setVisible(true);
 		Expenser.exportMapListToTxt( expensesList,filePath);
 	}
 	}
+
+	/**
+	 * Generic method used to look for data in a unique column in a table.
+	 * For example, this can be used to look in a user table for a username column that has the username "Thomas" in it.  The method will
+	 * @param tableName name of the table
+	 * @param columnName name of the column to look at
+	 * @param textToLookFor specific text data to search for
+	 * @return true if text is found, false otherwise.
+	 */
+	private static boolean queryForItem(String tableName, String columnName, String textToLookFor) {
+		try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStatement = conn.prepareStatement("SELECT " + columnName + " FROM " + tableName + " WHERE " + columnName + " = ?");
+		){
+			preparedStatement.setString(1, textToLookFor);
+			ResultSet results = preparedStatement.executeQuery();
+			if(results.next()) {
+				return true;
+			} else {
+				return false;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	/**
+	 * Method to get adjacent data in a database table row.
+	 * For example, this could be used to look for usernames in the User table and get the userID of the user with that username.
+	 * @param tableName name of table
+	 * @param initialColumn column to look for text in
+	 * @param adjacentColumn column to get text from
+	 * @param initialColumnText text to find in initialColumn
+	 * @return text that is in adjacent column.
+	 */
+	private static String queryForAdjacentItem(String tableName, String initialColumn, String adjacentColumn, String initialColumnText) {
+		try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStatement = conn.prepareStatement(
+				"SELECT " + initialColumn + ", " + adjacentColumn + " FROM " + tableName + " WHERE " + initialColumn + " = ?");
+		) {
+			preparedStatement.setString(1, initialColumnText);
+			ResultSet results = preparedStatement.executeQuery();
+			if (results.next()) {
+				return results.getString(adjacentColumn);
+			} else {
+				return null;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
 	/////////////////////////////////////////////////////////////////
 	
 	//function to reset screen to base window, anytime you add a button on another window, set it to false here so when we add a back to home button, it makes it invisible.
