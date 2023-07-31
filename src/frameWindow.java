@@ -987,7 +987,7 @@ public class frameWindow extends JFrame implements ActionListener {
 				if(queryForItem("USERTABLE","username",loginUsernameField.getText())) {
 					try {
 						int userID = Integer.parseInt(queryForAdjacentItem("USERTABLE", "username", "userID", loginUsernameField.getText()));
-						if (loginPasswordField.getPassword().equals(queryForAdjacentItem("USERTABLE","userID","password",String.valueOf(userID)))) {
+						if (loginPasswordField.getText().equals(queryForAdjacentItem("USERTABLE","userID","password",String.valueOf(userID)))) {
 							JOptionPane.showMessageDialog(this, "Login Successful","E-WALLET Authentication Service",JOptionPane.INFORMATION_MESSAGE);
 							loginUsernameField.setText("");
 							loginPasswordField.setText("");
