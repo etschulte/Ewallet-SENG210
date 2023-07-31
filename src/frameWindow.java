@@ -17,6 +17,8 @@ public class frameWindow extends JFrame implements ActionListener {
 	// Global variables, to work with action listener
 	private static final int MAX_LOGIN_ATTEMPTS = 5;
 	private static int loginAttempts = 0;
+	// Embedded Database Objects and Variables
+	private static String embeddedDBURL = "jdbc:derby:ewalletDB;create=true; username=seng210&password=Summer2023!";
 	private static JButton addIncome = new JButton();
 	private static JButton addExpense = new JButton();
 	private static JButton viewSummary = new JButton();
@@ -984,12 +986,14 @@ public class frameWindow extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this,"Password field is empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
 			}
 			else {
-				if(queryForItem("User","username",loginUsernameField.getText())) {
-					System.out.println("Username found in database");
+				if(queryForItem("USERTABLE","username",loginUsernameField.getText())) {
 					try {
-						int userID = Integer.parseInt(queryForAdjacentItem("User", "username", "userID", loginUsernameField.getText()));
-						if (loginPasswordField.equals(queryForAdjacentItem("User","userID","password",String.valueOf(userID)))) {
+						int userID = Integer.parseInt(queryForAdjacentItem("USERTABLE", "username", "userID", loginUsernameField.getText()));
+						if (loginPasswordField.getText().equals(queryForAdjacentItem("USERTABLE","userID","password",String.valueOf(userID)))) {
 							JOptionPane.showMessageDialog(this, "Login Successful","E-WALLET Authentication Service",JOptionPane.INFORMATION_MESSAGE);
+							loginUsernameField.setText("");
+							loginPasswordField.setText("");
+							loginAttempts = 0;
 						} else {
 							JOptionPane.showMessageDialog(this, "Incorrect Credentials","E-WALLET Authentication Service",JOptionPane.INFORMATION_MESSAGE);
 							loginAttempts++;
@@ -1692,7 +1696,9 @@ public class frameWindow extends JFrame implements ActionListener {
 	 * @return true if text is found, false otherwise.
 	 */
 	private static boolean queryForItem(String tableName, String columnName, String textToLookFor) {
-		try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStatement = conn.prepareStatement("SELECT " + columnName + " FROM " + tableName + " WHERE " + columnName + " = ?");
+		try (Connection conn = DriverManager.getConnection(embeddedDBURL);
+			 PreparedStatement preparedStatement = conn.prepareStatement("SELECT " + columnName +
+					 " FROM " + tableName + " WHERE " + columnName + " = ?");
 		){
 			preparedStatement.setString(1, textToLookFor);
 			ResultSet results = preparedStatement.executeQuery();
@@ -1718,8 +1724,10 @@ public class frameWindow extends JFrame implements ActionListener {
 	 * @return text that is in adjacent column.
 	 */
 	private static String queryForAdjacentItem(String tableName, String initialColumn, String adjacentColumn, String initialColumnText) {
-		try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStatement = conn.prepareStatement(
-				"SELECT " + initialColumn + ", " + adjacentColumn + " FROM " + tableName + " WHERE " + initialColumn + " = ?");
+		try (Connection connection = DriverManager.getConnection(embeddedDBURL);
+			 PreparedStatement preparedStatement = connection.prepareStatement(
+					 "SELECT " + initialColumn + ", " + adjacentColumn +
+							 " FROM " + tableName + " WHERE " + initialColumn + " = ?");
 		) {
 			preparedStatement.setString(1, initialColumnText);
 			ResultSet results = preparedStatement.executeQuery();
@@ -1732,6 +1740,58 @@ public class frameWindow extends JFrame implements ActionListener {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
+		}
+	}
+
+	// Database Related Methods
+
+	protected static void insertNewUser(String tableName, int userID, String username, String password) {
+		try (Connection connection = DriverManager.getConnection(embeddedDBURL);
+			 PreparedStatement preparedStatement = connection.prepareStatement(
+					 "INSERT INTO " + tableName + " VALUES (?,?,?)");
+		) {
+			preparedStatement.setInt(1, userID);
+			preparedStatement.setString(2, username);
+			preparedStatement.setString(3,password);
+			preparedStatement.execute();
+			System.out.println("User " + username + " added with userID of " + userID + " to database.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("There was a problem adding user " + username + " to the database.");
+		}
+	}
+
+	protected static void createUserTable() {
+		try (Connection connection = DriverManager.getConnection(embeddedDBURL);
+			 PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE USERTABLE" + " (" +
+					 "userID INT PRIMARY KEY CHECK (userID >= 0), " +
+					 "username VARCHAR(100) UNIQUE NOT NULL, " +
+					 "password VARCHAR(100) NOT NULL" + ")");
+		){
+
+			preparedStatement.execute();
+			System.out.println("Table successfully created.");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("There was a problem creating the table ...");
+		}
+	}
+
+	protected static void printUserData() {
+		try (Connection connection = DriverManager.getConnection(embeddedDBURL);){
+			Statement statement = connection.createStatement();
+
+			ResultSet results = statement.executeQuery("SELECT * FROM USERTABLE");
+			System.out.println("userID, username, password");
+			while (results.next()) {
+				System.out.printf("ID: %s, Username: %s, Password: %s\n",
+				results.getString("userID"),
+						results.getString("username"),
+						results.getString("password"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -1847,4 +1907,5 @@ public class frameWindow extends JFrame implements ActionListener {
 		// showing login screen
 		loginPanel.setVisible(true);
 	}
+
 }
