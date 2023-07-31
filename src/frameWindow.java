@@ -4,63 +4,55 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
-//m
 import java.nio.file.Paths;
+import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 public class frameWindow extends JFrame implements ActionListener {
 
 	// Global variables, to work with action listener
+	private static final int MAX_LOGIN_ATTEMPTS = 5;
+	private static int loginAttempts = 0;
 	private static JButton addIncome = new JButton();
 	private static JButton addExpense = new JButton();
 	private static JButton viewSummary = new JButton();
 	private static JButton currencyConv = new JButton();
 	private static JButton homeButton = new JButton();
-	private static JButton makeAccountBtn = new JButton();
+	private static JButton loginButton = new JButton();
+	private static JButton createAccountButton = new JButton();
 	private static JTextField convertText = new JTextField();
 	private static JButton convertButton = new JButton();
 	private static JComboBox currSelectOne;
 	private static JComboBox currSelectTwo;
 	private static JLabel currResultLabel;
-	
-//create account
+
+	//create account
 	private static JPanel createAccPanel;
 	private static JButton createAccHomeBtn = new JButton();
 	private static JButton createAccountBtn = new JButton();
 	private static JTextField addUsernameFld = new JTextField();
-	private static JTextField addPasswordFld = new JTextField();	
+	private static JTextField addPasswordFld = new JTextField();
 	private static JTextField confPasswordFld = new JTextField();
 	private static JLabel usernameLbl = new JLabel();
 	private static JLabel passwordLbl = new JLabel();
 	private static JLabel confPasswordLbl = new JLabel();
 
-//file export 
+	//file export
 	private static JButton importExpenseButton = new JButton();
 	private static JButton importIncomeButton = new JButton();
 
-//Save for item
+	//Save for item
 	private static JLabel saveResLabel;
 	private static JTextField saveAmountText;
 	private static JButton itemSave;
 	private static JButton savePanelHomeButton = new JButton();
 	private static JButton savePanelSubmit = new JButton();
 
-// add expense
+	// add expense
 	private static JButton expenseHomeButton = new JButton();
 	private static JComboBox expenseSelectOne;
 	private static JButton expenseSubmitButton = new JButton();
@@ -76,26 +68,26 @@ public class frameWindow extends JFrame implements ActionListener {
 	private static JTextField expenseAmountText = new JTextField();
 	private static JButton addtionalInfoSubmitButton = new JButton();
 
-//for the detailed report
+	//for the detailed report
 	private static JPanel detailedSummaryPanel;
 	private static JTextArea detailedSummaryTextArea = new JTextArea();
 	private static JButton detailedSummaryHomeButton = new JButton();
 
-//For the report expense function 
+	//For the report expense function
 	private static JPanel fullExpenseOverviewPanel;
 	private static JTextArea expenseDetailsTextArea = new JTextArea();
 	private static JButton fullExpenseReportsButton = new JButton();
 	private static JButton fullExpenseHomeButton = new JButton();
 	private static JLabel expenseOverviewLabel = new JLabel();
 
-//Save for item
+	//Save for item
 	private static JPanel savePanel;
-//Summary view menu 
+	//Summary view menu
 	private static JPanel summaryOverviewPanel;
 	private static JButton summaryHomeButton = new JButton();
 	private static JButton detailedSummaryButton = new JButton();
 
-//For the expense report by type function 
+	//For the expense report by type function
 	private static JButton expenseByTypeButton = new JButton();
 	private static JPanel expenseTypeOverviewPanel;
 	private static JButton typeExpenseHomeButton = new JButton();
@@ -106,13 +98,22 @@ public class frameWindow extends JFrame implements ActionListener {
 	private static JButton sortTypeSubmitButton = new JButton();
 	private static JButton exportExpenseReportButton = new JButton();
 
-//income 
+	//income
 	private static JLabel incomeLabel;
 	private static JTextField incomeText = new JTextField();
 	private static JComboBox incomeType;
-//private static JComboBox incomemonth;
-//private static JTextField incomeyear = new JTextField();
-//private static JLabel moneylabel;
+
+	// Login Panel
+	private Font loginPanelComponentFont;
+	private static JPanel loginPanel;
+	private static JButton loginHomeButton;
+	private JLabel loginPanelDefaultMessage;
+	private JLabel loginUsernameFieldLabel;
+	private JLabel loginPasswordFieldLabel;
+	private static JTextField loginUsernameField;
+	private static JPasswordField loginPasswordField;
+	private static JButton loginToAccountButton;
+
 	private static JLabel inlabel;
 	private static JButton enterIncome = new JButton();
 	private static JButton incomeHomeButton = new JButton();
@@ -130,15 +131,16 @@ public class frameWindow extends JFrame implements ActionListener {
 	private static JLabel incomeOverviewLabel = new JLabel();
 	private static JButton exportIncomeReportButton = new JButton();
 
-	frameWindow() {
 
+	frameWindow() {
 //start panel
 		startPanel = new JPanel();
 		startPanel.setBackground(Color.black);
 		startPanel.setBounds(0, 0, 455, 600);
 		startPanel.setLayout(null);
 		startPanel.setVisible(true);
-//Start Page Labels			
+//Start Page Labels
+
 
 		JLabel titleLabel = new JLabel();
 		titleLabel.setText("E-WALLET");
@@ -157,102 +159,170 @@ public class frameWindow extends JFrame implements ActionListener {
 //Start Page Buttons
 		addIncome = new JButton("Add an Income");
 		addIncome.setFont(new Font("Courier New", Font.PLAIN, 13));
-		addIncome.setBounds(30, 330, 182, 70);
+		addIncome.setBounds(30, 260, 182, 70);
 		addIncome.setFocusable(false);
 		addIncome.addActionListener(this);
 		addIncome.setVisible(true);
 
 		addExpense = new JButton("Add an Expense");
 		addExpense.setFont(new Font("Courier New", Font.PLAIN, 13));
-		addExpense.setBounds(233, 330, 182, 70);
+		addExpense.setBounds(233, 260, 182, 70);
 		addExpense.setFocusable(false);
 		addExpense.addActionListener(this);
 		addExpense.setVisible(true);
 
 		viewSummary = new JButton("View a Summary");
 		viewSummary.setFont(new Font("Courier New", Font.PLAIN, 13));
-		viewSummary.setBounds(30, 450, 182, 70);
+		viewSummary.setBounds(30, 360, 182, 70);
 		viewSummary.setFocusable(false);
 		viewSummary.addActionListener(this);
 		viewSummary.setVisible(true);
 
 		currencyConv = new JButton("Convert Currency ");
 		currencyConv.setFont(new Font("Courier New", Font.PLAIN, 13));
-		currencyConv.setBounds(233, 450, 182, 70);
+		currencyConv.setBounds(233, 360, 182, 70);
 		currencyConv.setFocusable(false);
 		currencyConv.addActionListener(this);
 		currencyConv.setVisible(true);
-		
-		makeAccountBtn = new JButton("Make an Account");
-		makeAccountBtn.setFont(new Font("Courier New", Font.PLAIN, 13));
-		makeAccountBtn.setBounds(30, 215, 182, 70);
-		makeAccountBtn.setFocusable(false);
-		makeAccountBtn.addActionListener(this);
-		makeAccountBtn.setVisible(true);
-		
+
+		createAccountButton.setText("Create An Account");
+		createAccountButton.setFont(new Font("Courier New", Font.PLAIN, 13));
+		createAccountButton.setBounds(30,460,182,70);
+		createAccountButton.setFocusable(false);
+		createAccountButton.addActionListener(this);
+
+		loginButton.setText("Login");
+		loginButton.setFont(new Font("Courier New", Font.PLAIN, 13));
+		loginButton.setBounds(233,460,182,70);
+		loginButton.setFocusable(false);
+		loginButton.addActionListener(this);
+
+// login panel configuration
+		loginPanel = new JPanel();
+		loginPanel.setLayout(null);
+		loginPanel.setBackground(Color.black);
+		loginPanel.setBounds(0, 0, 455, 600);
+
+// Reusable font component configuration
+		loginPanelComponentFont = new Font("Courier New", Font.PLAIN, 16);
+
+// Login Button to go back to home page configuration
+		loginHomeButton = new JButton("Home");
+		loginHomeButton.setFont(new Font("Courier New", Font.PLAIN,13));
+		loginHomeButton.addActionListener(this);
+		loginHomeButton.setFocusable(false);
+		loginHomeButton.setBounds(140,20,180,35);
+
+// Login default message configuration
+		loginPanelDefaultMessage = new JLabel();
+		loginPanelDefaultMessage.setText("Login to an account here!");
+		loginPanelDefaultMessage.setFont(new Font("Courier New", Font.PLAIN, 20));
+		loginPanelDefaultMessage.setBounds(72, 210, 400, 25);
+		loginPanelDefaultMessage.setForeground(Color.WHITE);
+
+// Username field label configuration
+		loginUsernameFieldLabel = new JLabel("Username:");
+		loginUsernameFieldLabel.setFont(loginPanelComponentFont);
+		loginUsernameFieldLabel.setBounds(40,300,100,50);
+		loginUsernameFieldLabel.setForeground(Color.WHITE);
+
+// Password field label configuration
+		loginPasswordFieldLabel = new JLabel("Password:");
+		loginPasswordFieldLabel.setFont(loginPanelComponentFont);
+		loginPasswordFieldLabel.setBounds(40,370,100,50);
+		loginPasswordFieldLabel.setForeground(Color.WHITE);
+
+// Username Field configuration
+		loginUsernameField = new JTextField();
+		loginUsernameField.setFont(loginPanelComponentFont);
+		loginUsernameField.setBounds(160,310,220,30);
+
+// Password field configuration
+		loginPasswordField = new JPasswordField();
+		loginPasswordField.setFont(loginPanelComponentFont);
+		loginPasswordField.setBounds(160,380,220,30);
+
+// Login to account button configuration
+		loginToAccountButton = new JButton("Login");
+		loginToAccountButton.setFont(loginPanelComponentFont);
+		loginToAccountButton.setFocusable(false);
+		loginToAccountButton.addActionListener(this);
+		loginToAccountButton.setBounds(140,480,180,35);
+
+// Adding components to login panel
+		loginPanel.add(loginHomeButton);
+		loginPanel.add(loginPanelDefaultMessage);
+		loginPanel.add(loginUsernameFieldLabel);
+		loginPanel.add(loginUsernameField);
+		loginPanel.add(loginPasswordFieldLabel);
+		loginPanel.add(loginPasswordField);
+		loginPanel.add(loginToAccountButton);
+		loginPanel.setVisible(false);
+
+
 //CREATE ACCOUNT PANEL
 		createAccPanel = new JPanel();
 		createAccPanel.setBackground(Color.black);
 		createAccPanel.setBounds(0, 0, 455, 600);
 		createAccPanel.setLayout(null);
 		createAccPanel.setVisible(false);
-		
+
 		createAccHomeBtn = new JButton("Home");
 		createAccHomeBtn.setFont(new Font("Courier New", Font.PLAIN, 15));
 		createAccHomeBtn.setBounds(140, 20, 180, 35);
 		createAccHomeBtn.setFocusable(false);
 		createAccHomeBtn.addActionListener(this);
 		createAccHomeBtn.setVisible(true);
-		
+
 		addUsernameFld.setFont(new Font("Courier New", Font.PLAIN, 13));
 		addUsernameFld.setPreferredSize(new Dimension(20, 30));
 		addUsernameFld.setCaretColor(Color.black); // cursor color
 		addUsernameFld.setEditable(true);
 		addUsernameFld.setBounds(200, 100, 180, 35);
 		addUsernameFld.setVisible(true);
-		
+
 		usernameLbl = new JLabel("Enter Username: ");
 		usernameLbl.setFont(new Font("Courier New", Font.PLAIN, 16));
 		usernameLbl.setForeground(Color.white);
 		usernameLbl.setBounds(30, 100, 180, 35);
 		usernameLbl.setFocusable(false);
 		usernameLbl.setVisible(true);
-		
+
 		addPasswordFld.setFont(new Font("Courier New", Font.PLAIN, 13));
 		addPasswordFld.setPreferredSize(new Dimension(20, 30));
 		addPasswordFld.setCaretColor(Color.black); // cursor color
 		addPasswordFld.setEditable(true);
 		addPasswordFld.setBounds(200, 175, 180, 35);
 		addPasswordFld.setVisible(true);
-		
+
 		passwordLbl = new JLabel("Enter Password: ");
 		passwordLbl.setFont(new Font("Courier New", Font.PLAIN, 16));
 		passwordLbl.setForeground(Color.white);
 		passwordLbl.setBounds(30, 175, 180, 35);
 		passwordLbl.setFocusable(false);
 		passwordLbl.setVisible(true);
-		
+
 		confPasswordFld.setFont(new Font("Courier New", Font.PLAIN, 13));
 		confPasswordFld.setPreferredSize(new Dimension(20, 30));
 		confPasswordFld.setCaretColor(Color.black); // cursor color
 		confPasswordFld.setEditable(true);
 		confPasswordFld.setBounds(220, 250, 180, 35);
 		confPasswordFld.setVisible(true);
-		
+
 		confPasswordLbl = new JLabel("Confirm Password: ");
 		confPasswordLbl.setFont(new Font("Courier New", Font.PLAIN, 16));
 		confPasswordLbl.setForeground(Color.white);
 		confPasswordLbl.setBounds(30, 250, 180, 35);
 		confPasswordLbl.setFocusable(false);
 		confPasswordLbl.setVisible(true);
-		
+
 		createAccountBtn = new JButton("Create Account");
 		createAccountBtn.setFont(new Font("Courier New", Font.PLAIN, 15));
 		createAccountBtn.setBounds(140, 400, 180, 35);
 		createAccountBtn.setFocusable(false);
 		createAccountBtn.addActionListener(this);
 		createAccountBtn.setVisible(true);
-		
+
 		createAccPanel.add(createAccHomeBtn);
 		createAccPanel.add(usernameLbl);
 		createAccPanel.add(passwordLbl);
@@ -530,7 +600,7 @@ public class frameWindow extends JFrame implements ActionListener {
 		expenseAmountText.setBounds(190, 480, 136, 25);
 		expenseAmountText.setVisible(false);
 
-//submit button for type of expense 
+//submit button for type of expense
 		expenseSubmitButton = new JButton("Submit!");
 		expenseSubmitButton.setFont(new Font("Courier New", Font.PLAIN, 13));
 		expenseSubmitButton.setBounds(270, 290, 100, 30);
@@ -595,7 +665,7 @@ public class frameWindow extends JFrame implements ActionListener {
 		expenseByTypeButton.addActionListener(this);
 		expenseByTypeButton.setVisible(true);
 
-//VIEW FULL EXPENSE OPTION 
+//VIEW FULL EXPENSE OPTION
 		fullExpenseOverviewPanel = new JPanel();
 		fullExpenseOverviewPanel.setBackground(Color.black);
 		fullExpenseOverviewPanel.setBounds(0, 0, 455, 600);
@@ -768,6 +838,7 @@ public class frameWindow extends JFrame implements ActionListener {
 		sortTypeSubmitButton.setVisible(true);
 
 //add to window
+
 		getContentPane().add(startPanel);
 		getContentPane().add(conPanel);
 		getContentPane().add(expensePanel);
@@ -778,6 +849,7 @@ public class frameWindow extends JFrame implements ActionListener {
 		getContentPane().add(expenseTypeOverviewPanel);
 		getContentPane().add(detailedSummaryPanel);
 		getContentPane().add(createAccPanel);
+		getContentPane().add(loginPanel);
 
 //save panel
 		savePanel.add(savePanelHomeButton);
@@ -808,7 +880,7 @@ public class frameWindow extends JFrame implements ActionListener {
 		fullExpenseOverviewPanel.add(expenseOverviewLabel);
 		fullExpenseOverviewPanel.add(expensePane);
 
-//expense report by type 
+//expense report by type
 		expenseTypeOverviewPanel.add(typeExpenseHomeButton);
 		expenseTypeOverviewPanel.add(expensetypePane);
 		expenseTypeOverviewPanel.add(expenseTypeLabel);
@@ -820,7 +892,7 @@ public class frameWindow extends JFrame implements ActionListener {
 		detailedSummaryPanel.add(detailedSummaryPane);
 		detailedSummaryPanel.add(detailedSummaryHomeButton);
 
-///summary report overview menu 
+///summary report overview menu
 		summaryOverviewPanel.add(summaryHomeButton);
 		summaryOverviewPanel.add(fullExpenseReportsButton);
 		summaryOverviewPanel.add(fullIncomeReportsButton);
@@ -829,6 +901,7 @@ public class frameWindow extends JFrame implements ActionListener {
 		summaryOverviewPanel.add(detailedSummaryButton);
 
 //currency conv
+
 		conPanel.add(convertButton);
 		conPanel.add(currSelectOne);
 		conPanel.add(convertText);
@@ -843,7 +916,8 @@ public class frameWindow extends JFrame implements ActionListener {
 		startPanel.add(addIncome);
 		startPanel.add(titleLabel);
 		startPanel.add(chooseLabel);
-		startPanel.add(makeAccountBtn);
+		startPanel.add(createAccountButton);
+		startPanel.add(loginButton);
 
 //define start window
 		this.setSize(455, 600);
@@ -862,20 +936,70 @@ public class frameWindow extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// Controls the buttons when pressed
-		if (e.getSource() == makeAccountBtn) {
+		if (e.getSource() == createAccountButton) {
 			try {
 				createAccWindow();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 		}
-		
+
 		if (e.getSource() == addExpense) {
 			try {
 				expenseWindow();
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+			}
+		}
+
+		if(e.getSource() == loginButton) {
+			try {
+				showLoginPanel();
+			} catch (IOException ioException) {
+				ioException.printStackTrace();
+			}
+
+		}
+
+		if(e.getSource() == loginHomeButton) {
+			try {
+				screenReset();
+			} catch (IOException ioException) {
+				ioException.printStackTrace();
+			}
+		}
+
+		if(e.getSource() == loginToAccountButton) {
+			if (loginAttempts > MAX_LOGIN_ATTEMPTS) {
+				System.exit(0);
+			}
+			if(loginUsernameField.getText().equals("") && loginPasswordField.getText().equals("")) {
+				JOptionPane.showMessageDialog(this,"Username and password field are empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
+			}
+			else if(loginUsernameField.getText().equals("")) {
+				JOptionPane.showMessageDialog(this,"Username field is empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
+			}
+			else if(loginPasswordField.getText().equals("")) {
+				JOptionPane.showMessageDialog(this,"Password field is empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
+			}
+			else {
+				if(queryForItem("USERTABLE","username",loginUsernameField.getText())) {
+					try {
+						int userID = Integer.parseInt(queryForAdjacentItem("USERTABLE", "username", "userID", loginUsernameField.getText()));
+						if (loginPasswordField.getText().equals(queryForAdjacentItem("USERTABLE","userID","password",String.valueOf(userID)))) {
+							JOptionPane.showMessageDialog(this, "Login Successful","E-WALLET Authentication Service",JOptionPane.INFORMATION_MESSAGE);
+							loginUsernameField.setText("");
+							loginPasswordField.setText("");
+							loginAttempts = 0;
+						} else {
+							JOptionPane.showMessageDialog(this, "Incorrect Credentials","E-WALLET Authentication Service",JOptionPane.INFORMATION_MESSAGE);
+							loginAttempts++;
+						}
+					} catch (NumberFormatException numberFormatException) {
+						System.out.println(numberFormatException.getMessage());
+					}
+				}
 			}
 		}
 
@@ -1417,7 +1541,7 @@ public class frameWindow extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 		}
-		
+
 		if (e.getSource() == createAccHomeBtn) { // resets to home screen
 			try {
 				screenReset();
@@ -1560,6 +1684,60 @@ public class frameWindow extends JFrame implements ActionListener {
 			Expenser.exportMapListToTxt(expensesList, filePath);
 		}
 	}
+
+	/**
+	 * Generic method used to look for data in a unique column in a table.
+	 * For example, this can be used to look in a user table for a username column that has the username "Thomas" in it.  The method will
+	 * @param tableName name of the table
+	 * @param columnName name of the column to look at
+	 * @param textToLookFor specific text data to search for
+	 * @return true if text is found, false otherwise.
+	 */
+	private static boolean queryForItem(String tableName, String columnName, String textToLookFor) {
+		try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStatement = conn.prepareStatement("SELECT " + columnName + " FROM " + tableName + " WHERE " + columnName + " = ?");
+		){
+			preparedStatement.setString(1, textToLookFor);
+			ResultSet results = preparedStatement.executeQuery();
+			if(results.next()) {
+				return true;
+			} else {
+				return false;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	/**
+	 * Method to get adjacent data in a database table row.
+	 * For example, this could be used to look for usernames in the User table and get the userID of the user with that username.
+	 * @param tableName name of table
+	 * @param initialColumn column to look for text in
+	 * @param adjacentColumn column to get text from
+	 * @param initialColumnText text to find in initialColumn
+	 * @return text that is in adjacent column.
+	 */
+	private static String queryForAdjacentItem(String tableName, String initialColumn, String adjacentColumn, String initialColumnText) {
+		try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStatement = conn.prepareStatement(
+				"SELECT " + initialColumn + ", " + adjacentColumn + " FROM " + tableName + " WHERE " + initialColumn + " = ?");
+		) {
+			preparedStatement.setString(1, initialColumnText);
+			ResultSet results = preparedStatement.executeQuery();
+			if (results.next()) {
+				return results.getString(adjacentColumn);
+			} else {
+				return null;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
 	/////////////////////////////////////////////////////////////////
 
 	// function to reset screen to base window, anytime you add a button on another
@@ -1576,13 +1754,14 @@ public class frameWindow extends JFrame implements ActionListener {
 		savePanel.setVisible(false);
 		expenseTypeOverviewPanel.setVisible(false);
 		detailedSummaryPanel.setVisible(false);
+		loginPanel.setVisible(false);
 		createAccPanel.setVisible(false);
 	}
-	
+
 	public static void createAccWindow() throws IOException {
 		startPanel.setVisible(false);
 		createAccPanel.setVisible(true);
-		
+
 	}
 
 	public static void convertWindow() throws IOException {
@@ -1661,5 +1840,13 @@ public class frameWindow extends JFrame implements ActionListener {
 		// making conversion screen
 		savePanel.setVisible(true);
 
+	}
+
+	public static void showLoginPanel() throws IOException {
+		// hiding original screen
+		startPanel.setVisible(false);
+
+		// showing login screen
+		loginPanel.setVisible(true);
 	}
 }
