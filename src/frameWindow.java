@@ -984,12 +984,14 @@ public class frameWindow extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this,"Password field is empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
 			}
 			else {
-				if(queryForItem("User","username",loginUsernameField.getText())) {
-					System.out.println("Username found in database");
+				if(queryForItem("USERTABLE","username",loginUsernameField.getText())) {
 					try {
-						int userID = Integer.parseInt(queryForAdjacentItem("User", "username", "userID", loginUsernameField.getText()));
-						if (loginPasswordField.equals(queryForAdjacentItem("User","userID","password",String.valueOf(userID)))) {
+						int userID = Integer.parseInt(queryForAdjacentItem("USERTABLE", "username", "userID", loginUsernameField.getText()));
+						if (loginPasswordField.getPassword().equals(queryForAdjacentItem("USERTABLE","userID","password",String.valueOf(userID)))) {
 							JOptionPane.showMessageDialog(this, "Login Successful","E-WALLET Authentication Service",JOptionPane.INFORMATION_MESSAGE);
+							loginUsernameField.setText("");
+							loginPasswordField.setText("");
+							loginAttempts = 0;
 						} else {
 							JOptionPane.showMessageDialog(this, "Incorrect Credentials","E-WALLET Authentication Service",JOptionPane.INFORMATION_MESSAGE);
 							loginAttempts++;
