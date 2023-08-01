@@ -1158,13 +1158,20 @@ public class frameWindow extends JFrame implements ActionListener {
 		}
 		if (e.getSource() == enterIncome) {
 			try {
+				DecimalFormat decimalFormat = new DecimalFormat("#.##");
 				String selectedincomeType = incomeType.getSelectedItem().toString();
 				double cashflow = Double.parseDouble(incomeText.getText());
-				Expenser.addIncome(selectedincomeType, cashflow);
-				System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $"
-						+ incomeText.getText() + ".");
+
+				if (cashflow >= 0.01d) {
+					JOptionPane.showMessageDialog(this, "Income adding successful.", "Income Added",
+							JOptionPane.INFORMATION_MESSAGE);
+					Expenser.addIncome(selectedincomeType, cashflow);
+					System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $"
+							+ incomeText.getText() + ".");
+				} else { throw new Exception("Invalid input.");
+				}
 			} catch (Exception exc) {
-				JOptionPane.showMessageDialog(null, "Please enter a valid submission.", "Error",
+				JOptionPane.showMessageDialog(this, "Please enter a valid submission.", "Error",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
