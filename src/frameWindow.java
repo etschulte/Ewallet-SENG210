@@ -1114,34 +1114,37 @@ public class frameWindow extends JFrame implements ActionListener {
 					selectedExpenseTwo = expenseSelectFive.getSelectedItem().toString();
 				}
 				double amount = Double.parseDouble(expenseAmountText.getText());
+				if (amount >= 0.01D) {
+					Expenser.addExpense(selectedExpenseOne, selectedExpenseTwo, amount, selectedFrequency);
 
-				Expenser.addExpense(selectedExpenseOne, selectedExpenseTwo, amount, selectedFrequency);
+					JOptionPane.showMessageDialog(this, selectedExpenseTwo + " expense for " +
+							String.format("$%.2f added.",amount), "Success", JOptionPane.INFORMATION_MESSAGE);
 
-				JOptionPane.showMessageDialog(null, "Expense added successfully!", "Success",
-						JOptionPane.INFORMATION_MESSAGE);
+					expenseAmountText.setText("");
+					expenseSelectOne.setSelectedIndex(0);
+					expenseSelectTwo.setSelectedIndex(0);
+					expenseSelectThree.setSelectedIndex(0);
+					expenseSelectFour.setSelectedIndex(0);
+					expenseSelectFive.setSelectedIndex(0);
+					expenseSelectSix.setSelectedIndex(0);
 
-				expenseAmountText.setText("");
-				expenseSelectOne.setSelectedIndex(0);
-				expenseSelectTwo.setSelectedIndex(0);
-				expenseSelectThree.setSelectedIndex(0);
-				expenseSelectFour.setSelectedIndex(0);
-				expenseSelectFive.setSelectedIndex(0);
-				expenseSelectSix.setSelectedIndex(0);
-
-				// Hide additional components
-				expenseSelectTwo.setVisible(false);
-				expenseSelectThree.setVisible(false);
-				expenseSelectFour.setVisible(false);
-				expenseSelectFive.setVisible(false);
-				expenseSelectSix.setVisible(false);
-				expenseAmountText.setVisible(false);
-				addtionalInfoSubmitButton.setVisible(false);
-				expenseAmountLabel.setVisible(false);
-				expenseCategoryLabel.setVisible(false);
-				expenseFrequencyLabel.setVisible(false);
-				expenseAddtionalLabel.setVisible(false);
+					// Hide additional components
+					expenseSelectTwo.setVisible(false);
+					expenseSelectThree.setVisible(false);
+					expenseSelectFour.setVisible(false);
+					expenseSelectFive.setVisible(false);
+					expenseSelectSix.setVisible(false);
+					expenseAmountText.setVisible(false);
+					addtionalInfoSubmitButton.setVisible(false);
+					expenseAmountLabel.setVisible(false);
+					expenseCategoryLabel.setVisible(false);
+					expenseFrequencyLabel.setVisible(false);
+					expenseAddtionalLabel.setVisible(false);
+				} else {
+					throw new Exception("Invalid amount.");
+				}
 			} catch (Exception exc) {
-				JOptionPane.showMessageDialog(null, "Please enter a valid submission.", "Error",
+				JOptionPane.showMessageDialog(this, "Please enter a valid submission.", "Error",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
@@ -1163,8 +1166,9 @@ public class frameWindow extends JFrame implements ActionListener {
 				double cashflow = Double.parseDouble(incomeText.getText());
 
 				if (cashflow >= 0.01d) {
-					JOptionPane.showMessageDialog(this, "Income adding successful.", "Income Added",
-							JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(this,
+							"Adding " + selectedincomeType + " income for " + String.format("$%.2f",cashflow) + " successful.",
+							"Income Added", JOptionPane.INFORMATION_MESSAGE);
 					Expenser.addIncome(selectedincomeType, cashflow);
 					System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $"
 							+ incomeText.getText() + ".");
