@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.*;
@@ -11,12 +12,15 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class frameWindow extends JFrame implements ActionListener {
 
 	// Global variables, to work with action listener
 	private static final int MAX_LOGIN_ATTEMPTS = 5;
 	private static int loginAttempts = 0;
+	private JFileChooser fileChooser = new JFileChooser("src\\");
 	private static JButton addIncome = new JButton();
 	private static JButton addExpense = new JButton();
 	private static JButton viewSummary = new JButton();
@@ -1624,14 +1628,22 @@ public class frameWindow extends JFrame implements ActionListener {
 
 		if (e.getSource() == importExpenseButton) {
 
-			String fileName = "C:\\Users\\Damian\\git\\Ewallet-SENG21011\\src\\expenseImport.txt";
-
 			try {
+				fileChooser.addChoosableFileFilter( new FileNameExtensionFilter("Text Files (*.txt)","txt"));
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fileChooser.setAcceptAllFileFilterUsed(false);
 
-				Expenser.addExpensesFromFile(fileName);
+				int fileChooserChoice = fileChooser.showOpenDialog(this);
 
-				JOptionPane.showMessageDialog(null, "Expense added! Look in Console for details!", "Success",
-						JOptionPane.INFORMATION_MESSAGE);
+				if (fileChooserChoice == JFileChooser.APPROVE_OPTION) {
+					Expenser.addExpensesFromFile(fileChooser.getSelectedFile().getAbsolutePath());
+
+					JOptionPane.showMessageDialog(this, "Expense added! Look in Console for details!", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
+				} else if (fileChooserChoice == JFileChooser.CANCEL_OPTION){
+					JOptionPane.showMessageDialog(this, "File selection canceled.", "Canceled",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
 
 			} catch (Exception ex) {
 
@@ -1646,15 +1658,23 @@ public class frameWindow extends JFrame implements ActionListener {
 
 		if (e.getSource() == importIncomeButton) {
 
-			String fileName = "C:\\Users\\Damian\\git\\Ewallet-SENG21011\\src\\incomes.txt";
-
 			try {
+				fileChooser.addChoosableFileFilter( new FileNameExtensionFilter("Text Files (*.txt)","txt"));
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fileChooser.setAcceptAllFileFilterUsed(false);
 
-				Expenser.addIncomesFromFile(fileName);
+				int fileChooserChoice = fileChooser.showOpenDialog(this);
 
-				JOptionPane.showMessageDialog(null, "Income added! Look in Console for details!", "Success",
-						JOptionPane.INFORMATION_MESSAGE);
+				if (fileChooserChoice == JFileChooser.APPROVE_OPTION) {
+					Expenser.addIncomesFromFile(fileChooser.getSelectedFile().getAbsolutePath());
 
+					JOptionPane.showMessageDialog(null, "Income added! Look in Console for details!", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
+
+				} else if (fileChooserChoice == JFileChooser.CANCEL_OPTION){
+					JOptionPane.showMessageDialog(this, "File selection canceled.", "Canceled",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
 			} catch (Exception ex) {
 
 				JOptionPane.showMessageDialog(null, "Error importing incomes from the file!", "Error",

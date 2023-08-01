@@ -78,6 +78,11 @@ public interface Expenser {
 		Map <String, Object> incomeDetailsMap = new HashMap<>();
 		incomeDetailsMap.put("Type", intype);
 		incomeDetailsMap.put("Income", income);
+
+		System.out.println("Income added:");
+		System.out.println("Type: " + intype);
+		System.out.println("Amount: " + income);
+		System.out.println();
 		
 		incomeAmount.add(incomeDetailsMap);
 		
