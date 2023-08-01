@@ -1161,7 +1161,6 @@ public class frameWindow extends JFrame implements ActionListener {
 		}
 		if (e.getSource() == enterIncome) {
 			try {
-				DecimalFormat decimalFormat = new DecimalFormat("#.##");
 				String selectedincomeType = incomeType.getSelectedItem().toString();
 				double cashflow = Double.parseDouble(incomeText.getText());
 
@@ -1371,7 +1370,7 @@ public class frameWindow extends JFrame implements ActionListener {
 				double currRes = currAmount / currMonthlySavings;
 
 				// Format currRes to one decimal place
-				DecimalFormat decimalFormat = new DecimalFormat("#.#");
+				DecimalFormat decimalFormat = new DecimalFormat("#.##");
 				String formattedRes = decimalFormat.format(currRes);
 
 				if (currRes > 0) {

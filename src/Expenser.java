@@ -202,12 +202,13 @@ public interface Expenser {
 	public int whenCanIBuy(String itemname,double  price);
 	// updates monthly savings based on latest added income and expenses. This is an internal function not called by the users.  Bonus: what is the most efficient way to call it (when?)? 
 	public static double updateMonthlySavings() {
-		double monthlySavings = 0;
-		double monthlyBills = 0;
-		double monthlyIncome = 0;
-		double secondIncome = 0;
-		double primIncome = 0;
-		double otherIncome = 0;
+		double monthlySavings = 0.0d;
+		double monthlyBills = 0.0d;
+		double monthlyIncome = 0.0d;
+		double secondIncome = 0.0d;
+		double primIncome = 0.0d;
+		double otherIncome = 0.0d;
+		double annualExpense = 0.0d;
 
 			//correction on keys 
 			
@@ -237,27 +238,28 @@ public interface Expenser {
 
 	for (Map<String, Object> expense : expensesList) {
 	    if (expense.containsKey("Amount") && expense.containsKey("Frequency")) {
-	    	double addVal = 0;
+	    	double addVal = 0.0d;
 	        Object amount = expense.get("Amount");
 	        Object frequency = expense.get("Frequency");
 	        // Do something with the amount and frequency
 	        String compString = frequency.toString();
 	        double compAmount = (double) amount;
+			double annualAmount = 0.0d;
 	        System.out.println("Amount: " + amount);
 	        System.out.println("Frequency: " + frequency);
-	        if (compString.equals("Annually")) {
+	        if (compString.equals("Monthly")) {
 	        	addVal = compAmount/12;
 	        	monthlyBills += addVal;
 	        } else if (compString.equals("Biweekly") ) {
 	        	addVal = compAmount*2;
 	        	monthlyBills += addVal;
-	        } else {
-	        	monthlyBills += compAmount;
-	        }
+	        } else if (compString.equals("Annually")) {
+				annualExpense += compAmount;
+			}
  
 	    }
 			} 
-	monthlySavings = monthlyIncome - monthlyBills;
+	monthlySavings = monthlyIncome - monthlyBills - annualExpense;
 	return monthlySavings;
 	}
 	
