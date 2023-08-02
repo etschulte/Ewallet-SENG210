@@ -943,6 +943,22 @@ public class frameWindow extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 		}
+		
+		if (e.getSource() == createAccountBtn) {
+			if (addUsernameFld.getText().equals("") && addPasswordFld.getText().equals("")) {
+				JOptionPane.showMessageDialog(this, "Username and password field are empty!","E-WALLET - Warning Message", JOptionPane.WARNING_MESSAGE);
+			}
+			else if(addUsernameFld.getText().equals("")) {
+				JOptionPane.showMessageDialog(this,"Username field is empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
+			}
+			else if(addPasswordFld.getText().equals("")) {
+				JOptionPane.showMessageDialog(this,"Password field is empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
+			}
+			else if(confPasswordFld.getText().equals("")) {
+				JOptionPane.showMessageDialog(this,"Please confirm your password!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
+			}
+			
+		}
 
 		if (e.getSource() == addExpense) {
 			try {
