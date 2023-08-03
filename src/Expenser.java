@@ -299,6 +299,9 @@ public interface Expenser {
 			}
 		}
 		for (int i = 0; amountToSaveFor > ((updateMonthlySavings() * 12) * i); i++) {
+			if (updateMonthlySavings() == 0) {
+				break;
+			}
 			years++;
 			System.out.println("Years: " + years);
 		}

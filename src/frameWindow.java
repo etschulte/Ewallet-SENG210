@@ -1373,13 +1373,16 @@ public class frameWindow extends JFrame implements ActionListener {
 				DecimalFormat decimalFormat = new DecimalFormat("#.##");
 				String formattedRes = decimalFormat.format(currRes);
 
-				if (currRes >= 0.01) {
+				if (currRes >= 0.01 && currAmount >= 0.01) {
 					saveResLabel.setText("Estimated Months to Save: " + formattedRes);
+					saveResLabel.setText("Estimated Months to Save: " + formattedRes);
+
 				} else {
-					saveResLabel.setText("You currently have a negative income: " + formattedRes);
+					saveAmountText.setText("");
+					throw new Exception("Less than penny or negative value entered.");
 				}
 			} catch (Exception exc) {
-				JOptionPane.showMessageDialog(null, "Please enter a valid submission.", "Error",
+				JOptionPane.showMessageDialog(this, "Please enter a valid submission.", "Error",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
@@ -1657,7 +1660,7 @@ public class frameWindow extends JFrame implements ActionListener {
 
 			} catch (Exception ex) {
 
-				JOptionPane.showMessageDialog(null, "Error importing expenses from the file!", "Error",
+				JOptionPane.showMessageDialog(this, "Error importing expenses from the file!", "Error",
 						JOptionPane.ERROR_MESSAGE);
 
 				ex.printStackTrace();
@@ -1678,7 +1681,7 @@ public class frameWindow extends JFrame implements ActionListener {
 				if (fileChooserChoice == JFileChooser.APPROVE_OPTION) {
 					Expenser.addIncomesFromFile(fileChooser.getSelectedFile().getAbsolutePath());
 
-					JOptionPane.showMessageDialog(null, "Income added! Look in Console for details!", "Success",
+					JOptionPane.showMessageDialog(this, "Income added! Look in Console for details!", "Success",
 							JOptionPane.INFORMATION_MESSAGE);
 
 				} else if (fileChooserChoice == JFileChooser.CANCEL_OPTION){
@@ -1687,7 +1690,7 @@ public class frameWindow extends JFrame implements ActionListener {
 				}
 			} catch (Exception ex) {
 
-				JOptionPane.showMessageDialog(null, "Error importing incomes from the file!", "Error",
+				JOptionPane.showMessageDialog(this, "Error importing incomes from the file!", "Error",
 						JOptionPane.ERROR_MESSAGE);
 
 				ex.printStackTrace();
