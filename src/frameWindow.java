@@ -1367,13 +1367,13 @@ public class frameWindow extends JFrame implements ActionListener {
 			try {
 				double currMonthlySavings = Expenser.updateMonthlySavings();
 				double currAmount = Double.parseDouble(saveAmountText.getText());
-				double currRes = currAmount / currMonthlySavings;
+				double currRes = (currAmount + Expenser.getAnnualExpenseTotal(currAmount)) / currMonthlySavings;
 
 				// Format currRes to one decimal place
 				DecimalFormat decimalFormat = new DecimalFormat("#.##");
 				String formattedRes = decimalFormat.format(currRes);
 
-				if (currRes > 0) {
+				if (currRes >= 0.01) {
 					saveResLabel.setText("Estimated Months to Save: " + formattedRes);
 				} else {
 					saveResLabel.setText("You currently have a negative income: " + formattedRes);
