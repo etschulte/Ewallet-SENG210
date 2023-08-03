@@ -575,7 +575,7 @@ public class frameWindow extends JFrame implements ActionListener {
 		expenseFrequencyLabel.setVisible(true);
 
 //combo box for the frequency of when the expense occurs
-		String[] expenseList6 = { "Annually", "Monthy", "Biweekly" };
+		String[] expenseList6 = { "Annually", "Monthly", "Biweekly" };
 		expenseSelectSix = new JComboBox(expenseList6);
 		expenseSelectSix.setFont(new Font("Courier New", Font.PLAIN, 13));
 		expenseSelectSix.setBounds(190, 440, 140, 30);

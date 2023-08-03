@@ -1,15 +1,8 @@
-import java.io.FileWriter;
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import java.io.BufferedWriter;
-import java.io.FileReader;
+import java.util.Map;
 
 public interface Expenser {
 
@@ -265,15 +258,15 @@ public interface Expenser {
 
 				System.out.println("Amount: " + amount);
 				System.out.println("Frequency: " + frequency);
+				System.out.println(compString);
+				if (compString.equals("Monthly")) {
+					System.out.println("Monthly cost: " + compAmount);
+					monthlyBills += compAmount;
 
-				if (compString.equals("Biweekly")) {
+				}
+				else if (compString.equals("Biweekly")) {
 
 					addVal = compAmount * 2.0;
-					monthlyBills += addVal;
-
-				} else if (compString.equals("Monthly")) {
-
-					addVal = compAmount;
 					monthlyBills += addVal;
 
 				}
@@ -282,7 +275,7 @@ public interface Expenser {
 		}
 		System.out.println("Monthly Income: " + monthlyIncome);
 		System.out.println("Monthly bills: " + monthlyBills);
-		monthlySavings = (monthlyIncome - monthlyBills);
+		monthlySavings = monthlyIncome - monthlyBills;
 		return monthlySavings;
 	}
 
