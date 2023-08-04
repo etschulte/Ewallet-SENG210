@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.*;
@@ -11,12 +12,15 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class frameWindow extends JFrame implements ActionListener {
 
 	// Global variables, to work with action listener
 	private static final int MAX_LOGIN_ATTEMPTS = 5;
 	private static int loginAttempts = 0;
+	private JFileChooser fileChooser = new JFileChooser("src\\");
 	private static JButton addIncome = new JButton();
 	private static JButton addExpense = new JButton();
 	private static JButton viewSummary = new JButton();
@@ -571,7 +575,7 @@ public class frameWindow extends JFrame implements ActionListener {
 		expenseFrequencyLabel.setVisible(true);
 
 //combo box for the frequency of when the expense occurs
-		String[] expenseList6 = { "Annually", "Monthy", "Biweekly" };
+		String[] expenseList6 = { "Annually", "Monthly", "Biweekly" };
 		expenseSelectSix = new JComboBox(expenseList6);
 		expenseSelectSix.setFont(new Font("Courier New", Font.PLAIN, 13));
 		expenseSelectSix.setBounds(190, 440, 140, 30);
@@ -1110,34 +1114,37 @@ public class frameWindow extends JFrame implements ActionListener {
 					selectedExpenseTwo = expenseSelectFive.getSelectedItem().toString();
 				}
 				double amount = Double.parseDouble(expenseAmountText.getText());
+				if (amount >= 0.01D) {
+					Expenser.addExpense(selectedExpenseOne, selectedExpenseTwo, amount, selectedFrequency);
 
-				Expenser.addExpense(selectedExpenseOne, selectedExpenseTwo, amount, selectedFrequency);
+					JOptionPane.showMessageDialog(this, selectedExpenseTwo + " expense for " +
+							String.format("$%.2f added.",amount), "Success", JOptionPane.INFORMATION_MESSAGE);
 
-				JOptionPane.showMessageDialog(null, "Expense added successfully!", "Success",
-						JOptionPane.INFORMATION_MESSAGE);
+					expenseAmountText.setText("");
+					expenseSelectOne.setSelectedIndex(0);
+					expenseSelectTwo.setSelectedIndex(0);
+					expenseSelectThree.setSelectedIndex(0);
+					expenseSelectFour.setSelectedIndex(0);
+					expenseSelectFive.setSelectedIndex(0);
+					expenseSelectSix.setSelectedIndex(0);
 
-				expenseAmountText.setText("");
-				expenseSelectOne.setSelectedIndex(0);
-				expenseSelectTwo.setSelectedIndex(0);
-				expenseSelectThree.setSelectedIndex(0);
-				expenseSelectFour.setSelectedIndex(0);
-				expenseSelectFive.setSelectedIndex(0);
-				expenseSelectSix.setSelectedIndex(0);
-
-				// Hide additional components
-				expenseSelectTwo.setVisible(false);
-				expenseSelectThree.setVisible(false);
-				expenseSelectFour.setVisible(false);
-				expenseSelectFive.setVisible(false);
-				expenseSelectSix.setVisible(false);
-				expenseAmountText.setVisible(false);
-				addtionalInfoSubmitButton.setVisible(false);
-				expenseAmountLabel.setVisible(false);
-				expenseCategoryLabel.setVisible(false);
-				expenseFrequencyLabel.setVisible(false);
-				expenseAddtionalLabel.setVisible(false);
+					// Hide additional components
+					expenseSelectTwo.setVisible(false);
+					expenseSelectThree.setVisible(false);
+					expenseSelectFour.setVisible(false);
+					expenseSelectFive.setVisible(false);
+					expenseSelectSix.setVisible(false);
+					expenseAmountText.setVisible(false);
+					addtionalInfoSubmitButton.setVisible(false);
+					expenseAmountLabel.setVisible(false);
+					expenseCategoryLabel.setVisible(false);
+					expenseFrequencyLabel.setVisible(false);
+					expenseAddtionalLabel.setVisible(false);
+				} else {
+					throw new Exception("Invalid amount.");
+				}
 			} catch (Exception exc) {
-				JOptionPane.showMessageDialog(null, "Please enter a valid submission.", "Error",
+				JOptionPane.showMessageDialog(this, "Please enter a valid submission.", "Error",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
@@ -1156,11 +1163,18 @@ public class frameWindow extends JFrame implements ActionListener {
 			try {
 				String selectedincomeType = incomeType.getSelectedItem().toString();
 				double cashflow = Double.parseDouble(incomeText.getText());
-				Expenser.addIncome(selectedincomeType, cashflow);
-				System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $"
-						+ incomeText.getText() + ".");
+
+				if (cashflow >= 0.01d) {
+					JOptionPane.showMessageDialog(this,
+							"Adding " + selectedincomeType + " income for " + String.format("$%.2f",cashflow) + " successful.",
+							"Income Added", JOptionPane.INFORMATION_MESSAGE);
+					Expenser.addIncome(selectedincomeType, cashflow);
+					System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $"
+							+ incomeText.getText() + ".");
+				} else { throw new Exception("Invalid input.");
+				}
 			} catch (Exception exc) {
-				JOptionPane.showMessageDialog(null, "Please enter a valid submission.", "Error",
+				JOptionPane.showMessageDialog(this, "Please enter a valid submission.", "Error",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
@@ -1353,19 +1367,22 @@ public class frameWindow extends JFrame implements ActionListener {
 			try {
 				double currMonthlySavings = Expenser.updateMonthlySavings();
 				double currAmount = Double.parseDouble(saveAmountText.getText());
-				double currRes = currAmount / currMonthlySavings;
+				double currRes = (currAmount + Expenser.getAnnualExpenseTotal(currAmount)) / currMonthlySavings;
 
 				// Format currRes to one decimal place
-				DecimalFormat decimalFormat = new DecimalFormat("#.#");
+				DecimalFormat decimalFormat = new DecimalFormat("#.##");
 				String formattedRes = decimalFormat.format(currRes);
 
-				if (currRes > 0) {
+				if (currRes >= 0.01 && currAmount >= 0.01) {
 					saveResLabel.setText("Estimated Months to Save: " + formattedRes);
+					saveResLabel.setText("Estimated Months to Save: " + formattedRes);
+
 				} else {
-					saveResLabel.setText("You currently have a negative income: " + formattedRes);
+					saveAmountText.setText("");
+					throw new Exception("Less than penny or negative value entered.");
 				}
 			} catch (Exception exc) {
-				JOptionPane.showMessageDialog(null, "Please enter a valid submission.", "Error",
+				JOptionPane.showMessageDialog(this, "Please enter a valid submission.", "Error",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
@@ -1624,18 +1641,26 @@ public class frameWindow extends JFrame implements ActionListener {
 
 		if (e.getSource() == importExpenseButton) {
 
-			String fileName = "C:\\Users\\Damian\\git\\Ewallet-SENG21011\\src\\expenseImport.txt";
-
 			try {
+				fileChooser.addChoosableFileFilter( new FileNameExtensionFilter("Text Files (*.txt)","txt"));
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fileChooser.setAcceptAllFileFilterUsed(false);
 
-				Expenser.addExpensesFromFile(fileName);
+				int fileChooserChoice = fileChooser.showOpenDialog(this);
 
-				JOptionPane.showMessageDialog(null, "Expense added! Look in Console for details!", "Success",
-						JOptionPane.INFORMATION_MESSAGE);
+				if (fileChooserChoice == JFileChooser.APPROVE_OPTION) {
+					Expenser.addExpensesFromFile(fileChooser.getSelectedFile().getAbsolutePath());
+
+					JOptionPane.showMessageDialog(this, "Expense added! Look in Console for details!", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
+				} else if (fileChooserChoice == JFileChooser.CANCEL_OPTION){
+					JOptionPane.showMessageDialog(this, "File selection canceled.", "Canceled",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
 
 			} catch (Exception ex) {
 
-				JOptionPane.showMessageDialog(null, "Error importing expenses from the file!", "Error",
+				JOptionPane.showMessageDialog(this, "Error importing expenses from the file!", "Error",
 						JOptionPane.ERROR_MESSAGE);
 
 				ex.printStackTrace();
@@ -1646,18 +1671,26 @@ public class frameWindow extends JFrame implements ActionListener {
 
 		if (e.getSource() == importIncomeButton) {
 
-			String fileName = "C:\\Users\\Damian\\git\\Ewallet-SENG21011\\src\\incomes.txt";
-
 			try {
+				fileChooser.addChoosableFileFilter( new FileNameExtensionFilter("Text Files (*.txt)","txt"));
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fileChooser.setAcceptAllFileFilterUsed(false);
 
-				Expenser.addIncomesFromFile(fileName);
+				int fileChooserChoice = fileChooser.showOpenDialog(this);
 
-				JOptionPane.showMessageDialog(null, "Income added! Look in Console for details!", "Success",
-						JOptionPane.INFORMATION_MESSAGE);
+				if (fileChooserChoice == JFileChooser.APPROVE_OPTION) {
+					Expenser.addIncomesFromFile(fileChooser.getSelectedFile().getAbsolutePath());
 
+					JOptionPane.showMessageDialog(this, "Income added! Look in Console for details!", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
+
+				} else if (fileChooserChoice == JFileChooser.CANCEL_OPTION){
+					JOptionPane.showMessageDialog(this, "File selection canceled.", "Canceled",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
 			} catch (Exception ex) {
 
-				JOptionPane.showMessageDialog(null, "Error importing incomes from the file!", "Error",
+				JOptionPane.showMessageDialog(this, "Error importing incomes from the file!", "Error",
 						JOptionPane.ERROR_MESSAGE);
 
 				ex.printStackTrace();
