@@ -958,23 +958,24 @@ public class frameWindow extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this,"Please confirm your password!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
 			}
 			else {
-				if (queryForItem("USERTABLE","username",addUsernameFld.getText())) {
-					try {
-						int userID = Integer.parseInt(queryForAdjacentItem("USERTABLE", "username", "userID", loginUsernameField.getText()));
-						if (addPasswordFld.getText().equals(queryForAdjacentItem("USERTABLE","userID","password",String.valueOf(userID)))) {
-							JOptionPane.showMessageDialog(this, "User credentials already in use!", "E-WALLET Authentication Service", JOptionPane.INFORMATION_MESSAGE);
-							addUsernameFld.setText("");
-							addPasswordFld.setText("");
-						}
-						else {
-							addUser(addUsernameFld.getText(), addPasswordFld.getText());
-						}
-					} catch (NumberFormatException numberFormatException) {
-						
-					}
+				int userID = Integer.parseInt(queryForAdjacentItem("USERTABLE", "username", "userID", addUsernameFld.getText()));
+				if (queryForItem("USERTABLE", "username", addUsernameFld.getText())) {
+					JOptionPane.showMessageDialog(this, "Username already in use!", "E-WALLET Authentication Service", JOptionPane.INFORMATION_MESSAGE);
+					addUsernameFld.setText("");
+					addPasswordFld.setText("");
+					confPasswordFld.setText("");
+				}
+				else if (!addPasswordFld.getText().equals(confPasswordFld.getText())) {
+					JOptionPane.showMessageDialog(this, "Passwords do not match!", "E-WALLET Authentication Service", JOptionPane.INFORMATION_MESSAGE);
+					addUsernameFld.setText("");
+					addPasswordFld.setText("");
+					confPasswordFld.setText("");
+				}
+				else {
+					addUser(addUsernameFld.getText(), addPasswordFld.getText(), userID);
+					JOptionPane.showMessageDialog(this, "Account Created Succesfully!", "E-WALLET Authentication Service", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
-			
 		}
 
 		if (e.getSource() == addExpense) {
@@ -1770,20 +1771,17 @@ public class frameWindow extends JFrame implements ActionListener {
 		}
 	}
 	
-	private static String addUser(String username, String password) {
-		String sql = " insert into users (username, password)";
+	private static void addUser(String username, String password, int userID) {
+		String sql = "INSERT INTO users VALUES (?,?,?)";
 		
 		try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStmt = conn.prepareStatement(sql)) {
-			preparedStmt.setString(1, username);
-			preparedStmt.setString(2, password);
-			
+			preparedStmt.setInt(1, userID);
+			preparedStmt.setString(2, username);
+			preparedStmt.setString(3, password);
 			preparedStmt.execute();
-			conn.close();
-			return null;
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return null;
 		}
 	}
 
