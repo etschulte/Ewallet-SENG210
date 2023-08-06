@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.*;
@@ -11,14 +12,16 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class frameWindow extends JFrame implements ActionListener {
 
 	// Global variables, to work with action listener
 	private static final int MAX_LOGIN_ATTEMPTS = 5;
 	private static int loginAttempts = 0;
-	// Embedded Database Objects and Variables
 	private static String embeddedDBURL = "jdbc:derby:ewalletDB;create=true; username=seng210&password=Summer2023!";
+	private JFileChooser fileChooser = new JFileChooser("src\\");
 	private static JButton addIncome = new JButton();
 	private static JButton addExpense = new JButton();
 	private static JButton viewSummary = new JButton();
@@ -573,7 +576,7 @@ public class frameWindow extends JFrame implements ActionListener {
 		expenseFrequencyLabel.setVisible(true);
 
 //combo box for the frequency of when the expense occurs
-		String[] expenseList6 = { "Annually", "Monthy", "Biweekly" };
+		String[] expenseList6 = { "Annually", "Monthly", "Biweekly" };
 		expenseSelectSix = new JComboBox(expenseList6);
 		expenseSelectSix.setFont(new Font("Courier New", Font.PLAIN, 13));
 		expenseSelectSix.setBounds(190, 440, 140, 30);
@@ -932,12 +935,71 @@ public class frameWindow extends JFrame implements ActionListener {
 
 	}
 
+	protected static void insertNewUser(String tableName, int userID, String username, String password) {
+		try (Connection connection = DriverManager.getConnection(embeddedDBURL);
+			 PreparedStatement preparedStatement = connection.prepareStatement(
+					 "INSERT INTO " + tableName + " VALUES (?,?,?)");
+		) {
+			preparedStatement.setInt(1, userID);
+			preparedStatement.setString(2, username);
+			preparedStatement.setString(3,password);
+			preparedStatement.execute();
+			System.out.println("User " + username + " added with userID of " + userID + " to database.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("There was a problem adding user " + username + " to the database.");
+		}
+	}
+
+	protected static void createUserTable() {
+		try (Connection connection = DriverManager.getConnection(embeddedDBURL);
+			 PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE USERTABLE" + " (" +
+					 "userID INT PRIMARY KEY CHECK (userID >= 0), " +
+					 "username VARCHAR(100) UNIQUE NOT NULL, " +
+					 "password VARCHAR(100) NOT NULL" + ")");
+		){
+
+			preparedStatement.execute();
+			System.out.println("Table successfully created.");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("There was a problem creating the table ...");
+		}
+	}
+
+	protected static void printUserData() {
+		try (Connection connection = DriverManager.getConnection(embeddedDBURL);){
+			Statement statement = connection.createStatement();
+
+			ResultSet results = statement.executeQuery("SELECT * FROM USERTABLE");
+			System.out.println("userID, username, password");
+			while (results.next()) {
+				System.out.printf("ID: %s, Username: %s, Password: %s\n",
+						results.getString("userID"),
+						results.getString("username"),
+						results.getString("password"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+
 	/// ACTIONS EVENTS +
 	/// LOGIC/////////////////////////////////////////////////////////////////
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// Controls the buttons when pressed
+		if (e.getSource() == createAccountButton) {
+			try {
+				createAccWindow();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+
 		if (e.getSource() == createAccountBtn) {
 			if (addUsernameFld.getText().equals("") && addPasswordFld.getText().equals("")) {
 				JOptionPane.showMessageDialog(this, "Username and password field are empty!","E-WALLET - Warning Message", JOptionPane.WARNING_MESSAGE);
@@ -952,7 +1014,7 @@ public class frameWindow extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this,"Please confirm your password!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
 			}
 			else {
-				int userID = Integer.parseInt(queryForAdjacentItem("USERTABLE", "username", "userID", addUsernameFld.getText()));
+				//int userID = Integer.parseInt(queryForAdjacentItem("USERTABLE", "username", "userID", addUsernameFld.getText()));
 				if (queryForItem("USERTABLE", "username", addUsernameFld.getText())) {
 					JOptionPane.showMessageDialog(this, "Username already in use!", "E-WALLET Authentication Service", JOptionPane.INFORMATION_MESSAGE);
 					addUsernameFld.setText("");
@@ -966,7 +1028,7 @@ public class frameWindow extends JFrame implements ActionListener {
 					confPasswordFld.setText("");
 				}
 				else {
-					addUser(addUsernameFld.getText(), addPasswordFld.getText(), userID);
+					addUser(addUsernameFld.getText(), addPasswordFld.getText(), countRowsInTable("USERTABLE", "username") + 1);
 					JOptionPane.showMessageDialog(this, "Account Created Succesfully!", "E-WALLET Authentication Service", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
@@ -1138,34 +1200,37 @@ public class frameWindow extends JFrame implements ActionListener {
 					selectedExpenseTwo = expenseSelectFive.getSelectedItem().toString();
 				}
 				double amount = Double.parseDouble(expenseAmountText.getText());
+				if (amount >= 0.01D) {
+					Expenser.addExpense(selectedExpenseOne, selectedExpenseTwo, amount, selectedFrequency);
 
-				Expenser.addExpense(selectedExpenseOne, selectedExpenseTwo, amount, selectedFrequency);
+					JOptionPane.showMessageDialog(this, selectedExpenseTwo + " expense for " +
+							String.format("$%.2f added.",amount), "Success", JOptionPane.INFORMATION_MESSAGE);
 
-				JOptionPane.showMessageDialog(null, "Expense added successfully!", "Success",
-						JOptionPane.INFORMATION_MESSAGE);
+					expenseAmountText.setText("");
+					expenseSelectOne.setSelectedIndex(0);
+					expenseSelectTwo.setSelectedIndex(0);
+					expenseSelectThree.setSelectedIndex(0);
+					expenseSelectFour.setSelectedIndex(0);
+					expenseSelectFive.setSelectedIndex(0);
+					expenseSelectSix.setSelectedIndex(0);
 
-				expenseAmountText.setText("");
-				expenseSelectOne.setSelectedIndex(0);
-				expenseSelectTwo.setSelectedIndex(0);
-				expenseSelectThree.setSelectedIndex(0);
-				expenseSelectFour.setSelectedIndex(0);
-				expenseSelectFive.setSelectedIndex(0);
-				expenseSelectSix.setSelectedIndex(0);
-
-				// Hide additional components
-				expenseSelectTwo.setVisible(false);
-				expenseSelectThree.setVisible(false);
-				expenseSelectFour.setVisible(false);
-				expenseSelectFive.setVisible(false);
-				expenseSelectSix.setVisible(false);
-				expenseAmountText.setVisible(false);
-				addtionalInfoSubmitButton.setVisible(false);
-				expenseAmountLabel.setVisible(false);
-				expenseCategoryLabel.setVisible(false);
-				expenseFrequencyLabel.setVisible(false);
-				expenseAddtionalLabel.setVisible(false);
+					// Hide additional components
+					expenseSelectTwo.setVisible(false);
+					expenseSelectThree.setVisible(false);
+					expenseSelectFour.setVisible(false);
+					expenseSelectFive.setVisible(false);
+					expenseSelectSix.setVisible(false);
+					expenseAmountText.setVisible(false);
+					addtionalInfoSubmitButton.setVisible(false);
+					expenseAmountLabel.setVisible(false);
+					expenseCategoryLabel.setVisible(false);
+					expenseFrequencyLabel.setVisible(false);
+					expenseAddtionalLabel.setVisible(false);
+				} else {
+					throw new Exception("Invalid amount.");
+				}
 			} catch (Exception exc) {
-				JOptionPane.showMessageDialog(null, "Please enter a valid submission.", "Error",
+				JOptionPane.showMessageDialog(this, "Please enter a valid submission.", "Error",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
@@ -1184,11 +1249,18 @@ public class frameWindow extends JFrame implements ActionListener {
 			try {
 				String selectedincomeType = incomeType.getSelectedItem().toString();
 				double cashflow = Double.parseDouble(incomeText.getText());
-				Expenser.addIncome(selectedincomeType, cashflow);
-				System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $"
-						+ incomeText.getText() + ".");
+
+				if (cashflow >= 0.01d) {
+					JOptionPane.showMessageDialog(this,
+							"Adding " + selectedincomeType + " income for " + String.format("$%.2f",cashflow) + " successful.",
+							"Income Added", JOptionPane.INFORMATION_MESSAGE);
+					Expenser.addIncome(selectedincomeType, cashflow);
+					System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $"
+							+ incomeText.getText() + ".");
+				} else { throw new Exception("Invalid input.");
+				}
 			} catch (Exception exc) {
-				JOptionPane.showMessageDialog(null, "Please enter a valid submission.", "Error",
+				JOptionPane.showMessageDialog(this, "Please enter a valid submission.", "Error",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
@@ -1381,19 +1453,22 @@ public class frameWindow extends JFrame implements ActionListener {
 			try {
 				double currMonthlySavings = Expenser.updateMonthlySavings();
 				double currAmount = Double.parseDouble(saveAmountText.getText());
-				double currRes = currAmount / currMonthlySavings;
+				double currRes = (currAmount + Expenser.getAnnualExpenseTotal(currAmount)) / currMonthlySavings;
 
 				// Format currRes to one decimal place
-				DecimalFormat decimalFormat = new DecimalFormat("#.#");
+				DecimalFormat decimalFormat = new DecimalFormat("#.##");
 				String formattedRes = decimalFormat.format(currRes);
 
-				if (currRes > 0) {
+				if (currRes >= 0.01 && currAmount >= 0.01) {
 					saveResLabel.setText("Estimated Months to Save: " + formattedRes);
+					saveResLabel.setText("Estimated Months to Save: " + formattedRes);
+
 				} else {
-					saveResLabel.setText("You currently have a negative income: " + formattedRes);
+					saveAmountText.setText("");
+					throw new Exception("Less than penny or negative value entered.");
 				}
 			} catch (Exception exc) {
-				JOptionPane.showMessageDialog(null, "Please enter a valid submission.", "Error",
+				JOptionPane.showMessageDialog(this, "Please enter a valid submission.", "Error",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
@@ -1652,18 +1727,26 @@ public class frameWindow extends JFrame implements ActionListener {
 
 		if (e.getSource() == importExpenseButton) {
 
-			String fileName = "C:\\Users\\Damian\\git\\Ewallet-SENG21011\\src\\expenseImport.txt";
-
 			try {
+				fileChooser.addChoosableFileFilter( new FileNameExtensionFilter("Text Files (*.txt)","txt"));
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fileChooser.setAcceptAllFileFilterUsed(false);
 
-				Expenser.addExpensesFromFile(fileName);
+				int fileChooserChoice = fileChooser.showOpenDialog(this);
 
-				JOptionPane.showMessageDialog(null, "Expense added! Look in Console for details!", "Success",
-						JOptionPane.INFORMATION_MESSAGE);
+				if (fileChooserChoice == JFileChooser.APPROVE_OPTION) {
+					Expenser.addExpensesFromFile(fileChooser.getSelectedFile().getAbsolutePath());
+
+					JOptionPane.showMessageDialog(this, "Expense added! Look in Console for details!", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
+				} else if (fileChooserChoice == JFileChooser.CANCEL_OPTION){
+					JOptionPane.showMessageDialog(this, "File selection canceled.", "Canceled",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
 
 			} catch (Exception ex) {
 
-				JOptionPane.showMessageDialog(null, "Error importing expenses from the file!", "Error",
+				JOptionPane.showMessageDialog(this, "Error importing expenses from the file!", "Error",
 						JOptionPane.ERROR_MESSAGE);
 
 				ex.printStackTrace();
@@ -1674,18 +1757,26 @@ public class frameWindow extends JFrame implements ActionListener {
 
 		if (e.getSource() == importIncomeButton) {
 
-			String fileName = "C:\\Users\\Damian\\git\\Ewallet-SENG21011\\src\\incomes.txt";
-
 			try {
+				fileChooser.addChoosableFileFilter( new FileNameExtensionFilter("Text Files (*.txt)","txt"));
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fileChooser.setAcceptAllFileFilterUsed(false);
 
-				Expenser.addIncomesFromFile(fileName);
+				int fileChooserChoice = fileChooser.showOpenDialog(this);
 
-				JOptionPane.showMessageDialog(null, "Income added! Look in Console for details!", "Success",
-						JOptionPane.INFORMATION_MESSAGE);
+				if (fileChooserChoice == JFileChooser.APPROVE_OPTION) {
+					Expenser.addIncomesFromFile(fileChooser.getSelectedFile().getAbsolutePath());
 
+					JOptionPane.showMessageDialog(this, "Income added! Look in Console for details!", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
+
+				} else if (fileChooserChoice == JFileChooser.CANCEL_OPTION){
+					JOptionPane.showMessageDialog(this, "File selection canceled.", "Canceled",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
 			} catch (Exception ex) {
 
-				JOptionPane.showMessageDialog(null, "Error importing incomes from the file!", "Error",
+				JOptionPane.showMessageDialog(this, "Error importing incomes from the file!", "Error",
 						JOptionPane.ERROR_MESSAGE);
 
 				ex.printStackTrace();
@@ -1722,9 +1813,7 @@ public class frameWindow extends JFrame implements ActionListener {
 	 * @return true if text is found, false otherwise.
 	 */
 	private static boolean queryForItem(String tableName, String columnName, String textToLookFor) {
-		try (Connection conn = DriverManager.getConnection(embeddedDBURL);
-			 PreparedStatement preparedStatement = conn.prepareStatement("SELECT " + columnName +
-					 " FROM " + tableName + " WHERE " + columnName + " = ?");
+		try (Connection conn = DriverManager.getConnection(embeddedDBURL); PreparedStatement preparedStatement = conn.prepareStatement("SELECT " + columnName + " FROM " + tableName + " WHERE " + columnName + " = ?");
 		){
 			preparedStatement.setString(1, textToLookFor);
 			ResultSet results = preparedStatement.executeQuery();
@@ -1750,10 +1839,8 @@ public class frameWindow extends JFrame implements ActionListener {
 	 * @return text that is in adjacent column.
 	 */
 	private static String queryForAdjacentItem(String tableName, String initialColumn, String adjacentColumn, String initialColumnText) {
-		try (Connection connection = DriverManager.getConnection(embeddedDBURL);
-			 PreparedStatement preparedStatement = connection.prepareStatement(
-					 "SELECT " + initialColumn + ", " + adjacentColumn +
-							 " FROM " + tableName + " WHERE " + initialColumn + " = ?");
+		try (Connection conn = DriverManager.getConnection(embeddedDBURL); PreparedStatement preparedStatement = conn.prepareStatement(
+				"SELECT " + initialColumn + ", " + adjacentColumn + " FROM " + tableName + " WHERE " + initialColumn + " = ?");
 		) {
 			preparedStatement.setString(1, initialColumnText);
 			ResultSet results = preparedStatement.executeQuery();
@@ -1769,12 +1856,10 @@ public class frameWindow extends JFrame implements ActionListener {
 		}
 	}
 
-	// Database Related Methods
-
 	private static void addUser(String username, String password, int userID) {
 		String sql = "INSERT INTO USERTABLE VALUES (?,?,?)";
 
-		try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStmt = conn.prepareStatement(sql)) {
+		try (Connection conn = DriverManager.getConnection(embeddedDBURL); PreparedStatement preparedStmt = conn.prepareStatement(sql)) {
 			preparedStmt.setInt(1, userID);
 			preparedStmt.setString(2, username);
 			preparedStmt.setString(3, password);
@@ -1785,56 +1870,20 @@ public class frameWindow extends JFrame implements ActionListener {
 		}
 	}
 
-	protected static void insertNewUser(String tableName, int userID, String username, String password) {
-		try (Connection connection = DriverManager.getConnection(embeddedDBURL);
-			 PreparedStatement preparedStatement = connection.prepareStatement(
-					 "INSERT INTO " + tableName + " VALUES (?,?,?)");
-		) {
-			preparedStatement.setInt(1, userID);
-			preparedStatement.setString(2, username);
-			preparedStatement.setString(3,password);
-			preparedStatement.execute();
-			System.out.println("User " + username + " added with userID of " + userID + " to database.");
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("There was a problem adding user " + username + " to the database.");
-		}
-	}
-
-	protected static void createUserTable() {
-		try (Connection connection = DriverManager.getConnection(embeddedDBURL);
-			 PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE USERTABLE" + " (" +
-					 "userID INT PRIMARY KEY CHECK (userID >= 0), " +
-					 "username VARCHAR(100) UNIQUE NOT NULL, " +
-					 "password VARCHAR(100) NOT NULL" + ")");
-		){
-
-			preparedStatement.execute();
-			System.out.println("Table successfully created.");
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("There was a problem creating the table ...");
-		}
-	}
-
-	protected static void printUserData() {
-		try (Connection connection = DriverManager.getConnection(embeddedDBURL);){
-			Statement statement = connection.createStatement();
-
-			ResultSet results = statement.executeQuery("SELECT * FROM USERTABLE");
-			System.out.println("userID, username, password");
-			while (results.next()) {
-				System.out.printf("ID: %s, Username: %s, Password: %s\n",
-				results.getString("userID"),
-						results.getString("username"),
-						results.getString("password"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
+    private static int countRowsInTable(String tableName, String columnName) {
+        try (Connection conn = DriverManager.getConnection(embeddedDBURL); PreparedStatement preparedStatement = conn.prepareStatement(
+                "SELECT COUNT(*) FROM USERTABLE");
+        ) {
+            ResultSet results = preparedStatement.executeQuery();
+            if (results.next()) {
+                return results.getInt(1);
+            }
+			return 0;
+        } catch (SQLException sqlException) {
+			sqlException.printStackTrace();
+            return 0;
+        }
+    }
 
 	/////////////////////////////////////////////////////////////////
 
@@ -1947,5 +1996,4 @@ public class frameWindow extends JFrame implements ActionListener {
 		// showing login screen
 		loginPanel.setVisible(true);
 	}
-
 }
