@@ -938,11 +938,37 @@ public class frameWindow extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// Controls the buttons when pressed
-		if (e.getSource() == createAccountButton) {
-			try {
-				createAccWindow();
-			} catch (IOException e1) {
-				e1.printStackTrace();
+		if (e.getSource() == createAccountBtn) {
+			if (addUsernameFld.getText().equals("") && addPasswordFld.getText().equals("")) {
+				JOptionPane.showMessageDialog(this, "Username and password field are empty!","E-WALLET - Warning Message", JOptionPane.WARNING_MESSAGE);
+			}
+			else if(addUsernameFld.getText().equals("")) {
+				JOptionPane.showMessageDialog(this,"Username field is empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
+			}
+			else if(addPasswordFld.getText().equals("")) {
+				JOptionPane.showMessageDialog(this,"Password field is empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
+			}
+			else if(confPasswordFld.getText().equals("")) {
+				JOptionPane.showMessageDialog(this,"Please confirm your password!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
+			}
+			else {
+				int userID = Integer.parseInt(queryForAdjacentItem("USERTABLE", "username", "userID", addUsernameFld.getText()));
+				if (queryForItem("USERTABLE", "username", addUsernameFld.getText())) {
+					JOptionPane.showMessageDialog(this, "Username already in use!", "E-WALLET Authentication Service", JOptionPane.INFORMATION_MESSAGE);
+					addUsernameFld.setText("");
+					addPasswordFld.setText("");
+					confPasswordFld.setText("");
+				}
+				else if (!addPasswordFld.getText().equals(confPasswordFld.getText())) {
+					JOptionPane.showMessageDialog(this, "Passwords do not match!", "E-WALLET Authentication Service", JOptionPane.INFORMATION_MESSAGE);
+					addUsernameFld.setText("");
+					addPasswordFld.setText("");
+					confPasswordFld.setText("");
+				}
+				else {
+					addUser(addUsernameFld.getText(), addPasswordFld.getText(), userID);
+					JOptionPane.showMessageDialog(this, "Account Created Succesfully!", "E-WALLET Authentication Service", JOptionPane.INFORMATION_MESSAGE);
+				}
 			}
 		}
 
@@ -1744,6 +1770,20 @@ public class frameWindow extends JFrame implements ActionListener {
 	}
 
 	// Database Related Methods
+
+	private static void addUser(String username, String password, int userID) {
+		String sql = "INSERT INTO USERTABLE VALUES (?,?,?)";
+
+		try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStmt = conn.prepareStatement(sql)) {
+			preparedStmt.setInt(1, userID);
+			preparedStmt.setString(2, username);
+			preparedStmt.setString(3, password);
+			preparedStmt.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	protected static void insertNewUser(String tableName, int userID, String username, String password) {
 		try (Connection connection = DriverManager.getConnection(embeddedDBURL);
