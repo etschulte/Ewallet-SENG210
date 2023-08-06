@@ -947,6 +947,39 @@ public class frameWindow extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 		}
+		
+		if (e.getSource() == createAccountBtn) {
+			if (addUsernameFld.getText().equals("") && addPasswordFld.getText().equals("")) {
+				JOptionPane.showMessageDialog(this, "Username and password field are empty!","E-WALLET - Warning Message", JOptionPane.WARNING_MESSAGE);
+			}
+			else if(addUsernameFld.getText().equals("")) {
+				JOptionPane.showMessageDialog(this,"Username field is empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
+			}
+			else if(addPasswordFld.getText().equals("")) {
+				JOptionPane.showMessageDialog(this,"Password field is empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
+			}
+			else if(confPasswordFld.getText().equals("")) {
+				JOptionPane.showMessageDialog(this,"Please confirm your password!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
+			}
+			else {
+				if (queryForItem("USERTABLE", "username", addUsernameFld.getText())) {
+					JOptionPane.showMessageDialog(this, "Username already in use!", "E-WALLET Authentication Service", JOptionPane.INFORMATION_MESSAGE);
+					addUsernameFld.setText("");
+					addPasswordFld.setText("");
+					confPasswordFld.setText("");
+				}
+				else if (!addPasswordFld.getText().equals(confPasswordFld.getText())) {
+					JOptionPane.showMessageDialog(this, "Passwords do not match!", "E-WALLET Authentication Service", JOptionPane.INFORMATION_MESSAGE);
+					addUsernameFld.setText("");
+					addPasswordFld.setText("");
+					confPasswordFld.setText("");
+				}
+				else {
+					addUser(addUsernameFld.getText(), addPasswordFld.getText(), countRowsInTable() + 1);
+					JOptionPane.showMessageDialog(this, "Account Created Succesfully!", "E-WALLET Authentication Service", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		}
 
 		if (e.getSource() == addExpense) {
 			try {
@@ -1769,6 +1802,35 @@ public class frameWindow extends JFrame implements ActionListener {
 			return null;
 		}
 	}
+	
+	private static void addUser(String username, String password, int userID) {
+		String sql = "INSERT INTO users VALUES (?,?,?)";
+		
+		try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStmt = conn.prepareStatement(sql)) {
+			preparedStmt.setInt(1, userID);
+			preparedStmt.setString(2, username);
+			preparedStmt.setString(3, password);
+			preparedStmt.execute();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static int countRowsInTable() {
+        try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStatement = conn.prepareStatement(
+                "SELECT COUNT(*) FROM USERTABLE");
+        ) {
+            ResultSet results = preparedStatement.executeQuery();
+            if (results.next()) {
+                return results.getInt(1);
+            }
+			return 0;
+        } catch (SQLException sqlException) {
+		sqlException.printStackTrace();
+                return 0;
+        }
+    }
 
 
 	/////////////////////////////////////////////////////////////////
