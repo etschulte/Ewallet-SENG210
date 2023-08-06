@@ -958,7 +958,6 @@ public class frameWindow extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this,"Please confirm your password!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
 			}
 			else {
-				int userID = Integer.parseInt(queryForAdjacentItem("USERTABLE", "username", "userID", addUsernameFld.getText()));
 				if (queryForItem("USERTABLE", "username", addUsernameFld.getText())) {
 					JOptionPane.showMessageDialog(this, "Username already in use!", "E-WALLET Authentication Service", JOptionPane.INFORMATION_MESSAGE);
 					addUsernameFld.setText("");
@@ -972,7 +971,7 @@ public class frameWindow extends JFrame implements ActionListener {
 					confPasswordFld.setText("");
 				}
 				else {
-					addUser(addUsernameFld.getText(), addPasswordFld.getText(), userID);
+					addUser(addUsernameFld.getText(), addPasswordFld.getText(), countRowsInTable() + 1);
 					JOptionPane.showMessageDialog(this, "Account Created Succesfully!", "E-WALLET Authentication Service", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
@@ -1784,6 +1783,21 @@ public class frameWindow extends JFrame implements ActionListener {
 			e.printStackTrace();
 		}
 	}
+	
+	private static int countRowsInTable() {
+        try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStatement = conn.prepareStatement(
+                "SELECT COUNT(*) FROM USERTABLE");
+        ) {
+            ResultSet results = preparedStatement.executeQuery();
+            if (results.next()) {
+                return results.getInt(1);
+            }
+			return 0;
+        } catch (SQLException sqlException) {
+		sqlException.printStackTrace();
+                return 0;
+        }
+    }
 
 
 	/////////////////////////////////////////////////////////////////
