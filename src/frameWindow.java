@@ -1181,7 +1181,6 @@ public class frameWindow extends JFrame implements ActionListener {
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
-
 		if (e.getSource() == addIncome) {
 
 			try {
@@ -1190,7 +1189,6 @@ public class frameWindow extends JFrame implements ActionListener {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-
 		}
 		if (e.getSource() == enterIncome) {
 			try {
@@ -1204,7 +1202,7 @@ public class frameWindow extends JFrame implements ActionListener {
 					Expenser.addIncome(selectedincomeType, cashflow);
 					System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $"
 							+ incomeText.getText() + ".");
-				} 
+				}
 				else{
 					throw new Exception("Invalid input.");
 				}
@@ -1214,10 +1212,6 @@ public class frameWindow extends JFrame implements ActionListener {
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
-
-		// want to enter information into an array, then enter it into a display into
-		// viewer
-		// WILL ONLY ENTER INTO AN ARRAY BASED ON TYPE FOR NOW
 		if (e.getSource() == currencyConv) {
 			try {
 				convertWindow();
@@ -1236,11 +1230,11 @@ public class frameWindow extends JFrame implements ActionListener {
 			}
 
 		}
-
 		if (e.getSource() == sortTypeSubmitButton) {
 
 			String selectedType = expenseSortItems.getSelectedItem().toString();
 			System.out.print(selectedType);
+			
 //expenseTypeDetailsTextArea
 			expenseTypeDetailsTextArea.setText("");
 
