@@ -151,12 +151,13 @@ public interface Expenser {
 	//	As a user I would like to view my current balance in a different currency
 	//Bonus : try to use the same convert function to convert from foreign currency to USD 
 	public static double convertForeignCurrency(String currOne, String currTwo, Double ammount) {
-		double USDtoEUR = 0.915;
-		double EURtoUSD = 1.0915;
-		double CADtoEUR = 1.441;
-		double EURtoCAD = 0.6934;
-		double USDtoCAD = 0.7567;
-		double CADtoUSD = 1.26;
+		double USDtoEUR = 0.91270;
+		double EURtoUSD = 1.09565;
+		double CADtoEUR = 1.47065;
+		double EURtoCAD = 0.67997;
+		double USDtoCAD = 0.74490;
+		double CADtoUSD = 1.34246;
+		
 		double conRate = 0;
 		if (currOne.equals("USD")) {
 			if (currTwo.equals("EUR")) {
@@ -190,7 +191,6 @@ public interface Expenser {
 		double results = ammount * conRate;
 		double roundedResult = Math.round(results * 100.0) / 100.0;
 		return roundedResult;
-
 	}
 
 	//	As a user I would like to load multiple expenses from an external file all at once returning true if loaded successfully and false otherwise 

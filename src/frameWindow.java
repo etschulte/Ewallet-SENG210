@@ -1205,8 +1205,11 @@ public class frameWindow extends JFrame implements ActionListener {
 					Expenser.addIncome(selectedincomeType, cashflow);
 					System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $"
 							+ incomeText.getText() + ".");
-				} else { throw new Exception("Invalid input.");
+				} 
+				else { 
+					throw new Exception("Invalid input.");
 				}
+				
 			} catch (Exception exc) {
 				JOptionPane.showMessageDialog(this, "Please enter a valid submission.", "Error",
 						JOptionPane.INFORMATION_MESSAGE);
