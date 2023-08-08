@@ -1593,6 +1593,7 @@ public class frameWindow extends JFrame implements ActionListener {
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
+		
 		if (e.getSource() == homeButton) { // resets to home screen
 			try {
 				screenReset();
