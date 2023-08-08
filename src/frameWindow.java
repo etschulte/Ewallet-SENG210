@@ -18,6 +18,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class frameWindow extends JFrame implements ActionListener {
 
 	// Global variables, to work with action listener
+	private static String derbyEmbeddedURL = "jdbc:derby:SENG;";
 	private static final int MAX_LOGIN_ATTEMPTS = 5;
 	private static int loginAttempts = 0;
 	private JFileChooser fileChooser = new JFileChooser("src\\");
@@ -962,7 +963,7 @@ public class frameWindow extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this,"Please confirm your password!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
 			}
 			else {
-				if (queryForItem("USERTABLE", "username", addUsernameFld.getText())) {
+				if (queryForItem("\"User\"", "username", addUsernameFld.getText())) {
 					JOptionPane.showMessageDialog(this, "Username already in use!", "E-WALLET Authentication Service", JOptionPane.INFORMATION_MESSAGE);
 					addUsernameFld.setText("");
 					addPasswordFld.setText("");
@@ -1021,10 +1022,10 @@ public class frameWindow extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this,"Password field is empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
 			}
 			else {
-				if(queryForItem("USERTABLE","username",loginUsernameField.getText())) {
+				if(queryForItem("\"User\"","username",loginUsernameField.getText())) {
 					try {
-						int userID = Integer.parseInt(queryForAdjacentItem("USERTABLE", "username", "userID", loginUsernameField.getText()));
-						if (loginPasswordField.getText().equals(queryForAdjacentItem("USERTABLE","userID","password",String.valueOf(userID)))) {
+						int userID = Integer.parseInt(queryForAdjacentItem("\"User\"", "username", "ID", loginUsernameField.getText()));
+						if (loginPasswordField.getText().equals(queryForAdjacentItem("\"User\"","ID","password",String.valueOf(userID)))) {
 							JOptionPane.showMessageDialog(this, "Login Successful","E-WALLET Authentication Service",JOptionPane.INFORMATION_MESSAGE);
 							loginUsernameField.setText("");
 							loginPasswordField.setText("");
@@ -1760,7 +1761,7 @@ public class frameWindow extends JFrame implements ActionListener {
 	 * @return true if text is found, false otherwise.
 	 */
 	private static boolean queryForItem(String tableName, String columnName, String textToLookFor) {
-		try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStatement = conn.prepareStatement("SELECT " + columnName + " FROM " + tableName + " WHERE " + columnName + " = ?");
+		try (Connection conn = DriverManager.getConnection(derbyEmbeddedURL); PreparedStatement preparedStatement = conn.prepareStatement("SELECT " + columnName + " FROM " + tableName + " WHERE " + columnName + " = ?");
 		){
 			preparedStatement.setString(1, textToLookFor);
 			ResultSet results = preparedStatement.executeQuery();
@@ -1786,7 +1787,7 @@ public class frameWindow extends JFrame implements ActionListener {
 	 * @return text that is in adjacent column.
 	 */
 	private static String queryForAdjacentItem(String tableName, String initialColumn, String adjacentColumn, String initialColumnText) {
-		try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStatement = conn.prepareStatement(
+		try (Connection conn = DriverManager.getConnection(derbyEmbeddedURL); PreparedStatement preparedStatement = conn.prepareStatement(
 				"SELECT " + initialColumn + ", " + adjacentColumn + " FROM " + tableName + " WHERE " + initialColumn + " = ?");
 		) {
 			preparedStatement.setString(1, initialColumnText);
@@ -1804,9 +1805,9 @@ public class frameWindow extends JFrame implements ActionListener {
 	}
 	
 	private static void addUser(String username, String password, int userID) {
-		String sql = "INSERT INTO users VALUES (?,?,?)";
+		String sql = "INSERT INTO \"User\" VALUES (?,?,?)";
 		
-		try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStmt = conn.prepareStatement(sql)) {
+		try (Connection conn = DriverManager.getConnection(derbyEmbeddedURL); PreparedStatement preparedStmt = conn.prepareStatement(sql)) {
 			preparedStmt.setInt(1, userID);
 			preparedStmt.setString(2, username);
 			preparedStmt.setString(3, password);
@@ -1817,9 +1818,9 @@ public class frameWindow extends JFrame implements ActionListener {
 		}
 	}
 	
-	private static int countRowsInTable() {
-        try (Connection conn = DriverManager.getConnection(""); PreparedStatement preparedStatement = conn.prepareStatement(
-                "SELECT COUNT(*) FROM USERTABLE");
+	protected static int countRowsInTable() {
+        try (Connection conn = DriverManager.getConnection(derbyEmbeddedURL); PreparedStatement preparedStatement = conn.prepareStatement(
+                "SELECT COUNT(*) FROM \"User\"");
         ) {
             ResultSet results = preparedStatement.executeQuery();
             if (results.next()) {

@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Tue Aug 08 15:55:50 EDT 2023:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.16.1.1 - (1901046): instance a816c00e-0189-d6b8-4d8d-00001ec27310 
+on database directory Z:\Programming\Ewallet-SENG210\SENG with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@4d7e1886 
+Loaded from file:/C:/Apache/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=19.0.2+7-44
+user.dir=Z:\Programming\Ewallet-SENG210
+os.name=Windows 11
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

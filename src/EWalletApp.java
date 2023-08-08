@@ -4,6 +4,7 @@ import java.util.ArrayList;
 public class EWalletApp {
 	  public static void main(String[] args) throws IOException {
 		  frameWindow frame = new frameWindow();
+		  frameWindow.countRowsInTable();
 		  
 		  
 		  
