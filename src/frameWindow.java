@@ -1204,7 +1204,8 @@ public class frameWindow extends JFrame implements ActionListener {
 					Expenser.addIncome(selectedincomeType, cashflow);
 					System.out.println("You entered the " + incomeType.getSelectedItem() + " type income with $"
 							+ incomeText.getText() + ".");
-				} else { throw new Exception("Invalid input.");
+				} else { 
+					throw new Exception("Invalid input.");
 				}
 			} catch (Exception exc) {
 				JOptionPane.showMessageDialog(this, "Please enter a valid submission.", "Error",
@@ -1574,11 +1575,11 @@ public class frameWindow extends JFrame implements ActionListener {
 				String currTwo = selectedConversionTwo.toString();
 
 				String amountToConvert = convertText.getText();
+				
+				
 				double convertAmount = Double.parseDouble(amountToConvert);
 				
-				
-				// WRONG
-				if(convertAmount >= 0.0) {
+				if(convertAmount >= 0.01d) {
 					double converResults = Expenser.convertForeignCurrency(currOne, currTwo, convertAmount);
 					currResultLabel.setText(currTwo + ": " + converResults);
 					currResultLabel.setVisible(true);	
@@ -1588,9 +1589,9 @@ public class frameWindow extends JFrame implements ActionListener {
 					
 				}
 			
-			} catch (Exception e1) {
-				e1.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Please enter a valid submission.", "Error", JOptionPane.INFORMATION_MESSAGE);	
+			} catch (Exception exc) {
+				exc.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Please enter a valid submission.", "Error", JOptionPane.WARNING_MESSAGE);	
 			}
 				
 		}
