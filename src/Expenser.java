@@ -157,6 +157,20 @@ public interface Expenser {
 		double EURtoCAD = 0.6934;
 		double USDtoCAD = 0.7567;
 		double CADtoUSD = 1.26;
+		double USDtoJPY = 143.319;
+		double JPYtoUSD = 0.00698;
+		double EURtoJPY = 157.009;
+		double JPYtoEUR = 0.00637;
+		double CADtoJPY = 106.776;
+		double JPYtoCAD = 0.00937;
+		double CNYtoUSD = 0.13858;
+		double USDtoCNY = 7.21630;
+		double CNYtoEUR = 0.12641;
+		double EURtoCNY = 7.91105;
+		double CNYtoCAD = 5.37513;
+		double CADtoCNY = 0.18604;
+		double CNYtoJPY = 19.8425;
+		double JPYtoCNY = 0.05040;
 		double conRate = 0;
 		if (currOne.equals("USD")) {
 			if (currTwo.equals("EUR")) {
@@ -164,6 +178,10 @@ public interface Expenser {
 			} else if
 			(currTwo.equals("CAD")) {
 				conRate = USDtoCAD;
+			}else if(currTwo.equals("JPY")) {
+				conRate = USDtoJPY;
+			}else if(currTwo.equals("CNY")) {
+				conRate = USDtoCNY;
 			}
 		}
 		if (currOne.equals("EUR")) {
@@ -172,15 +190,44 @@ public interface Expenser {
 			} else if
 			(currTwo.equals("CAD")) {
 				conRate = EURtoCAD;
+			}else if (currTwo.equals("JPY")) {
+				conRate = EURtoJPY;
+			}else if(currTwo.equals("CNY")) {
+				conRate = EURtoCNY;
 			}
 		}
 
 		if (currOne.equals("CAD")) {
 			if (currTwo.equals("EUR")) {
 				conRate = CADtoEUR;
-			} else if
-			(currTwo.equals("USD")) {
+			} else if(currTwo.equals("USD")) {
 				conRate = CADtoUSD;
+			}else if(currTwo.equals("JPY")) {
+				conRate = CADtoJPY;
+			}else if(currTwo.equals("CNY")) {
+				conRate = CADtoCNY;
+			}
+		}
+		if (currOne.equals("JPY")) {
+			if (currTwo.equals("EUR")) {
+				conRate = JPYtoEUR;
+			} else if (currTwo.equals("USD")) {
+				conRate = JPYtoUSD;
+			}else if (currTwo.equals("CAD")) {
+				conRate = JPYtoCAD;
+			}else if(currTwo.equals("CNY")) {
+				conRate = JPYtoCNY;
+			}
+		}
+		if (currOne.equals("CNY")) {
+			if(currTwo.equals("EUR")) {
+				conRate = CNYtoEUR;
+			} else if(currTwo.equals("USD")) {
+				conRate = CNYtoUSD;
+			}else if(currTwo.equals("CAD")) {
+				conRate = CNYtoCAD;
+			}else if(currTwo.equals("JPY")) {
+				conRate = CNYtoJPY;
 			}
 		}
 		if (conRate == 0.0) {
