@@ -1589,8 +1589,13 @@ public class frameWindow extends JFrame implements ActionListener {
 				}
 			
 			} catch (Exception exc) {
-				JOptionPane.showMessageDialog(this, "Please enter a value greater than zero.", "Error",
-						JOptionPane.INFORMATION_MESSAGE);
+				if(Double.parseDouble(convertText.getText()) < 0.0) {
+					JOptionPane.showMessageDialog(this, "Please enter a value greater than zero.", "Error",
+							JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(this, "Check your entry and try again.", "Error",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
 			}
 		}
 		
