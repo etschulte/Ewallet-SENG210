@@ -338,7 +338,6 @@ public class frameWindow extends JFrame implements ActionListener {
 		createAccPanel.add(createAccountBtn);
 
 //currency Conversion window
-
 //you can re-use the home button for other screens as long as you don't move it, if you want to move it, copy, rename, and change the position.
 		homeButton = new JButton("Home");
 		homeButton.setFont(new Font("Courier New", Font.PLAIN, 15));
@@ -375,7 +374,7 @@ public class frameWindow extends JFrame implements ActionListener {
 		convertText.setBounds(185, 390, 80, 25);
 		convertText.setVisible(true);
 
-		String[] currencyList = { "USD", "EUR", "CAD", };
+		String[] currencyList = { "USD", "EUR", "CAD", "JPY", "CNY"};
 		currSelectOne = new JComboBox(currencyList);
 		currSelectOne.setFont(new Font("Courier New", Font.PLAIN, 13));
 		currSelectOne.setBounds(110, 390, 60, 25);
