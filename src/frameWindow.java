@@ -1021,21 +1021,21 @@ public class frameWindow extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this,"Password field is empty!","E-WALLET - Warning Message",JOptionPane.WARNING_MESSAGE);
 			}
 			else {
-				if(queryForItem("\"User\"","username",loginUsernameField.getText())) {
+				if(queryForItem("\"User\"","USERNAME",loginUsernameField.getText())) {
 					try {
-						int userID = Integer.parseInt(queryForAdjacentItem("\"User\"", "username", "ID", loginUsernameField.getText()));
-						if (loginPasswordField.getText().equals(queryForAdjacentItem("\"User\"","ID","password",String.valueOf(userID)))) {
+						int userID = Integer.parseInt(queryForAdjacentItem("\"User\"", "USERNAME", "ID", loginUsernameField.getText()));
+						if (loginPasswordField.getText().equals(queryForAdjacentItem("\"User\"","ID","PASSWORD",String.valueOf(userID)))) {
 							JOptionPane.showMessageDialog(this, "Login Successful","E-WALLET Authentication Service",JOptionPane.INFORMATION_MESSAGE);
 							loginUsernameField.setText("");
 							loginPasswordField.setText("");
 							loginAttempts = 0;
-						} else {
-							JOptionPane.showMessageDialog(this, "Incorrect Credentials","E-WALLET Authentication Service",JOptionPane.INFORMATION_MESSAGE);
-							loginAttempts++;
 						}
 					} catch (NumberFormatException numberFormatException) {
 						System.out.println(numberFormatException.getMessage());
 					}
+				}  else {
+					JOptionPane.showMessageDialog(this, "Incorrect Credentials","E-WALLET Authentication Service",JOptionPane.INFORMATION_MESSAGE);
+					loginAttempts++;
 				}
 			}
 		}
@@ -1778,8 +1778,10 @@ public class frameWindow extends JFrame implements ActionListener {
 			preparedStatement.setString(1, textToLookFor);
 			ResultSet results = preparedStatement.executeQuery();
 			if(results.next()) {
+				System.out.println("Found");
 				return true;
 			} else {
+				System.out.println("Not Found");
 				return false;
 			}
 
